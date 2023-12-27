@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">BobbeeFood</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string-array name="State">
+        <item>      </item>
+        <item>Thành Phố Hồ Chí Minh</item>
+        <item>Thành Phố Hà Nội</item>
+        <item>Tỉnh Tiền Giang</item>
+    </string-array>
+
+    <string-array name="shipper">
+        <item>Shipper 1</item>
+        <item>Shipper 2</item>
+    </string-array>
+    <string-array name="reason">
+        <item>Chọn lí do</item>
+        <item>Nghỉ trưa</item>
+        <item>Nghỉ trưa</item>
+        <item>Hết nguyên liệu</item>
+        <item>Số lượng đơn hàng quá lớn</item>
+        <item>Lý do khác</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    tools:context=".ChefVoucherFragment">
+    <TextView
+        android:fontFamily="@font/utmamerikasans"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Voucher"
+        android:gravity="center"
+        android:textSize="30dp"
+        style="@style/CustomAlertDialog"
+        />
+    <TableRow
+        android:id="@+id/hr"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+
+        android:background="@color/lightgray" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:orientation="horizontal"
+    >
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+            android:paddingRight="90dp"
+            android:id="@+id/tvVoucher"
+            android:textColor="@color/choose_a_tasty_dish_color"
+            android:text="Tăng doanh thu cho quán"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="+"
+            android:textSize="25dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/Red"
+            android:layout_toRightOf="@id/tvVoucher"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/CreateVoucher"
+            android:text="Tạo"
+            android:textColor="@color/Red"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/tvVoucher"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+    <LinearLayout
+        android:padding="5dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/linear2"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="vertical"
+        android:background="#FFF1E0"
+        android:paddingTop="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            >
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:textSize="15dp"
+                android:text="Tăng doanh thu cho quán"
+                />
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:text="Xem thêm >"
+                android:textSize="15dp"
+                android:gravity="right"
+                android:layout_marginLeft="50dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="Đăng kí tham gia Bộ sưu tập của BobeeFood ngay để tăng doanh thu cho quán" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="15dp"
+                android:layout_marginTop="12dp"
+                android:layout_margin="3dp"
+                android:textColor="@color/blueish"
+                android:text="cách thức hoạt động" />
+        </LinearLayout>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvInviteEvent"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+     >
+    </androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+
+        >
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/comming"
+            android:layout_width="116dp"
+            android:layout_height="30dp"
+            android:text="Đang đến"
+            android:fontFamily="@font/calibri_regular"
+            android:textStyle="bold"
+            android:background="#E4E0E0"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            />
+        <TextView
+            android:layout_width="116dp"
+            android:layout_height="30dp"
+            android:text="Chờ Xác nhận"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:background="#E4E0E0"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/calibri_regular"
+            />
+        <TextView
+            android:layout_width="116dp"
+            android:layout_height="30dp"
+            android:text="Hết hạn"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:background="#E4E0E0"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:fontFamily="@font/calibri_regular"
+            android:layout_margin="5dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_margin="10dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Tất cả"
+            android:textStyle="bold"
+            android:background="#E4E0E0"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableRight="@drawable/baseline_unfold_more_24"
+            />
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvVoucherDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>
+

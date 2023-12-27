@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/SwipeRevealLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:mode="same_level"
+    app:dragEdge="right"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:id="@+id/editButton"
+            android:text="Sửa"
+            android:background="@color/gradient_end_color"
+            android:gravity="center"
+            />
+        <TextView
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:id="@+id/deleteButton"
+            android:background="@color/Red"
+        android:text="Xóa"
+            android:gravity="center"
+        />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/CateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo"
+            android:scaleType="centerCrop"
+            android:id="@+id/ImageCategory"/>
+        <TextView
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:maxLines="1"
+            android:layout_below="@id/ImageCategory"
+            android:maxWidth="180dp"
+            android:layout_height="match_parent"
+            android:id="@+id/dish_cate"
+            android:text="Tên Thể loại"
+            android:padding="10dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</com.chauthai.swipereveallayout.SwipeRevealLayout>
