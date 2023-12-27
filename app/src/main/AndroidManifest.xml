@@ -26,6 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <activity android:name=".CustomerEditProfile"
+            android:exported="false"/>
         <activity
             android:name=".Chef.ChefActivity.ChefPhoneSendOTP"
             android:exported="false"/>
@@ -128,7 +130,7 @@
             android:label="Quên Mật khẩu" />
         <activity
             android:name=".Customerr.CustomerActivity.CustomerPassword"
-            android:label="Mật khẩu" />
+            android:theme="@style/AppTheme1"/>
         <activity android:name=".Customerr.CustomerActivity.OrderDish" />
         <activity
             android:name=".Chef.ChefActivity.Chef_Update_Delete_Dish"

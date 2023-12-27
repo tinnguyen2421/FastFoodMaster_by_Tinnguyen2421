@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import com.example.appfood_by_tinnguyen2421.CustomerFavoriteFragment;
-import com.example.appfood_by_tinnguyen2421.CustomerNotificationFragment;
+import com.example.appfood_by_tinnguyen2421.CustomerVoucherFragment;
 import com.example.appfood_by_tinnguyen2421.CustomerOrderTablayoutFragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerHomeFragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerProfileFragment;
@@ -110,7 +110,7 @@ public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implem
                break;
 
            case R.id.Track:
-                fragment = new CustomerNotificationFragment();
+                fragment = new CustomerVoucherFragment();
                 break;
 
 

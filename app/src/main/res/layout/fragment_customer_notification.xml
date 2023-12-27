@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerNotificationFragment">
+    tools:context=".CustomerVoucherFragment">
     <LinearLayout
         android:orientation="horizontal"
         android:id="@+id/ln1"
@@ -22,7 +22,7 @@
             />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvcart"
+        android:id="@+id/rcvNotify"
         android:layout_below="@+id/ln1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

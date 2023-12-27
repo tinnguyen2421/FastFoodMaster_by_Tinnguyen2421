@@ -20,8 +20,6 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.OrderDish;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Favorite;
 import com.example.appfood_by_tinnguyen2421.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +42,7 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
     DatabaseReference fvrtref,fvrt_listRef;
     Boolean mProcessLike =false;
 
-    public CustomerDishesAdapter(Context context, List<UpdateDishModel>updateDishModellist)
+    public CustomerDishesAdapter(Context context, List<UpdateDishModel> updateDishModellist)
     {
         this.updateDishModellist=updateDishModellist;
         this.mcontext=context;

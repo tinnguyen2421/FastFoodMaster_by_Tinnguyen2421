@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,7 +57,6 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
     String State, City, Sub,LocalAdd;
     DatabaseReference dataaa, databaseReference,databaseReference1;
     SwipeRefreshLayout swipeRefreshLayout;
-    SearchView searchView;
     EditText search;
     TextView diachii;
 
@@ -93,31 +91,28 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
               actionBar.hide();
           }
          }
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
-                dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Customer cust = dataSnapshot.getValue(Customer.class);
-                        State = cust.getState();
-                        City = cust.getCity();
-                        Sub = cust.getSuburban();
-                        LocalAdd= cust.getLocalAddress();
-                        diachii.setText(LocalAdd+","+Sub+","+City+","+State);
-                        customerCatemenu();
-                        customermenu();
+        swipeRefreshLayout.post(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+            dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Customer cust = dataSnapshot.getValue(Customer.class);
+                    State = cust.getState();
+                    City = cust.getCity();
+                    Sub = cust.getSuburban();
+                    LocalAdd= cust.getLocalAddress();
+                    diachii.setText(LocalAdd+","+Sub+","+City+","+State);
+                    customerCate();
+                    customerDishes();
 
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
-            }
+                }
+            });
         });
 
         //extra
@@ -165,9 +160,9 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
 
-        customermenu();
+        customerDishes();
     }
-    private void customerCatemenu() {
+    private void customerCate() {
         databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
@@ -192,7 +187,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
             }
         });
     }
-    private void customermenu() {
+    private void customerDishes() {
 
         swipeRefreshLayout.setRefreshing(true);
         databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Linear Layout 1 -->
+        <LinearLayout
+            android:id="@+id/CateLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+
+            <!-- Add your views for the first linear layout here -->
+            <ImageView
+                android:id="@+id/ImageCategory1"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/voucher"
+                android:scaleType="centerCrop" />
+            <TextView
+                android:id="@+id/VoucherValue"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:padding="10dp"
+                android:text="Giam 20000"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+
+        </LinearLayout>
+
+        <!-- Linear Layout 2 -->
+        <LinearLayout
+            android:id="@+id/CateLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Add your views for the second linear layout here -->
+            <TextView
+                android:id="@+id/VoucherName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:padding="10dp"
+                android:text="Tên khuyến mãi"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/DishApply"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:padding="10dp"
+                android:text="Món áp dụng"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:padding="10dp"
+                android:text="Tạo bởi Quán"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/VoucherDate"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left"
+                android:maxWidth="180dp"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:text="Ngày tạo"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

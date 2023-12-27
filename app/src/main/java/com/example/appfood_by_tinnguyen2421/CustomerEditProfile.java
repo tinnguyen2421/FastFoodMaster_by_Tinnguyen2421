@@ -1,11 +1,10 @@
 package com.example.appfood_by_tinnguyen2421;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,9 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefChangePassword;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPhonenumberAuth;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPassword;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPhonenumber;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
@@ -32,9 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChefEditProfile extends AppCompatActivity {
+public class CustomerEditProfile extends AppCompatActivity {
 
-    String[] TP_HCM = {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10", "Q11", "Q12", "Quận Tân Bình", "Quận Bình Tân", "Quận Phú Nhuận", "Quận Bình Thạnh"};
+    String[] TP_HCM = {"Q1", "Q2", "Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10","Q11","Q12","Quận Tân Bình","Quận Bình Tân","Quận Phú Nhuận","Quận Bình Thạnh"};
     String[] TP_HàNội = {"Quận Hoàn Kiếm", "Quận Ba Đình", "Quận Đống Đa"};
     String[] TiềnGiang = {"Huyện Chợ Gạo", "Huyện Tân Phú Đông", "Huyện Gò Công"};
 
@@ -43,7 +41,7 @@ public class ChefEditProfile extends AppCompatActivity {
             "Phường Tân Định", "Phường ĐaKao"};
 
 
-    String[] Q2 = {"Phường An Khánh", "Phường An Lợi Đông", " Phường An Phú", "PBình An", "Phường Bình Khánh", "Phường Bình Trưng Đông", "Phường Bình Trưng Tây", "Phường Cát Lái", "Phường Thạnh Mỹ Lợi", "Phường Thảo Điền", "Phường Thủ Thiêm"};
+    String[] Q2 = {"Phường An Khánh", "Phường An Lợi Đông", " Phường An Phú", "PBình An", "Phường Bình Khánh","Phường Bình Trưng Đông","Phường Bình Trưng Tây","Phường Cát Lái","Phường Thạnh Mỹ Lợi","Phường Thảo Điền","Phường Thủ Thiêm"};
     String[] Q3 = {"P1", "P2", "P3", "P4", "P5", "P9", "P10", "P11", "P12", "P13", "P14"};
 
     EditText firstname, lastname, address;
@@ -55,10 +53,11 @@ public class ChefEditProfile extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     String statee, cityy, suburban, email, passwordd, confirmpass;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chef_edit_profile);
+        setContentView(R.layout.activity_customer_edit_profile);
         firstname = findViewById(R.id.fnamee);
         lastname = findViewById(R.id.lnamee);
         address = findViewById(R.id.address);
@@ -70,17 +69,17 @@ public class ChefEditProfile extends AppCompatActivity {
         Update = findViewById(R.id.update);
         password = findViewById(R.id.passwordlayout);
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chef").child(userid);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final Chef chef = dataSnapshot.getValue(Chef.class);
-                firstname.setText(chef.getFname());
-                lastname.setText(chef.getLname());
-                address.setText(chef.getArea());
-                mobileno.setText(chef.getMobile());
-                Email.setText(chef.getEmailID());
-                State.setSelection(getIndexByString(State, chef.getState()));
+                final Customer customer = dataSnapshot.getValue(Customer.class);
+                firstname.setText(customer.getFirstName());
+                lastname.setText(customer.getLastName());
+                address.setText(customer.getLocalAddress());
+                mobileno.setText(customer.getMobileno());
+                Email.setText(customer.getEmailID());
+                State.setSelection(getIndexByString(State, customer.getState()));
                 State.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -91,7 +90,7 @@ public class ChefEditProfile extends AppCompatActivity {
                             for (String text : TP_HCM) {
                                 list.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, list);
                             City.setAdapter(arrayAdapter);
                         }
                         if (statee.equals("Thành Phố Hà Nội")) {
@@ -99,21 +98,21 @@ public class ChefEditProfile extends AppCompatActivity {
                             for (String text : TP_HàNội) {
                                 list.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, list);
 
                             City.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, chef.getCity()));
+                        City.setSelection(getIndexByString(City, customer.getCity()));
                         if (statee.equals("Tỉnh Tiền Giang")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TiềnGiang) {
                                 list.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, list);
 
                             City.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, chef.getCity()));
+                        City.setSelection(getIndexByString(City, customer.getCity()));
                     }
 
                     @Override
@@ -132,7 +131,7 @@ public class ChefEditProfile extends AppCompatActivity {
                             for (String text : Q1) {
                                 listt.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, listt);
                             Suburban.setAdapter(arrayAdapter);
                         }
 
@@ -141,7 +140,7 @@ public class ChefEditProfile extends AppCompatActivity {
                             for (String text : Q2) {
                                 listt.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, listt);
                             Suburban.setAdapter(arrayAdapter);
                         }
 
@@ -150,10 +149,10 @@ public class ChefEditProfile extends AppCompatActivity {
                             for (String text : Q3) {
                                 listt.add(text);
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, listt);
                             Suburban.setAdapter(arrayAdapter);
                         }
-                        Suburban.setSelection(getIndexByString(Suburban, chef.getSuburban()));
+                        Suburban.setSelection(getIndexByString(Suburban, customer.getSuburban()));
                     }
 
                     @Override
@@ -186,43 +185,36 @@ public class ChefEditProfile extends AppCompatActivity {
     }
 
     private void updateinformation() {
-
-
         Update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                data = FirebaseDatabase.getInstance().getReference("Chef").child(useridd);
+                data = FirebaseDatabase.getInstance().getReference("Customer").child(useridd);
                 data.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Customer customer = dataSnapshot.getValue(Customer.class);
-
-
                         confirmpass = customer.getConfirmPassword();
                         email = customer.getEmailID();
                         passwordd = customer.getPassword();
-                        long mobilenoo = Long.parseLong(customer.getMobileno());
-
-                        String Fname = firstname.getText().toString().trim();
+                        long mobilenoo = Long.parseLong(customer.getMobileno());String Fname = firstname.getText().toString().trim();
                         String Lname = lastname.getText().toString().trim();
                         String Address = address.getText().toString().trim();
-
                         HashMap<String, String> hashMappp = new HashMap<>();
-                        hashMappp.put("Area", Address);
                         hashMappp.put("City", cityy);
                         hashMappp.put("ConfirmPassword", confirmpass);
-                        hashMappp.put("FirstName", Fname);
                         hashMappp.put("EmailID", email);
-                        hashMappp.put("LastName", Lname);
+                        hashMappp.put("FirstName", Fname);
+                        hashMappp.put("LastName",Lname);
                         hashMappp.put("Mobileno", String.valueOf(mobilenoo));
                         hashMappp.put("Password", passwordd);
+                        hashMappp.put("LocalAddress", Address);
                         hashMappp.put("State", statee);
                         hashMappp.put("Suburban", suburban);
-                        firebaseDatabase.getInstance().getReference("Chef").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ChefEditProfile.this);
-                        Toast.makeText(ChefEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerEditProfile.this);
+                        Toast.makeText(CustomerEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -236,13 +228,21 @@ public class ChefEditProfile extends AppCompatActivity {
                 });
 
 
+
             }
+
+
+
         });
+
+
+
+
         password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ChefEditProfile.this, ChefChangePassword.class);
+                Intent intent = new Intent(CustomerEditProfile.this, CustomerPassword.class);
                 startActivity(intent);
             }
         });
@@ -251,11 +251,13 @@ public class ChefEditProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(ChefEditProfile.this, ChefPhonenumberAuth.class);
+                Intent i = new Intent(CustomerEditProfile.this, CustomerPhonenumber.class);
                 startActivity(i);
             }
         });
+
     }
+
     private int getIndexByString(Spinner st, String spist) {
         int index = 0;
         for (int i = 0; i < st.getCount(); i++) {
