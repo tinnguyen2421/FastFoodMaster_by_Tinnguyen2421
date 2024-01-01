@@ -25,6 +25,7 @@ import com.example.appfood_by_tinnguyen2421.ChefEditProfile;
 import com.example.appfood_by_tinnguyen2421.ChefOrdersHistory;
 import com.example.appfood_by_tinnguyen2421.ChefRevenue;
 import com.example.appfood_by_tinnguyen2421.CustomerEditProfile;
+import com.example.appfood_by_tinnguyen2421.CustomerOrdersHistory;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPassword;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPhonenumber;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
@@ -71,7 +72,7 @@ public class CustomerProfileFragment extends Fragment {
         History.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent( getActivity(), ChefOrdersHistory.class);
+                Intent intent=new Intent( getActivity(), CustomerOrdersHistory.class);
                 startActivity(intent);
             }
         });

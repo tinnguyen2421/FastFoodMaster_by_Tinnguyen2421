@@ -26,6 +26,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <activity android:name=".CustomerOrdersHistoryView"
+            android:exported="false"/>
+        <activity android:name=".CustomerOrdersHistory"
+            android:exported="false"/>
         <activity android:name=".CustomerEditProfile"
             android:exported="false"/>
         <activity

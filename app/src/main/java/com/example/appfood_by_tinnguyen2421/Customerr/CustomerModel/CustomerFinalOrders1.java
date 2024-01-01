@@ -3,7 +3,7 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class CustomerFinalOrders1 {
 
-    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,Status,Date,AceptDate;
+    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,Status,Date,AceptDate,ShippingDate;
 
     public String getDate() {
         return Date;
@@ -13,7 +13,15 @@ public class CustomerFinalOrders1 {
         Date = date;
     }
 
-    public CustomerFinalOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String status, String date,String aceptDate) {
+    public String getShippingDate() {
+        return ShippingDate;
+    }
+
+    public void setShippingDate(String shippingDate) {
+        ShippingDate = shippingDate;
+    }
+
+    public CustomerFinalOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String status, String date, String aceptDate, String shippingDate) {
         Address = address;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
@@ -23,6 +31,7 @@ public class CustomerFinalOrders1 {
         Status = status;
         Date=date;
         AceptDate=aceptDate;
+        ShippingDate=shippingDate;
     }
 
     public String getAceptDate() {

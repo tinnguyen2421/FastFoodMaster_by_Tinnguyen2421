@@ -104,82 +104,92 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                 Shipped.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
-                                            public void onSuccess(Void aVoid) {
-                                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        String usertoken = dataSnapshot.getValue(String.class);
-                                                        sendNotifications(usertoken, "Home Chef", "Cảm ơn bạn vì đã đặt đơn !", "ThankYou");
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                            }
-                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(Chefid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        String usertoken = dataSnapshot.getValue(String.class);
-                                                        sendNotifications(usertoken, "Đã giao hàng", "Đơn hàng của bạn đã được giao đến khách hàng", "Delivered");
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                            }
-                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(Delivery_ShippingOrder.this);
-                                                builder.setMessage("Đơn hàng đã được giao, Bây giờ bạn có thể xem các đơn hàng mới");
-                                                builder.setCancelable(false);
-                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-
-                                                        dialog.dismiss();
-                                                        Intent intent = new Intent(Delivery_ShippingOrder.this, Delivery_FoodPanelBottomNavigation.class);
-                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                        startActivity(intent);
-                                                        finish();
-
-
-                                                    }
-                                                });
-                                                AlertDialog alert = builder.create();
-                                                alert.show();
-                                            }
-                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                FirebaseDatabase.getInstance().getReference("DeliveryShipFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomuid).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            public void onSuccess(Void aVoid) {
+                                                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        String usertoken = dataSnapshot.getValue(String.class);
+                                                                        sendNotifications(usertoken, "Home Chef", "Cảm ơn bạn vì đã đặt đơn !", "ThankYou");
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(Chefid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        String usertoken = dataSnapshot.getValue(String.class);
+                                                                        sendNotifications(usertoken, "Đã giao hàng", "Đơn hàng của bạn đã được giao đến khách hàng", "Delivered");
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                AlertDialog.Builder builder = new AlertDialog.Builder(Delivery_ShippingOrder.this);
+                                                                builder.setMessage("Đơn hàng đã được giao, Bây giờ bạn có thể xem các đơn hàng mới");
+                                                                builder.setCancelable(false);
+                                                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                        dialog.dismiss();
+                                                                        Intent intent = new Intent(Delivery_ShippingOrder.this, Delivery_FoodPanelBottomNavigation.class);
+                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                        startActivity(intent);
+                                                                        finish();
+
+
+                                                                    }
+                                                                });
+                                                                AlertDialog alert = builder.create();
+                                                                alert.show();
+                                                            }
+                                                        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                                        FirebaseDatabase.getInstance().getReference("DeliveryShipFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomuid).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(userid).child("isOrdered").setValue("false");
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                FirebaseDatabase.getInstance().getReference("DeliveryShipFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomuid).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                                        FirebaseDatabase.getInstance().getReference("DeliveryShipFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomuid).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onSuccess(Void aVoid) {
+                                                                                                FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(userid).child("isOrdered").setValue("false");
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
                                                                             }
                                                                         });
                                                                     }
@@ -192,8 +202,10 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                                         });
                                     }
                                 });
+
                             }
                         });
+
                             }
                         });
 
