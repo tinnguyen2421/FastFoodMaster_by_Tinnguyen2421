@@ -199,7 +199,7 @@ public class CustomerCartFragment extends Fragment {
                                                                     hashMap.put("Price", cart1.getPrice());
                                                                     hashMap.put("TotalPrice", cart1.getTotalprice());
                                                                     FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").child(DishId).setValue(hashMap);
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(ChefId).child(RandomUId).child("OtherInformation").setValue(hashMap  );
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(ChefId).child(RandomUId).child("Dishes").setValue(hashMap  );
 
                                                                 }
                                                                 ref = FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("GrandTotal");
