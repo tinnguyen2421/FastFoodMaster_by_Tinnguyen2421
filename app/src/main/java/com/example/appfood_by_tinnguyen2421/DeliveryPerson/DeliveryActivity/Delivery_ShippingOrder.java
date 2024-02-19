@@ -107,7 +107,7 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                         FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {

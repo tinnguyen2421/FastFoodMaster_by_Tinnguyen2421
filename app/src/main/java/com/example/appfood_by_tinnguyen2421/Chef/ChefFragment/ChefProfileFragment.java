@@ -14,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.appfood_by_tinnguyen2421.ChefEditProfile;
-import com.example.appfood_by_tinnguyen2421.ChefRevenue;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefEditProfile;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefRevenue;
 import com.example.appfood_by_tinnguyen2421.MainMenu;
-import com.example.appfood_by_tinnguyen2421.ChefOrdersHistory;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefOrdersHistory;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 

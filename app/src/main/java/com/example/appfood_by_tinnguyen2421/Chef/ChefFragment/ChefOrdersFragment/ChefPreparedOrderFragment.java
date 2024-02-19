@@ -43,13 +43,7 @@ public class ChefPreparedOrderFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chefFinalOrders1List = new ArrayList<>();
-        if(chefFinalOrders1List.size()==0)
-        {
-            recyclerView.setBackgroundResource(R.drawable.empty_bill);
-        }
-        else {
-            ChefPrepareOrders();
-        }
+        ChefPrepareOrders();
         return v;
 
     }

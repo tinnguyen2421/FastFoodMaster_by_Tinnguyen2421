@@ -13,8 +13,8 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefHomeFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefPendingOrdersFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefProfileFragment;
 
-import com.example.appfood_by_tinnguyen2421.ChefOrderTablayoutFragment;
-import com.example.appfood_by_tinnguyen2421.ChefVoucherFragment;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrderTablayoutFragment;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefVoucherFragment;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

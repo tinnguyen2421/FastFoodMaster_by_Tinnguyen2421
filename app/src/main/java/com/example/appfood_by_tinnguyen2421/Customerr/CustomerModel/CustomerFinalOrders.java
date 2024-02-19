@@ -3,13 +3,13 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class CustomerFinalOrders {
 
-    private String ChefId,DishId,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice,UserId;
+    private String ChefId, DishID,DishName, Price,DishQuantity,RandomUID,TotalPrice,UserId;
 
     public CustomerFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
         ChefId = chefId;
-        DishId = dishId;
+        DishID = dishId;
         DishName = dishName;
-        DishPrice = dishPrice;
+        Price = dishPrice;
         DishQuantity = dishQuantity;
         RandomUID = randomUID;
         TotalPrice = totalPrice;
@@ -30,12 +30,12 @@ public class CustomerFinalOrders {
         ChefId = chefId;
     }
 
-    public String getDishId() {
-        return DishId;
+    public String getDishID() {
+        return DishID;
     }
 
-    public void setDishId(String dishId) {
-        DishId = dishId;
+    public void setDishID(String dishID) {
+        DishID = dishID;
     }
 
     public String getDishName() {
@@ -46,12 +46,12 @@ public class CustomerFinalOrders {
         DishName = dishName;
     }
 
-    public String getDishPrice() {
-        return DishPrice;
+    public String getPrice() {
+        return Price;
     }
 
-    public void setDishPrice(String dishPrice) {
-        DishPrice = dishPrice;
+    public void setPrice(String price) {
+        Price = price;
     }
 
     public String getDishQuantity() {

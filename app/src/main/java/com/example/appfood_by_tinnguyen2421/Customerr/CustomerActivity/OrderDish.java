@@ -349,7 +349,6 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 updateDishModelList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-
                         UpdateDishModel updateDishModel = snapshot1.getValue(UpdateDishModel.class);
                         if(Matl.equals(updateDishModel.getCateID())&&!TenMon.equals(updateDishModel.getDishes())) {
                             updateDishModelList.add(updateDishModel);

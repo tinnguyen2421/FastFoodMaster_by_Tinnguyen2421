@@ -48,7 +48,14 @@ public class ChefPendingOrdersFragment extends Fragment {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
         adapter = new ChefPendingOrdersAdapter(getContext(),chefPendingOrders1List);
         recyclerView.setAdapter(adapter);
+        if(chefPendingOrders1List.size()!=0)
+        {
+            cheforders();
 
+        }
+        else {
+            recyclerView.setBackgroundResource(R.drawable.empty);
+        }
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -60,13 +67,6 @@ public class ChefPendingOrdersFragment extends Fragment {
                 cheforders();
             }
         });
-        if(chefPendingOrders1List.size()==0)
-        {
-            recyclerView.setBackgroundResource(R.drawable.empty);
-        }
-        else {
-            cheforders();
-        }
         return v;
     }
 

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -198,13 +200,8 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                                                                                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                                                         @Override
                                                                                         public void onClick(DialogInterface dialog, int which) {
-
                                                                                             dialog.dismiss();
-                                                                                            Intent b = new Intent(ChefPreparedOrderView.this, ChefPreparedOrderFragment.class);
-                                                                                            startActivity(b);
                                                                                             finish();
-
-
                                                                                         }
                                                                                     });
                                                                                     AlertDialog alert = builder.create();

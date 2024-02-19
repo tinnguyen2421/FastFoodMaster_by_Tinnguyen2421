@@ -197,9 +197,10 @@ public class CustomerCartFragment extends Fragment {
                                                                     hashMap.put("DishName", cart1.getDishName());
                                                                     hashMap.put("DishQuantity", cart1.getDishQuantity());
                                                                     hashMap.put("Price", cart1.getPrice());
+                                                                    hashMap.put("RandomUID",RandomUId);
                                                                     hashMap.put("TotalPrice", cart1.getTotalprice());
                                                                     FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").child(DishId).setValue(hashMap);
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(ChefId).child(RandomUId).child("Dishes").setValue(hashMap  );
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").setValue(hashMap);
 
                                                                 }
                                                                 ref = FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("GrandTotal");
@@ -216,10 +217,11 @@ public class CustomerCartFragment extends Fragment {
                                                                         hashMap1.put("Address", address);
                                                                         hashMap1.put("GrandTotalPrice", String.valueOf(grandtotal));
                                                                         hashMap1.put("MobileNumber", customer.getMobileno());
+                                                                        hashMap1.put("RandomUID",RandomUId);
                                                                         hashMap1.put("Name", customer.getFirstName() + " " + customer.getLastName());
                                                                         hashMap1.put("Note", Addnote);
                                                                         hashMap1.put("OrderDate", formattedDateTime);
-                                                                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(ChefId).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {

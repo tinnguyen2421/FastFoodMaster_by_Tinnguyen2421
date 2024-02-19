@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical"
-    tools:context=".ChefVoucherFragment">
+    tools:context=".Chef.ChefFragment.ChefVoucherFragment">
     <TextView
         android:fontFamily="@font/utmamerikasans"
         android:layout_width="match_parent"

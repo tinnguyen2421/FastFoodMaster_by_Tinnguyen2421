@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -163,9 +165,10 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                                                                                                 @Override
                                                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                                                     dialog.dismiss();
-                                                                                                    Intent b = new Intent(ChefOrdertobePrepareView.this, ChefOrderTobePreparedFragment.class);
-                                                                                                    startActivity(b);
+                                                                                                    //Intent b = new Intent(ChefOrdertobePrepareView.this, ChefOrderTobePreparedFragment.class);
+                                                                                                    //startActivity(b);
                                                                                                     finish();
+
                                                                                                 }
                                                                                             });
                                                                                             AlertDialog alert = builder.create();

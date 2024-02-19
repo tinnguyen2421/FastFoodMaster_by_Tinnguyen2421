@@ -12,9 +12,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
-import com.example.appfood_by_tinnguyen2421.CustomerFavoriteFragment;
-import com.example.appfood_by_tinnguyen2421.CustomerVoucherFragment;
-import com.example.appfood_by_tinnguyen2421.CustomerOrderTablayoutFragment;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerFavoriteFragment;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerVoucherFragment;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerOrderTablayoutFragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerHomeFragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerProfileFragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerOrdersFragment.CustomerTrackFragment;

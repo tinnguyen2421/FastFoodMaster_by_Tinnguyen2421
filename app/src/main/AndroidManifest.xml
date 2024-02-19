@@ -26,11 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".CustomerOrdersHistoryView"
+        <activity android:name=".Customerr.CustomerActivity.CustomerOrdersHistoryView"
             android:exported="false"/>
-        <activity android:name=".CustomerOrdersHistory"
+        <activity android:name=".Customerr.CustomerActivity.CustomerOrdersHistory"
             android:exported="false"/>
-        <activity android:name=".CustomerEditProfile"
+        <activity android:name=".Customerr.CustomerActivity.CustomerEditProfile"
             android:exported="false"/>
         <activity
             android:name=".Chef.ChefActivity.ChefPhoneSendOTP"
@@ -42,19 +42,19 @@
             android:name=".Chef.ChefActivity.ChefChangePassword"
             android:exported="false"/>
         <activity
-            android:name=".ChefEditProfile"
+            android:name=".Chef.ChefActivity.ChefEditProfile"
             android:exported="false" />
         <activity
-            android:name=".ChefRevenue"
+            android:name=".Chef.ChefActivity.ChefRevenue"
             android:exported="false" />
         <activity
-            android:name=".ChefOrdersHistoryView"
+            android:name=".Chef.ChefActivity.ChefOrdersHistoryView"
             android:exported="false" />
         <activity
-            android:name=".ChefOrdersHistory"
+            android:name=".Chef.ChefActivity.ChefOrdersHistory"
             android:exported="false" />
         <activity
-            android:name=".Chef_Update_Cate"
+            android:name=".Chef.ChefActivity.Chef_Update_Cate"
             android:exported="false" />
         <activity
             android:name=".Chef.ChefActivity.ChefDishes"
@@ -114,12 +114,6 @@
         <activity
             android:name=".Customerr.CustomerActivity.CustomerPayment"
             android:label="Đơn hàng cần thanh toán" />
-        <activity
-            android:name=".Customerr.CustomerActivity.PayableOrders"
-            android:label="Thanh toán đơn hàng" />
-        <activity
-            android:name=".Customerr.CustomerActivity.PendingOrders"
-            android:label="Đơn hàng đang chờ" />
         <activity
             android:name=".Chef.ChefActivity.Chef_order_dishes"
             android:label="Đơn hàng" />

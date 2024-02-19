@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefOrderTobePreparedFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefPendingOrdersFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefPreparedOrderFragment;
-import com.example.appfood_by_tinnguyen2421.ChefOrderTablayoutFragment;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrderTablayoutFragment;
 
 public class ChefOrdersViewPagerAdapter extends FragmentStateAdapter {
     public ChefOrdersViewPagerAdapter(@NonNull ChefOrderTablayoutFragment fragmentActivity) {
