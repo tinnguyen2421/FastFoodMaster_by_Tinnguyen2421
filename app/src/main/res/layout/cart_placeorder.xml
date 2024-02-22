@@ -3,89 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     app:cardUseCompatPadding="true"
     android:background="#fff"
     app:cardCornerRadius="15dp"
     app:cardElevation="8dp"
     app:contentPadding="5dp">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <!-- LinearLayout 1 -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
-
+            android:orientation="vertical"
+           >
 
             <TextView
                 android:id="@+id/Dishname"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:textColor="@color/Blacklogo"
                 android:maxWidth="300dp"
                 android:text="Gà rán "
                 android:textSize="25dp" />
+            <ImageView
+                android:padding="10dp"
+                android:id="@+id/ImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/logo"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right">
+                android:contentDescription="description"/>
 
-                <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                    android:id="@+id/elegantbtn"
-                    android:layout_width="75dp"
-                  android:layout_marginRight="10dp"
-                    app:backgroundDrawable="@drawable/elegant_btnshape"
-                    android:layout_height="25dp"
-                    android:layout_gravity="bottom"
-                     />
-            </LinearLayout>
         </LinearLayout>
-
+        <!-- LinearLayout 2 -->
         <LinearLayout
+            android:padding="15dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:gravity="right"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/pricers"
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            >
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                android:id="@+id/elegantbtn"
+                android:layout_width="75dp"
+                app:backgroundDrawable="@drawable/elegant_btnshape"
+                android:layout_height="25dp"
+                android:layout_gravity="right"
+                />
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:text="Giá :50.000 Vnđ"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:id="@+id/pricers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:text="Giá :50.000 Vnđ"
+                    android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/qty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:gravity="end"
+                    android:text="x 3"
+                    android:textSize="18sp" />
+            </LinearLayout>
             <TextView
-                android:id="@+id/qty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:gravity="end"
-                android:text="x 3"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <TextView
             android:id="@+id/totalrs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="8dp"
-            android:gravity="right"
-            android:text="Tổng tiền: 150.000 VNĐ"
+            android:gravity="left"
+            android:text="Tổng tiền: 150.000 đ"
             android:textSize="18sp"></TextView>
 
+
+            <!-- Other Views in LinearLayout 2 -->
+
+        </LinearLayout>
+
     </LinearLayout>
+
+
 
 </androidx.cardview.widget.CardView>

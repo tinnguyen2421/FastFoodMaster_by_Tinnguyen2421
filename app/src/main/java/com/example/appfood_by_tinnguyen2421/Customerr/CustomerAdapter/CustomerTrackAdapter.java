@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -18,10 +19,10 @@ import java.util.List;
 public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdapter.ViewHolder> {
 
     private Context context;
-    private List<CustomerFinalOrders> customerFinalOrderslist;
+    private List<CustomerPaymentOrders> customerPaymentOrdersList;
 
-    public CustomerTrackAdapter(Context context, List<CustomerFinalOrders> customerFinalOrderslist) {
-        this.customerFinalOrderslist = customerFinalOrderslist;
+    public CustomerTrackAdapter(Context context, List<CustomerPaymentOrders> customerPaymentOrdersList) {
+        this.customerPaymentOrdersList = customerPaymentOrdersList;
         this.context = context;
     }
 
@@ -35,28 +36,29 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final CustomerFinalOrders customerFinalOrders = customerFinalOrderslist.get(position);
-        holder.Dishname.setText(customerFinalOrders.getDishName());
-        holder.Quantity.setText(customerFinalOrders.getDishQuantity() + "× ");
-        holder.Totalprice.setText( customerFinalOrders.getTotalPrice()+"đ");
+        final CustomerPaymentOrders customerFinalOrders = customerPaymentOrdersList.get(position);
+        holder.dishName.setText(customerFinalOrders.getDishName());
+        holder.dishQuantity.setText(customerFinalOrders.getDishQuantity() + "× ");
+        holder.totalPrice.setText( customerFinalOrders.getTotalPrice()+"đ");
 
     }
 
     @Override
     public int getItemCount() {
-        return customerFinalOrderslist.size();
+        return customerPaymentOrdersList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView Dishname, Quantity, Totalprice;
+        TextView dishName, dishQuantity, dishPrice, totalPrice;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            Dishname = itemView.findViewById(R.id.dishnm);
-            Quantity = itemView.findViewById(R.id.dishqty);
-            Totalprice = itemView.findViewById(R.id.totRS);
+            dishName = itemView.findViewById(R.id.DishName);
+            dishPrice =itemView.findViewById(R.id.DishPrice);
+            dishQuantity = itemView.findViewById(R.id.DishQuantity);
+            totalPrice = itemView.findViewById(R.id.TotalPrice);
         }
     }
 }

@@ -2,8 +2,8 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.Customer
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +23,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPaymentOTP;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerCartAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Cart;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPendingOrders;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPendingOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
@@ -48,7 +47,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -64,11 +62,13 @@ public class CustomerCartFragment extends Fragment {
     RecyclerView recyclecart;
     private List<Cart> cartModelList;
     private CustomerCartAdapter adapter;
-    private LinearLayout TotalBtns;
+    private LinearLayout TotalBtns,payment;
     DatabaseReference databaseReference, data, reference, ref, getRef, dataa;
     public static TextView grandt;
     Button remove, placeorder;
+    RadioGroup radioGroup;
     String address, Addnote;
+    RadioButton onlinePayment,cashPayment;
     String DishId, RandomUId, ChefId;
     private ProgressDialog progressDialog;
     private APIService apiService;
@@ -85,6 +85,10 @@ public class CustomerCartFragment extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         cartModelList = new ArrayList<>();
+        payment=v.findViewById(R.id.Payment);
+        radioGroup = v.findViewById(R.id.radioGroupPayment);
+        cashPayment = v.findViewById(R.id.CashPayment);
+        onlinePayment = v.findViewById(R.id.OnlinePayment);
         grandt = v.findViewById(R.id.GT);
         remove = v.findViewById(R.id.RM);
         placeorder = v.findViewById(R.id.PO);
@@ -93,7 +97,6 @@ public class CustomerCartFragment extends Fragment {
         customercart();
         return v;
     }
-
     private void customercart() {
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -104,14 +107,15 @@ public class CustomerCartFragment extends Fragment {
                 cartModelList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Cart cart = snapshot.getValue(Cart.class);
-
                     cartModelList.add(cart);
                 }
                 if (cartModelList.size() == 0) {
                     TotalBtns.setVisibility(View.INVISIBLE);
+                    payment.setVisibility(View.INVISIBLE);
                     recyclecart.setBackgroundResource(R.drawable.empty_cart);
                 } else {
                     TotalBtns.setVisibility(View.VISIBLE);
+                    payment.setVisibility(View.VISIBLE);
                     remove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -143,213 +147,170 @@ public class CustomerCartFragment extends Fragment {
                             placeorder.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isOrdered").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            String ss = "";
-                                            if (dataSnapshot.exists()) {
-                                                ss = dataSnapshot.getValue(String.class);
-                                            }
-                                            if (ss.trim().equalsIgnoreCase("false") || ss.trim().equalsIgnoreCase("")) {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                builder.setTitle("Nhập địa chỉ");
-                                                LayoutInflater inflater = getActivity().getLayoutInflater();
-                                                View view = inflater.inflate(R.layout.enter_address, null);
-                                                final EditText localaddress = (EditText) view.findViewById(R.id.LA);
-                                                final EditText addnote = (EditText) view.findViewById(R.id.addnote);
-                                                RadioGroup group = (RadioGroup) view.findViewById(R.id.grp);
-                                                final RadioButton home = (RadioButton) view.findViewById(R.id.HA);
-                                                final RadioButton other = (RadioButton) view.findViewById(R.id.OA);
-                                                builder.setView(view);
-                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                                    if(selectedId==-1)
+                                    {
+                                        Toast.makeText(getContext(), "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                            if(cashPayment.isChecked())
+                                            {
+                                                FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isOrdered").addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
-                                                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                                        if (home.isChecked()) {
-                                                            localaddress.setText(customer.getLocalAddress() + ", " + customer.getSuburban());
-                                                        } else if (other.isChecked()) {
-                                                            localaddress.getText().clear();
-                                                            Toast.makeText(getContext(), "Kiểm tra", Toast.LENGTH_SHORT).show();
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        String ss = "";
+                                                        if (dataSnapshot.exists()) {
+                                                            ss = dataSnapshot.getValue(String.class);
+                                                        }
+                                                        if (ss.trim().equalsIgnoreCase("false") || ss.trim().equalsIgnoreCase("")) {
+                                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                            builder.setTitle("Nhập địa chỉ");
+                                                            LayoutInflater inflater = getActivity().getLayoutInflater();
+                                                            View view = inflater.inflate(R.layout.enter_address, null);
+                                                            final EditText localaddress = (EditText) view.findViewById(R.id.LA);
+                                                            final EditText addnote = (EditText) view.findViewById(R.id.addnote);
+                                                            RadioGroup group = (RadioGroup) view.findViewById(R.id.grp);
+                                                            final RadioButton home = (RadioButton) view.findViewById(R.id.HA);
+                                                            final RadioButton other = (RadioButton) view.findViewById(R.id.OA);
+                                                            builder.setView(view);
+                                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                @Override
+                                                                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                                                    if (home.isChecked()) {
+                                                                        localaddress.setText(customer.getLocalAddress() + ", " + customer.getSuburban());
+                                                                    } else if (other.isChecked()) {
+                                                                        localaddress.getText().clear();
+                                                                        Toast.makeText(getContext(), "Kiểm tra", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
+                                                            builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    progressDialog.setMessage("Vui lòng đợi ...");
+                                                                    progressDialog.show();
+                                                                    reference = FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                                                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            RandomUId = UUID.randomUUID().toString();
+                                                                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                                                final Cart cart1 = dataSnapshot1.getValue(Cart.class);
+                                                                                DishId = cart1.getDishID();
+                                                                                ChefId=cart1.getChefID();
+                                                                                address = localaddress.getText().toString().trim();
+                                                                                Addnote = addnote.getText().toString().trim();
+                                                                                final HashMap<String, String> hashMap = new HashMap<>();
+                                                                                hashMap.put("ChefID", ChefId);
+                                                                                hashMap.put("DishID", cart1.getDishID());
+                                                                                hashMap.put("DishName", cart1.getDishName());
+                                                                                hashMap.put("DishQuantity", cart1.getDishQuantity());
+                                                                                hashMap.put("DishPrice", cart1.getDishPrice());
+                                                                                hashMap.put("RandomUID",RandomUId);
+                                                                                hashMap.put("TotalPrice", cart1.getTotalPrice());
+                                                                                hashMap.put("UserID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                                                                hashMap.put("ImageURL", cart1.getImageURL());
+                                                                                FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").child(DishId).setValue(hashMap);
+                                                                                FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(ChefId).child(RandomUId).child("Dishes").child(DishId).setValue(hashMap);
+
+                                                                            }
+                                                                            ref = FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("GrandTotal");
+                                                                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                    LocalDateTime currentDateTime = LocalDateTime.now();
+
+                                                                                    // Định dạng ngày giờ thành chuỗi nếu cần
+                                                                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm, dd/MM/yyyy");
+                                                                                    String formattedDateTime = currentDateTime.format(formatter);
+                                                                                    String grandtotal = dataSnapshot.getValue(String.class);
+                                                                                    HashMap<String, String> hashMap1 = new HashMap<>();
+                                                                                    hashMap1.put("Address", address);
+                                                                                    hashMap1.put("GrandTotalPrice", String.valueOf(grandtotal));
+                                                                                    hashMap1.put("MobileNumber", customer.getMobileno());
+                                                                                    hashMap1.put("RandomUID",RandomUId);
+                                                                                    hashMap1.put("Name", customer.getFirstName() + " " + customer.getLastName());
+                                                                                    hashMap1.put("Note", Addnote);
+                                                                                    hashMap1.put("OrderDate", formattedDateTime);
+                                                                                    hashMap1.put("PaymentMethod", String.valueOf(radioGroup.getCheckedRadioButtonId()));
+                                                                                    hashMap1.put("OrderStatus","Chờ xác nhận...");
+                                                                                    FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void unused) {
+                                                                                            FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(ChefId).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                @Override
+                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                    FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                        @Override
+                                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                                            FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                                @Override
+                                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                    FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isOrdered").setValue("true").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                        @Override
+                                                                                                                        public void onSuccess(Void unused) {
+                                                                                                                            FirebaseDatabase.getInstance().getReference().child("Tokens").child(ChefId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                                                                @Override
+                                                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                                                                                                    String usertoken = dataSnapshot.getValue(String.class);
+                                                                                                                                    sendNotifications(usertoken, "Đơn hàng mới", "Bạn có đơn hàng mới", "Order");
+                                                                                                                                    progressDialog.dismiss();
+                                                                                                                                    ReusableCodeForAll.ShowAlert(getContext(), "", "Đơn hàng của bạn đang chờ cửa hàng duyệt");
+                                                                                                                                }
+                                                                                                                                @Override
+                                                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+                                                                                                    });
+                                                                                                }
+                                                                                            });
+                                                                                        }
+                                                                                    });
+                                                                                }
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        }
+                                                                    });
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });
+                                                            builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });
+                                                            AlertDialog aler = builder.create();
+                                                            aler.show();
+                                                        } else {
+                                                            ReusableCodeForAll.ShowAlert(getContext(), "Lỗi", "Oops ! có vẻ bạn đã có một đơn đặt hàng rồi nên bạn không được đặt đơn khác cho đến khi đơn hàng đầu tiên được giao ");
                                                         }
                                                     }
-                                                });
-                                                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-
-
-                                                        progressDialog.setMessage("Vui lòng đợi ...");
-                                                        progressDialog.show();
-
-                                                        reference = FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                RandomUId = UUID.randomUUID().toString();
-                                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                                                    final Cart cart1 = dataSnapshot1.getValue(Cart.class);
-                                                                    DishId = cart1.getDishID();
-                                                                    ChefId=cart1.getChefId();
-                                                                    address = localaddress.getText().toString().trim();
-                                                                    Addnote = addnote.getText().toString().trim();
-                                                                    final HashMap<String, String> hashMap = new HashMap<>();
-                                                                    hashMap.put("ChefId", ChefId);
-                                                                    hashMap.put("DishID", cart1.getDishID());
-                                                                    hashMap.put("DishName", cart1.getDishName());
-                                                                    hashMap.put("DishQuantity", cart1.getDishQuantity());
-                                                                    hashMap.put("Price", cart1.getPrice());
-                                                                    hashMap.put("RandomUID",RandomUId);
-                                                                    hashMap.put("TotalPrice", cart1.getTotalprice());
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").child(DishId).setValue(hashMap);
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes").setValue(hashMap);
-
-                                                                }
-                                                                ref = FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("GrandTotal");
-                                                                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                        LocalDateTime currentDateTime = LocalDateTime.now();
-
-                                                                        // Định dạng ngày giờ thành chuỗi nếu cần
-                                                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm, dd/MM/yyyy");
-                                                                        String formattedDateTime = currentDateTime.format(formatter);
-                                                                        String grandtotal = dataSnapshot.getValue(String.class);
-                                                                        HashMap<String, String> hashMap1 = new HashMap<>();
-                                                                        hashMap1.put("Address", address);
-                                                                        hashMap1.put("GrandTotalPrice", String.valueOf(grandtotal));
-                                                                        hashMap1.put("MobileNumber", customer.getMobileno());
-                                                                        hashMap1.put("RandomUID",RandomUId);
-                                                                        hashMap1.put("Name", customer.getFirstName() + " " + customer.getLastName());
-                                                                        hashMap1.put("Note", Addnote);
-                                                                        hashMap1.put("OrderDate", formattedDateTime);
-                                                                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                                                                        FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                            @Override
-                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                    @Override
-                                                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                                                        getRef = FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("Dishes");
-                                                                                                        getRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                                            @Override
-                                                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                                                                                                for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
-                                                                                                                    final CustomerPendingOrders customerPendingOrders = dataSnapshot2.getValue(CustomerPendingOrders.class);
-                                                                                                                    String d = customerPendingOrders.getDishID();
-                                                                                                                    String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                                                                                    ChefId = customerPendingOrders.getChefId();
-                                                                                                                    final HashMap<String, String> hashMap2 = new HashMap<>();
-                                                                                                                    hashMap2.put("ChefId", ChefId);
-                                                                                                                    hashMap2.put("DishId", customerPendingOrders.getDishID());
-                                                                                                                    hashMap2.put("DishName", customerPendingOrders.getDishName());
-                                                                                                                    hashMap2.put("DishQuantity", customerPendingOrders.getDishQuantity());
-                                                                                                                    hashMap2.put("Price", customerPendingOrders.getPrice());
-                                                                                                                    hashMap2.put("RandomUID", RandomUId);
-                                                                                                                    hashMap2.put("TotalPrice", customerPendingOrders.getTotalPrice());
-                                                                                                                    hashMap2.put("UserId", userid);
-                                                                                                                    FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(ChefId).child(RandomUId).child("Dishes").child(d).setValue(hashMap2);
-                                                                                                                }
-                                                                                                                dataa = FirebaseDatabase.getInstance().getReference("CustomerPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId).child("OtherInformation");
-                                                                                                                dataa.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                                                    @Override
-                                                                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                                                        CustomerPendingOrders1 customerPendingOrders1 = dataSnapshot.getValue(CustomerPendingOrders1.class);
-                                                                                                                        HashMap<String, String> hashMap3 = new HashMap<>();
-                                                                                                                        hashMap3.put("Address", customerPendingOrders1.getAddress());
-                                                                                                                        hashMap3.put("GrandTotalPrice", customerPendingOrders1.getGrandTotalPrice());
-                                                                                                                        hashMap3.put("MobileNumber", customerPendingOrders1.getMobileNumber());
-                                                                                                                        hashMap3.put("Name", customerPendingOrders1.getName());
-                                                                                                                        hashMap3.put("Note", customerPendingOrders1.getNote());
-                                                                                                                        hashMap3.put("RandomUID", RandomUId);
-                                                                                                                        hashMap3.put("CurrentDateTime", formattedDateTime);
-                                                                                                                        FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(ChefId).child(RandomUId).child("OtherInformation").setValue(hashMap3).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                            @Override
-                                                                                                                            public void onSuccess(Void aVoid) {
-
-                                                                                                                                FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isOrdered").setValue("true").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                                    @Override
-                                                                                                                                    public void onSuccess(Void aVoid) {
-
-                                                                                                                                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(ChefId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                                                                            @Override
-                                                                                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                                                                                String usertoken = dataSnapshot.getValue(String.class);
-                                                                                                                                                sendNotifications(usertoken, "Đơn hàng mới", "Bạn có đơn hàng mới", "Order");
-                                                                                                                                                progressDialog.dismiss();
-                                                                                                                                                ReusableCodeForAll.ShowAlert(getContext(), "", "Đơn hàng của bạn đã được chuyển sang trạng thái Đang chờ xử lý, vui lòng đợi cho đến khi cửa hàng chấp nhận đơn hàng của bạn");
-                                                                                                                                            }
-                                                                                                                                            @Override
-                                                                                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                                                                                                            }
-                                                                                                                                        });
-                                                                                                                                    }
-                                                                                                                                });
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-
-                                                                                                                    @Override
-                                                                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                                                                    }
-                                                                                                                });
-//                                                                                                            }
-                                                                                                            }
-
-                                                                                                            @Override
-                                                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                                                            }
-                                                                                                        });
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        });
-
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                                    }
-                                                                });
-//                                                                }
-                                                            }
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-                                                        dialog.dismiss();
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
                                                     }
                                                 });
-                                                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                                AlertDialog aler = builder.create();
-                                                aler.show();
-                                            } else {
-                                                ReusableCodeForAll.ShowAlert(getContext(), "Lỗi", "Oops ! có vẻ bạn đã có một đơn đặt hàng rồi nên bạn không được đặt đơn khác cho đến khi đơn hàng đầu tiên được giao ");
                                             }
-                                        }
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        }
-                                    });
+                                            else if (onlinePayment.isChecked()){
+                                                Intent intent =new Intent(getContext(), CustomerPaymentOTP.class);
+                                                intent.putExtra("RandomUID",RandomUId);
+                                                startActivity(intent);
+                                            }
 
-                                }
+                                        }
+                                    }
                             });
                         }
                         @Override
@@ -368,8 +329,6 @@ public class CustomerCartFragment extends Fragment {
         });
 
     }
-
-
     private void sendNotifications(String usertoken, String title, String message, String order) {
 
         Data data = new Data(title, message, order);

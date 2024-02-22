@@ -13,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -228,8 +227,8 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
-                dish.getEditText().setText( updateDishModel.getDishes());
-                pri.getEditText().setText(updateDishModel.getPrice());
+                dish.getEditText().setText( updateDishModel.getDishName());
+                pri.getEditText().setText(updateDishModel.getDishPrice());
                 Glide.with(Chef_Update_Delete_Dish.this).load(updateDishModel.getImageURL()).into(imageButton);
                 dburi = updateDishModel.getImageURL();
                 desc.getEditText().setText(updateDishModel.getDescription());
@@ -241,7 +240,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
                 {
                     discountSwitch.setChecked(true);
                     disc.getEditText().setText(updateDishModel.getReducePrice());
-                    dishCountPercent.setText("Giảm "+updateDishModel.getPercentDecrease()+"%");
+                    dishCountPercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
                 }
                 else
                 {

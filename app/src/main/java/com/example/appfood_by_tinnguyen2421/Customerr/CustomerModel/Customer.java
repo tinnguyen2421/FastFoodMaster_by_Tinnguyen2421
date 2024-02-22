@@ -13,7 +13,7 @@ public class Customer {
 
     public Customer(String City, String confirmPassword, String emailID, String firstName, String lastName, String mobileno, String password, String state, String suburban, String localAddress) {
         this.City = City;
-       ConfirmPassword=confirmPassword;
+        ConfirmPassword=confirmPassword;
         EmailID = emailID;
         FirstName=firstName;
         LastName=lastName;

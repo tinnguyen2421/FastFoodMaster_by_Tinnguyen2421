@@ -44,10 +44,10 @@ public class ChefDishAdapter extends RecyclerView.Adapter<ChefDishAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final UpdateDishModel updateDishModel = updateDishModellist.get(position);
-        holder.dishes.setText(updateDishModel.getDishes());
+        holder.dishes.setText(updateDishModel.getDishName());
         holder.saleCost.setText(updateDishModel.getReducePrice());
-        holder.cost.setText(updateDishModel.getPrice());
-        holder.titlePercent.setText("Giảm "+updateDishModel.getPercentDecrease()+"%");
+        holder.cost.setText(updateDishModel.getDishPrice());
+        holder.titlePercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
         Glide.with(mcont).load(updateDishModel.getImageURL()).into(holder.imgCate);
         updateDishModel.getRandomUID();
         if(updateDishModel.getOnSale().equals("true"))

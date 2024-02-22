@@ -100,9 +100,9 @@ public class CustomerPayableOrdersFragment extends Fragment {
                                     payment.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent = new Intent(getContext(), CustomerPayment.class);
-                                            intent.putExtra("RandomUID", randomuid);
-                                            startActivity(intent);
+                                            //Intent intent = new Intent(getContext(), CustomerPayment.class);
+                                            //intent.putExtra("RandomUID", randomuid);
+                                            //startActivity(intent);
                                             //finish();
                                         }
                                     });

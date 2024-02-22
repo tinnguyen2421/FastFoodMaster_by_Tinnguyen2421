@@ -107,16 +107,16 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                         FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Giao hàng thành công").addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("ShippingDate").setValue(formattedDateTime).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(Chefid).child(randomuid).child("OtherInformation").child("Status").setValue("Giao hàng thành công").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Đơn hàng đã được giao").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(randomuid).child("OtherInformation").child("Status").setValue("Giao hàng thành công").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
                                                             public void onSuccess(Void aVoid) {
                                                                 FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {

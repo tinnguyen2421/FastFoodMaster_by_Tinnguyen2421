@@ -41,8 +41,8 @@ public class ChefOrderDishesAdapter extends RecyclerView.Adapter<ChefOrderDishes
         final ChefPendingOrders chefPendingOrders = chefPendingOrderslist.get(position);
         holder.dishname.setText(position+1+"."+chefPendingOrders.getDishName());
         //holder.price.setText("Giá: " + chefPendingOrders.getPrice()+"đ");
-        if (chefPendingOrders != null && chefPendingOrders.getPrice() != null) {
-            String priceString = chefPendingOrders.getPrice();
+        if (chefPendingOrders != null && chefPendingOrders.getDishPrice() != null) {
+            String priceString = chefPendingOrders.getDishPrice();
 
             // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
             String priceWithoutComma = priceString.replace(",", "").trim();

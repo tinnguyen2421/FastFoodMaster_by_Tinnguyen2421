@@ -51,7 +51,6 @@ public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerO
             public void onClick(View view) {
                 Intent intent=new Intent(context, CustomerOrdersHistoryView.class);
                 intent.putExtra("RandomUIDD",customerFinalOrders1.getRandomUID());
-                Log.d("Demooooo", "onClick: "+customerFinalOrders1.getRandomUID());
                 context.startActivity(intent);
             }
         });

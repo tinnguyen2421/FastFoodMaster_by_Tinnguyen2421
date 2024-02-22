@@ -60,10 +60,10 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
 
         final UpdateDishModel updateDishModel=updateDishModellist.get(position);
         Glide.with(mcontext).load(updateDishModel.getImageURL()).into(holder.imageView);
-        holder.Dishname.setText(updateDishModel.getDishes());
+        holder.Dishname.setText(updateDishModel.getDishName());
         updateDishModel.getRandomUID();
-        updateDishModel.getChefId();
-        double price=Double.parseDouble(updateDishModel.getPrice());
+        updateDishModel.getChefID();
+        double price=Double.parseDouble(updateDishModel.getDishPrice());
         double priceReduce=Double.parseDouble(updateDishModel.getReducePrice());
         DecimalFormat decimalFormat=new DecimalFormat("#,###,###,###");
         String FormatPrice=decimalFormat.format(price);
@@ -71,7 +71,7 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
         holder.price.setText(FormatPrice+"đ");
         holder.priceReduce.setText(FormatPriceReduce+"đ");
         holder.priceReduce.setTextColor(Color.RED);
-        holder.tittle.setText("Giảm "+updateDishModel.getPercentDecrease()+"%");
+        holder.tittle.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
         if(updateDishModel.getOnSale().equals("true"))
         {
             holder.tittle.setVisibility(View.VISIBLE);
@@ -90,10 +90,10 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
 
                 Intent intent=new Intent(mcontext, OrderDish.class);
                 intent.putExtra("FoodMenu"  ,updateDishModel.getRandomUID());
-                intent.putExtra("ChefId",updateDishModel.getChefId());
+                intent.putExtra("ChefId",updateDishModel.getChefID());
 
                 intent.putExtra("CateID",updateDishModel.getCateID());
-                intent.putExtra("TenMon",updateDishModel.getDishes());
+                intent.putExtra("TenMon",updateDishModel.getDishName());
                 mcontext.startActivity(intent);
             }
         });
@@ -102,7 +102,7 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
             public void onClick(View view) {
              Intent intent=new Intent(Intent.ACTION_SEND);
              intent.setType("text/plain");
-             String shareBody=updateDishModel.getDishes();
+             String shareBody=updateDishModel.getDishName();
              String shareSub=updateDishModel.getDescription();
                 String shareSub1=updateDishModel.getImageURL();
                 String combinedText=shareSub+"\n"+shareSub1;
@@ -114,7 +114,7 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
         });
         fvrtref = FirebaseDatabase.getInstance().getReference("favourites");
         fvrt_listRef = FirebaseDatabase.getInstance().getReference("favoriteList").child(FirebaseAuth.getInstance().getUid());
-        String  key = updateDishModel.getDishes();
+        String  key = updateDishModel.getDishName();
         favouriteChecker(key,holder);
         holder.likebtn.setOnClickListener(new View.OnClickListener() {
             @Override

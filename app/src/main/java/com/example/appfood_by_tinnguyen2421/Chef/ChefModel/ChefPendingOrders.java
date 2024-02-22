@@ -3,26 +3,17 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefPendingOrders {
 
-    private String ChefId,DishId,DishName,DishQuantity,Price,RandomUID,TotalPrice,UserId,Date;
+    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID;
 
-    public ChefPendingOrders(String chefId, String dishId, String dishName, String dishQuantity, String price, String randomUID, String totalPrice, String userId,String date) {
-        ChefId = chefId;
-        DishId = dishId;
+    public ChefPendingOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
+        ChefID = chefId;
+        DishID = dishId;
         DishName = dishName;
+        DishPrice = dishPrice;
         DishQuantity = dishQuantity;
-        Price = price;
-        RandomUID=randomUID;
+        RandomUID = randomUID;
         TotalPrice = totalPrice;
-        UserId = userId;
-        Date=date;
-    }
-
-    public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String date) {
-        Date = date;
+        UserID = userId;
     }
 
     public ChefPendingOrders()
@@ -30,20 +21,20 @@ public class ChefPendingOrders {
 
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
-    public String getDishId() {
-        return DishId;
+    public String getDishID() {
+        return DishID;
     }
 
-    public void setDishId(String dishId) {
-        DishId = dishId;
+    public void setDishID(String dishID) {
+        DishID = dishID;
     }
 
     public String getDishName() {
@@ -54,20 +45,20 @@ public class ChefPendingOrders {
         DishName = dishName;
     }
 
+    public String getDishPrice() {
+        return DishPrice;
+    }
+
+    public void setDishPrice(String dishPrice) {
+        DishPrice = dishPrice;
+    }
+
     public String getDishQuantity() {
         return DishQuantity;
     }
 
     public void setDishQuantity(String dishQuantity) {
         DishQuantity = dishQuantity;
-    }
-
-    public String getPrice() {
-        return Price;
-    }
-
-    public void setPrice(String price) {
-        Price = price;
     }
 
     public String getRandomUID() {
@@ -86,11 +77,13 @@ public class ChefPendingOrders {
         TotalPrice = totalPrice;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getUserID() {
+        return UserID;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserID(String userID) {
+        UserID = userID;
     }
+
+
 }

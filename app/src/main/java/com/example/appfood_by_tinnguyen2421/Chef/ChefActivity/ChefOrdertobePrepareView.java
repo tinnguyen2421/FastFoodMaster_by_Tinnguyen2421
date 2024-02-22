@@ -2,8 +2,8 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,13 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefOrdertobePrepareViewAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefOrderTobePreparedFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -83,7 +80,6 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
     }
     private void CheforderdishesView() {
         RandomUID = getIntent().getStringExtra("RandomUID");
-
         reference = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -102,7 +98,6 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                     Preparing.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             progressDialog.setMessage("Vui lòng đợi...");
                             progressDialog.show();
 
@@ -113,18 +108,18 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                         final ChefWaitingOrders chefWaitingOrders = dataSnapshot1.getValue(ChefWaitingOrders.class);
                                         HashMap<String, String> hashMap = new HashMap<>();
-                                        String dishid = chefWaitingOrders.getDishId();
-                                        userid = chefWaitingOrders.getUserId();
-                                        hashMap.put("ChefId", chefWaitingOrders.getChefId());
-                                        hashMap.put("DishId", chefWaitingOrders.getDishId());
+                                        String dishid = chefWaitingOrders.getDishID();
+                                        userid = chefWaitingOrders.getUserID();
+                                        String chefID=chefWaitingOrders.getChefID();
+                                        hashMap.put("ChefID", chefWaitingOrders.getChefID());
+                                        hashMap.put("DishID", chefWaitingOrders.getDishID());
                                         hashMap.put("DishName", chefWaitingOrders.getDishName());
                                         hashMap.put("DishPrice", chefWaitingOrders.getDishPrice());
                                         hashMap.put("DishQuantity", chefWaitingOrders.getDishQuantity());
-                                        hashMap.put("RandomUID", RandomUID);
+                                        hashMap.put("RandomUID", chefWaitingOrders.getRandomUID());
                                         hashMap.put("TotalPrice", chefWaitingOrders.getTotalPrice());
-                                        hashMap.put("UserId", chefWaitingOrders.getUserId());
+                                        hashMap.put("UserID", chefWaitingOrders.getUserID());
                                         FirebaseDatabase.getInstance().getReference("ChefFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
-
                                     }
                                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation");
                                     data.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -213,7 +208,6 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                 }
                 adapter = new ChefOrdertobePrepareViewAdapter(ChefOrdertobePrepareView.this, chefWaitingOrdersList);
                 recyclerViewdish.setAdapter(adapter);
-
             }
 
             @Override

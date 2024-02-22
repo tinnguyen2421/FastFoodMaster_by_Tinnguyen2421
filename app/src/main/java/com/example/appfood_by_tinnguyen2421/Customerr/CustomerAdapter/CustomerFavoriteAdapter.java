@@ -53,7 +53,7 @@ public class CustomerFavoriteAdapter extends RecyclerView.Adapter<CustomerFavori
         decimalFormat.applyPattern("#,###,###,###");
         UpdateDishModel updateDishModel = updateDishModelArrayList.get(position);
         if (updateDishModel != null) {
-            holder.title.setText(updateDishModel.getDishes());
+            holder.title.setText(updateDishModel.getDishName());
             Picasso.get()
                     .load(updateDishModel.getImageURL())
                     .into(holder.imageView, new Callback() {
@@ -73,9 +73,9 @@ public class CustomerFavoriteAdapter extends RecyclerView.Adapter<CustomerFavori
             public void onClick(View view) {
                 Intent intent = new Intent(context, OrderDish.class);
                 intent.putExtra("FoodMenu"  ,updateDishModel.getRandomUID());
-                intent.putExtra("ChefId",updateDishModel.getChefId());
+                intent.putExtra("ChefId",updateDishModel.getChefID());
                 intent.putExtra("CateID",updateDishModel.getCateID());
-                intent.putExtra("TenMon",updateDishModel.getDishes());
+                intent.putExtra("TenMon",updateDishModel.getDishName());
                 context.startActivity(intent);
             }
         });

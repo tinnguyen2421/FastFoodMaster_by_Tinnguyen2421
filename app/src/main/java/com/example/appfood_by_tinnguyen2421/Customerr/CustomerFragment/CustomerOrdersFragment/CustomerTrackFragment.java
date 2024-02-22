@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerTrackAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,11 +33,11 @@ import java.util.List;
 public class CustomerTrackFragment extends Fragment {
 
     RecyclerView recyclerView;
-    private List<CustomerFinalOrders> customerFinalOrdersList;
+    private List<CustomerPaymentOrders> customerPaymentOrdersList;
     private CustomerTrackAdapter adapter;
     DatabaseReference databaseReference;
-    TextView grandtotal, Address,Status,STT1;
-    LinearLayout total;
+    TextView grandtotal,orderStatus;
+    LinearLayout total,orderInfo,otherInfo;
 
     @Nullable
     @Override
@@ -46,12 +47,12 @@ public class CustomerTrackFragment extends Fragment {
         recyclerView = v.findViewById(R.id.recyclefinalorders);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        STT1=v.findViewById(R.id.STT123);
-        grandtotal = v.findViewById(R.id.Rs);
-        Address = v.findViewById(R.id.addresstrack);
-        Status=v.findViewById(R.id.status);
+        grandtotal = v.findViewById(R.id.GrandTotal);
         total = v.findViewById(R.id.btnn);
-        customerFinalOrdersList = new ArrayList<>();
+        orderInfo=v.findViewById(R.id.OrdersInfo);
+        otherInfo=v.findViewById(R.id.OtherInfo);
+        orderStatus=v.findViewById(R.id.OrderStatus);
+        customerPaymentOrdersList = new ArrayList<>();
         CustomerTrackOrder();
 
         return v;
@@ -63,25 +64,26 @@ public class CustomerTrackFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                customerFinalOrdersList.clear();
+                customerPaymentOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("Dishes");
                     data.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                CustomerFinalOrders customerFinalOrders = snapshot1.getValue(CustomerFinalOrders.class);
-                                customerFinalOrdersList.add(customerFinalOrders);
+                                CustomerPaymentOrders customerPaymentOrders = snapshot1.getValue(CustomerPaymentOrders.class);
+                                customerPaymentOrdersList.add(customerPaymentOrders);
                             }
-
-                            if (customerFinalOrdersList.size() == 0) {
-                                Address.setVisibility(View.INVISIBLE);
+                            if (customerPaymentOrdersList.size() == 0) {
                                 total.setVisibility(View.INVISIBLE);
+                                orderInfo.setVisibility(View.INVISIBLE);
+                                otherInfo.setVisibility(View.INVISIBLE);
                             } else {
-                                Address.setVisibility(View.VISIBLE);
                                 total.setVisibility(View.VISIBLE);
+                                orderInfo.setVisibility(View.VISIBLE);
+                                otherInfo.setVisibility(View.VISIBLE);
                             }
-                            adapter = new CustomerTrackAdapter(getContext(), customerFinalOrdersList);
+                            adapter = new CustomerTrackAdapter(getContext(), customerPaymentOrdersList);
                             recyclerView.setAdapter(adapter);
                         }
 
@@ -96,10 +98,8 @@ public class CustomerTrackFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             CustomerFinalOrders1 customerFinalOrders1 = dataSnapshot.getValue(CustomerFinalOrders1.class);
                             try{
-
+                                orderStatus.setText(customerFinalOrders1.getOrderStatus());
                                 grandtotal.setText(customerFinalOrders1.getGrandTotalPrice()+"đ");
-                                Address.setText("Địa chỉ:"+customerFinalOrders1.getAddress());
-                                Status.setText(customerFinalOrders1.getStatus());
                             }catch (Exception e){
                                 Log.d("CustomerTrackFragment", "onDataChange: "+e);
                             }

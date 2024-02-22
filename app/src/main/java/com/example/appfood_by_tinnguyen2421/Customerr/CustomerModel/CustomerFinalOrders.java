@@ -3,13 +3,13 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class CustomerFinalOrders {
 
-    private String ChefId, DishID,DishName, Price,DishQuantity,RandomUID,TotalPrice,UserId;
+    private String ChefId, DishID,DishName, DishPrice,DishQuantity,RandomUID,TotalPrice,UserId;
 
     public CustomerFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
         ChefId = chefId;
         DishID = dishId;
         DishName = dishName;
-        Price = dishPrice;
+        DishPrice = dishPrice;
         DishQuantity = dishQuantity;
         RandomUID = randomUID;
         TotalPrice = totalPrice;
@@ -46,12 +46,12 @@ public class CustomerFinalOrders {
         DishName = dishName;
     }
 
-    public String getPrice() {
-        return Price;
+    public String getDishPrice() {
+        return DishPrice;
     }
 
-    public void setPrice(String price) {
-        Price = price;
+    public void setDishPrice(String dishPrice) {
+        DishPrice = dishPrice;
     }
 
     public String getDishQuantity() {

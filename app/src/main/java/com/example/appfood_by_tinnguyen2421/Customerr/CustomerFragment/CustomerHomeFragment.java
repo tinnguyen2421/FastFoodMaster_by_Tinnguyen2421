@@ -235,7 +235,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
 
         ArrayList<UpdateDishModel> mylist = new ArrayList<>();
         for (UpdateDishModel object : updateDishModelList) {
-            if (object.getDishes().toLowerCase().contains(searchtext.toLowerCase())) {
+            if (object.getDishName().toLowerCase().contains(searchtext.toLowerCase())) {
                 mylist.add(object);
             }
         }

@@ -72,15 +72,15 @@ public class CustomerPaymentOTP extends AppCompatActivity {
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             final CustomerPaymentOrders customerPaymentOrders = dataSnapshot1.getValue(CustomerPaymentOrders.class);
                             HashMap<String, String> hashMap = new HashMap<>();
-                            String dishid = customerPaymentOrders.getDishId();
-                            hashMap.put("ChefId", customerPaymentOrders.getChefId());
-                            hashMap.put("DishId", customerPaymentOrders.getDishId());
+                            String dishid = customerPaymentOrders.getDishID();
+                            hashMap.put("ChefId", customerPaymentOrders.getChefID());
+                            hashMap.put("DishId", customerPaymentOrders.getDishID());
                             hashMap.put("DishName", customerPaymentOrders.getDishName());
                             hashMap.put("DishPrice", customerPaymentOrders.getDishPrice());
                             hashMap.put("DishQuantity", customerPaymentOrders.getDishQuantity());
                             hashMap.put("RandomUID", RandomUID);
                             hashMap.put("TotalPrice", customerPaymentOrders.getTotalPrice());
-                            hashMap.put("UserId", customerPaymentOrders.getUserId());
+                            hashMap.put("UserId", customerPaymentOrders.getUserID());
                             FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                         }
                         DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerPaymentOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation");
@@ -102,7 +102,7 @@ public class CustomerPaymentOTP extends AppCompatActivity {
                                 hashMap1.put("Note", customerPaymentOrders1.getNote());
                                 hashMap1.put("RandomUID", RandomUID);
                                 hashMap1.put("Status", "Đơn hàng của bạn đang chờ Cửa hàng chuẩn bị...");
-                                hashMap1.put("Date", customerPaymentOrders1.getDate());
+                                hashMap1.put("Date", customerPaymentOrders1.getOrderDate());
                                 FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation").setValue(hashMap1).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -114,16 +114,16 @@ public class CustomerPaymentOTP extends AppCompatActivity {
                                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                                     final CustomerPaymentOrders customerPaymentOrderss = snapshot.getValue(CustomerPaymentOrders.class);
                                                     HashMap<String, String> hashMap2 = new HashMap<>();
-                                                    String dishid = customerPaymentOrderss.getDishId();
-                                                    ChefID = customerPaymentOrderss.getChefId();
-                                                    hashMap2.put("ChefId", customerPaymentOrderss.getChefId());
-                                                    hashMap2.put("DishId", customerPaymentOrderss.getDishId());
+                                                    String dishid = customerPaymentOrderss.getDishID();
+                                                    ChefID = customerPaymentOrderss.getChefID();
+                                                    hashMap2.put("ChefId", customerPaymentOrderss.getChefID());
+                                                    hashMap2.put("DishId", customerPaymentOrderss.getDishID());
                                                     hashMap2.put("DishName", customerPaymentOrderss.getDishName());
                                                     hashMap2.put("DishPrice", customerPaymentOrderss.getDishPrice());
                                                     hashMap2.put("DishQuantity", customerPaymentOrderss.getDishQuantity());
                                                     hashMap2.put("RandomUID", RandomUID);
                                                     hashMap2.put("TotalPrice", customerPaymentOrderss.getTotalPrice());
-                                                    hashMap2.put("UserId", customerPaymentOrderss.getUserId());
+                                                    hashMap2.put("UserId", customerPaymentOrderss.getUserID());
                                                     FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(ChefID).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap2);
                                                 }
                                                 DatabaseReference dataa = FirebaseDatabase.getInstance().getReference("CustomerPaymentOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation");

@@ -35,7 +35,7 @@ public class CustomerOrdersHistoryViewAdapter extends RecyclerView.Adapter<Custo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CustomerFinalOrders customerOrdersHistoryModel=customerFinalOrdersList.get(position);
         holder.dishname.setText(position+1+"."+customerOrdersHistoryModel.getDishName());
-        holder.price.setText("Giá tiền: " + customerOrdersHistoryModel.getPrice()+"đ");
+        holder.price.setText("Giá tiền: " + customerOrdersHistoryModel.getDishPrice()+"đ");
         holder.quantity.setText("× " + customerOrdersHistoryModel.getDishQuantity());
         holder.totalprice.setText("Tổng cộng:" + customerOrdersHistoryModel.getTotalPrice()+"đ");
     }

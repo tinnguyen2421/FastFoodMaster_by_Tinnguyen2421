@@ -5,7 +5,7 @@ public class UpdateDishModel {
 
 
 
-    String CateID,Dishes,RandomUID,Description,Price,ImageURL,ChefId,ReducePrice,PercentDecrease,OnSale,AvailableDish;
+    String CateID, DishName,RandomUID,Description, DishPrice,ImageURL, ChefID,ReducePrice, DecreasePercent,OnSale,AvailableDish;
 
 
     public UpdateDishModel()
@@ -33,12 +33,12 @@ public class UpdateDishModel {
         ReducePrice = reducePrice;
     }
 
-    public String getPercentDecrease() {
-        return PercentDecrease;
+    public String getDecreasePercent() {
+        return DecreasePercent;
     }
 
-    public void setPercentDecrease(String percentDecrease) {
-        PercentDecrease = percentDecrease;
+    public void setDecreasePercent(String decreasePercent) {
+        DecreasePercent = decreasePercent;
     }
 
     public String getOnSale() {
@@ -68,12 +68,12 @@ public class UpdateDishModel {
         ImageURL = imageURL;
     }
 
-    public String getPrice() {
-        return Price;
+    public String getDishPrice() {
+        return DishPrice;
     }
 
-    public void setPrice(String price) {
-        Price = price;
+    public void setDishPrice(String dishPrice) {
+        DishPrice = dishPrice;
     }
 
     public String getRandomUID() {
@@ -86,21 +86,21 @@ public class UpdateDishModel {
         RandomUID = randomUID;
     }
 
-    public String getDishes()
+    public String getDishName()
     {
-        return Dishes;
+        return DishName;
     }
 
-    public void setDishes(String dishes) {
+    public void setDishName(String dishName) {
 
-        Dishes = dishes;
+        DishName = dishName;
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 }

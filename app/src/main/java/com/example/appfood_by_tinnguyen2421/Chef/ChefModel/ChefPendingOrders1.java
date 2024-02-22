@@ -3,24 +3,33 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefPendingOrders1 {
 
-    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,DateAcept;
+    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID, AceptDate,PaymentMethod;
 
-    public ChefPendingOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID,String dateAcept ) {
+    public ChefPendingOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID,String dateAcept ,String paymentMethod) {
         Address = address;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
         Name = name;
         Note = note;
         RandomUID = randomUID;
-        DateAcept=dateAcept;
+        AceptDate =dateAcept;
+        PaymentMethod=paymentMethod;
     }
 
-    public String getDateAcept() {
-        return DateAcept;
+    public String getAceptDate() {
+        return AceptDate;
     }
 
-    public void setDateAcept(String dateAcept) {
-        DateAcept = dateAcept;
+    public String getPaymentMethod() {
+        return PaymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        PaymentMethod = paymentMethod;
+    }
+
+    public void setAceptDate(String aceptDate) {
+        AceptDate = aceptDate;
     }
 
     public ChefPendingOrders1()

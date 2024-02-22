@@ -133,12 +133,12 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
-                        Foodname.setText( "Tên món: " + updateDishModel.getDishes());
+                        Foodname.setText( "Tên món: " + updateDishModel.getDishName());
                         String ss = "<b>" + "Chi tiết: " + "</b>" + updateDishModel.getDescription();
                         FoodDescription.setText(Html.fromHtml(ss));
-                        titlePercent.setText("Giảm "+updateDishModel.getPercentDecrease()+"%");
+                        titlePercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
                         //
-                        double price=Double.parseDouble(updateDishModel.getPrice());
+                        double price=Double.parseDouble(updateDishModel.getDishPrice());
                         DecimalFormat decimalFormat=new DecimalFormat("#,###,###,###");
                         String FormatPrice=decimalFormat.format(price);
                         //
@@ -217,21 +217,21 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                         }
                                     }
 
-                                    if (ChefID.equals(cart1.getChefId())) {
+                                    if (ChefID.equals(cart1.getChefID())) {
                                         data = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(ChefID).child(RandomId);
                                         data.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                UpdateDishModel update = dataSnapshot.getValue(UpdateDishModel.class);
-                                                if(update.getOnSale().equals("true"))
+                                                UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
+                                                if(updateDishModel.getOnSale().equals("true"))
                                                 {
-                                                    dishprice = Integer.parseInt(update.getReducePrice());
+                                                    dishprice = Integer.parseInt(updateDishModel.getReducePrice());
                                                 }
                                                 else
                                                 {
-                                                    dishprice = Integer.parseInt(update.getPrice());
+                                                    dishprice = Integer.parseInt(updateDishModel.getDishPrice());
                                                 }
-                                                dishname = update.getDishes();
+                                                dishname = updateDishModel.getDishName();
                                                 int num = Integer.parseInt(additem.getNumber());
                                                 int totalprice = num * dishprice;
                                                 if (num != 0) {
@@ -239,9 +239,10 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                                     hashMap.put("DishName", dishname);
                                                     hashMap.put("DishID", RandomId);
                                                     hashMap.put("DishQuantity", String.valueOf(num));
-                                                    hashMap.put("Price", String.valueOf(dishprice));
-                                                    hashMap.put("Totalprice", String.valueOf(totalprice));
-                                                    hashMap.put("ChefId", ChefID);
+                                                    hashMap.put("DishPrice", String.valueOf(dishprice));
+                                                    hashMap.put("TotalPrice", String.valueOf(totalprice));
+                                                    hashMap.put("ChefID", ChefID);
+                                                    hashMap.put("ImageURL",updateDishModel.getImageURL());
                                                     custID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                     reference = FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(custID).child(RandomId);
                                                     reference.setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -286,9 +287,16 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UpdateDishModel update = dataSnapshot.getValue(UpdateDishModel.class);
-                                            dishname = update.getDishes();
-                                            dishprice = Integer.parseInt(update.getPrice());
+                                            UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
+                                            if(updateDishModel.getOnSale().equals("true"))
+                                            {
+                                                dishprice = Integer.parseInt(updateDishModel.getReducePrice());
+                                            }
+                                            else
+                                            {
+                                                dishprice = Integer.parseInt(updateDishModel.getDishPrice());
+                                            }
+                                            dishname = updateDishModel.getDishName();
                                             int num = Integer.parseInt(additem.getNumber());
                                             int totalprice = num * dishprice;
                                             if (num != 0) {
@@ -296,9 +304,10 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                                 hashMap.put("DishName", dishname);
                                                 hashMap.put("DishID", RandomId);
                                                 hashMap.put("DishQuantity", String.valueOf(num));
-                                                hashMap.put("Price", String.valueOf(dishprice));
-                                                hashMap.put("Totalprice", String.valueOf(totalprice));
-                                                hashMap.put("ChefId", ChefID);
+                                                hashMap.put("DishPrice", String.valueOf(dishprice));
+                                                hashMap.put("TotalPrice", String.valueOf(totalprice));
+                                                hashMap.put("ChefID", ChefID);
+                                                hashMap.put("ImageURL",updateDishModel.getImageURL());
                                                 custID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                 reference = FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(custID).child(RandomId);
                                                 reference.setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -350,7 +359,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                         UpdateDishModel updateDishModel = snapshot1.getValue(UpdateDishModel.class);
-                        if(Matl.equals(updateDishModel.getCateID())&&!TenMon.equals(updateDishModel.getDishes())) {
+                        if(Matl.equals(updateDishModel.getCateID())&&!TenMon.equals(updateDishModel.getDishName())) {
                             updateDishModelList.add(updateDishModel);
                         }
                     }

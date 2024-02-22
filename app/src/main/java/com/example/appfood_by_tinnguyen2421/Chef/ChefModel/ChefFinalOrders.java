@@ -3,17 +3,17 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefFinalOrders {
 
-    private String ChefId,DishId,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice,UserId;
+    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID;
 
     public ChefFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
-        ChefId = chefId;
-        DishId = dishId;
+        ChefID = chefId;
+        DishID = dishId;
         DishName = dishName;
         DishPrice = dishPrice;
         DishQuantity = dishQuantity;
         RandomUID = randomUID;
         TotalPrice = totalPrice;
-        UserId = userId;
+        UserID = userId;
     }
 
     public ChefFinalOrders()
@@ -21,20 +21,20 @@ public class ChefFinalOrders {
 
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
-    public String getDishId() {
-        return DishId;
+    public String getDishID() {
+        return DishID;
     }
 
-    public void setDishId(String dishId) {
-        DishId = dishId;
+    public void setDishID(String dishID) {
+        DishID = dishID;
     }
 
     public String getDishName() {
@@ -77,11 +77,11 @@ public class ChefFinalOrders {
         TotalPrice = totalPrice;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getUserID() {
+        return UserID;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 }

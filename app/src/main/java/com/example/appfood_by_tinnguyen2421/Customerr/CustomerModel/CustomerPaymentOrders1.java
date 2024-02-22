@@ -3,33 +3,33 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class CustomerPaymentOrders1 {
 
-    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,Date,AceptDate;
+    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID, OrderDate, PaymentMethod;
 
-    public String getDate() {
-        return Date;
+    public String getOrderDate() {
+        return OrderDate;
     }
 
-    public void setDate(String date) {
-        Date = date;
+    public void setOrderDate(String orderDate) {
+        OrderDate = orderDate;
     }
 
-    public CustomerPaymentOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String date,String aceptDate) {
+    public CustomerPaymentOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String date,String paymentMethod) {
         Address = address;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
         Name = name;
         Note = note;
         RandomUID = randomUID;
-        Date=date;
-        AceptDate=aceptDate;
+        OrderDate =date;
+        PaymentMethod =paymentMethod;
     }
 
-    public String getAceptDate() {
-        return AceptDate;
+    public String getPaymentMethod() {
+        return PaymentMethod;
     }
 
-    public void setAceptDate(String aceptDate) {
-        AceptDate = aceptDate;
+    public void setPaymentMethod(String paymentMethod) {
+        PaymentMethod = paymentMethod;
     }
 
     public CustomerPaymentOrders1() {

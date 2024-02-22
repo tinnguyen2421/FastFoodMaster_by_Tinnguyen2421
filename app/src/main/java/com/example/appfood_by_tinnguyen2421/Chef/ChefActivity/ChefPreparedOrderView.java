@@ -2,7 +2,6 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,13 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefPreparedOrderViewAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrdersFragment.ChefPreparedOrderFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
@@ -126,16 +122,16 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                                 final ChefFinalOrders chefFinalOrders = dataSnapshot1.getValue(ChefFinalOrders.class);
                                                 HashMap<String, String> hashMap = new HashMap<>();
-                                                String dishid = chefFinalOrders.getDishId();
-                                                userid = chefFinalOrders.getUserId();
-                                                hashMap.put("ChefId", chefFinalOrders.getChefId());
-                                                hashMap.put("DishId", chefFinalOrders.getDishId());
+                                                String dishid = chefFinalOrders.getDishID();
+                                                userid = chefFinalOrders.getUserID();
+                                                hashMap.put("ChefId", chefFinalOrders.getChefID());
+                                                hashMap.put("DishId", chefFinalOrders.getDishID());
                                                 hashMap.put("DishName", chefFinalOrders.getDishName());
                                                 hashMap.put("DishPrice", chefFinalOrders.getDishPrice());
                                                 hashMap.put("DishQuantity", chefFinalOrders.getDishQuantity());
                                                 hashMap.put("RandomUID", RandomUID);
                                                 hashMap.put("TotalPrice", chefFinalOrders.getTotalPrice());
-                                                hashMap.put("UserId", chefFinalOrders.getUserId());
+                                                hashMap.put("UserId", chefFinalOrders.getUserID());
                                                 FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(deliveryId).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                                                 FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                                             }

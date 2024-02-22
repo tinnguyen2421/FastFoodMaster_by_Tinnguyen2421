@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    android:id="@+id/fragment_container123"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#FDFDFD">
-
-
     <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/recyclecart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/TotalBtns"
+        android:layout_height="450dp"
+        android:layout_above="@+id/Payment"
         android:orientation="vertical" />
-
     <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/Payment"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <RadioGroup
+            android:id="@+id/radioGroupPayment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:text="Thẻ tín dụng"
+                android:id="@+id/OnlinePayment"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <RadioButton
+                android:id="@+id/CashPayment"
+                android:text="Tiền mặt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@+id/Payment"
         android:id="@+id/TotalBtns"
         android:layout_width="match_parent"
         android:layout_height="105dp"
@@ -63,4 +91,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

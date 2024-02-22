@@ -22,14 +22,13 @@ public class CustomerOrdersViewPagerAdapter extends FragmentStateAdapter {
         {
             case 0:return new CustomerCartFragment();
             case 1:return new CustomerPendingOrdersFragment();
-            case 2:return new CustomerPayableOrdersFragment();
-            case 3:return new CustomerTrackFragment();
+            case 2:return new CustomerTrackFragment();
             default:return new CustomerCartFragment();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 3;
     }
 }

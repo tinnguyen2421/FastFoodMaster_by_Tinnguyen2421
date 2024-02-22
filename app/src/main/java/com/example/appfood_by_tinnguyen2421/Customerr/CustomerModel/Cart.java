@@ -3,35 +3,35 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class Cart {
 
-    private String ChefId,DishID,DishName,DishQuantity,Price,Totalprice,Date;
+    private String ChefID,DishID,DishName,DishQuantity, DishPrice, TotalPrice,ImageURL;
 
-    public Cart(String chefId, String dishID, String dishName, String dishQuantity, String price, String totalprice,String date) {
-        ChefId = chefId;
+    public String getImageURL() {
+        return ImageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        ImageURL = imageURL;
+    }
+
+    public Cart(String chefId, String dishID, String dishName, String dishQuantity, String dishPrice, String totalprice, String imageURL) {
+        ChefID = chefId;
         DishID = dishID;
         DishName = dishName;
         DishQuantity = dishQuantity;
-        Price = price;
-        Totalprice = totalprice;
-        Date=date;
-    }
-
-    public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String date) {
-        Date = date;
+        DishPrice = dishPrice;
+        TotalPrice = totalprice;
+        ImageURL=imageURL;
     }
 
     public Cart() {
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
     public String getDishID() {
@@ -58,19 +58,19 @@ public class Cart {
         DishQuantity = dishQuantity;
     }
 
-    public String getPrice() {
-        return Price;
+    public String getDishPrice() {
+        return DishPrice;
     }
 
-    public void setPrice(String price) {
-        Price = price;
+    public void setDishPrice(String dishPrice) {
+        DishPrice = dishPrice;
     }
 
-    public String getTotalprice() {
-        return Totalprice;
+    public String getTotalPrice() {
+        return TotalPrice;
     }
 
-    public void setTotalprice(String totalprice) {
-        Totalprice = totalprice;
+    public void setTotalPrice(String totalPrice) {
+        TotalPrice = totalPrice;
     }
 }
