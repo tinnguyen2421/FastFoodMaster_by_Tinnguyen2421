@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefPendingOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 
@@ -21,9 +21,9 @@ public class ChefOrderDishesAdapter extends RecyclerView.Adapter<ChefOrderDishes
 
 
     private Context mcontext;
-    private List<ChefPendingOrders> chefPendingOrderslist;
+    private List<ChefFinalOrders> chefPendingOrderslist;
 
-    public ChefOrderDishesAdapter(Context context, List<ChefPendingOrders> chefPendingOrderslist) {
+    public ChefOrderDishesAdapter(Context context, List<ChefFinalOrders> chefPendingOrderslist) {
         this.chefPendingOrderslist = chefPendingOrderslist;
         this.mcontext = context;
     }
@@ -38,7 +38,7 @@ public class ChefOrderDishesAdapter extends RecyclerView.Adapter<ChefOrderDishes
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final ChefPendingOrders chefPendingOrders = chefPendingOrderslist.get(position);
+        final ChefFinalOrders chefPendingOrders = chefPendingOrderslist.get(position);
         holder.dishname.setText(position+1+"."+chefPendingOrders.getDishName());
         //holder.price.setText("Giá: " + chefPendingOrders.getPrice()+"đ");
         if (chefPendingOrders != null && chefPendingOrders.getDishPrice() != null) {

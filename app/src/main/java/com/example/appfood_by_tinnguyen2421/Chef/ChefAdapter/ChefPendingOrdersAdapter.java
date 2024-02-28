@@ -2,7 +2,6 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_order_dishes;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefPendingOrders;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefPendingOrders1;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
@@ -48,12 +47,12 @@ import retrofit2.Response;
 public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOrdersAdapter.ViewHolder> {
 
     private Context context;
-    private List<ChefPendingOrders1> chefPendingOrders1list;
+    private List<ChefFinalOrders1> chefPendingOrders1list;
     private APIService apiService;
     String userid, dishid;
 
 
-    public ChefPendingOrdersAdapter(Context context, List<ChefPendingOrders1> chefPendingOrders1list) {
+    public ChefPendingOrdersAdapter(Context context, List<ChefFinalOrders1> chefPendingOrders1list) {
         this.chefPendingOrders1list = chefPendingOrders1list;
         this.context = context;
     }
@@ -69,7 +68,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final ChefPendingOrders1 chefPendingOrders1 = chefPendingOrders1list.get(position);
+        final ChefFinalOrders1 chefPendingOrders1 = chefPendingOrders1list.get(position);
         holder.Stt.setText("Đơn hàng số: "+position+1);
         holder.Address.setText("Địa chỉ :"+chefPendingOrders1.getAddress());
         if (chefPendingOrders1 != null && chefPendingOrders1.getGrandTotalPrice() != null) {
@@ -108,7 +107,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            final CustomerPaymentOrders chefPendingOrders = snapshot.getValue(CustomerPaymentOrders.class);
+                            final CustomerOrders chefPendingOrders = snapshot.getValue(CustomerOrders.class);
                             HashMap<String, String> hashMap = new HashMap<>();
                             String chefid = chefPendingOrders.getChefID();
                             String dishid = chefPendingOrders.getDishID();
@@ -129,7 +128,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                         data.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ChefPendingOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefPendingOrders1.class);
+                                ChefFinalOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
                                 LocalDateTime currentDateTime = LocalDateTime.now();
                                 // Định dạng ngày giờ thành chuỗi nếu cần
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm, dd/MM/yyyy");
@@ -204,7 +203,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            final ChefPendingOrders chefPendingOrders = snapshot.getValue(ChefPendingOrders.class);
+                            final ChefFinalOrders chefPendingOrders = snapshot.getValue(ChefFinalOrders.class);
                             userid = chefPendingOrders.getUserID();
                             dishid = chefPendingOrders.getDishID();
                         }

@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -19,10 +18,10 @@ import java.util.List;
 public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdapter.ViewHolder> {
 
     private Context context;
-    private List<CustomerPaymentOrders> customerPaymentOrdersList;
+    private List<CustomerOrders> customerOrdersList;
 
-    public CustomerTrackAdapter(Context context, List<CustomerPaymentOrders> customerPaymentOrdersList) {
-        this.customerPaymentOrdersList = customerPaymentOrdersList;
+    public CustomerTrackAdapter(Context context, List<CustomerOrders> customerOrdersList) {
+        this.customerOrdersList = customerOrdersList;
         this.context = context;
     }
 
@@ -36,7 +35,7 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final CustomerPaymentOrders customerFinalOrders = customerPaymentOrdersList.get(position);
+        final CustomerOrders customerFinalOrders = customerOrdersList.get(position);
         holder.dishName.setText(customerFinalOrders.getDishName());
         holder.dishQuantity.setText(customerFinalOrders.getDishQuantity() + "× ");
         holder.totalPrice.setText( customerFinalOrders.getTotalPrice()+"đ");
@@ -45,7 +44,7 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
 
     @Override
     public int getItemCount() {
-        return customerPaymentOrdersList.size();
+        return customerOrdersList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

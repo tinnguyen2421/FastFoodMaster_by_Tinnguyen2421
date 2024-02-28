@@ -124,14 +124,15 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                                                 HashMap<String, String> hashMap = new HashMap<>();
                                                 String dishid = chefFinalOrders.getDishID();
                                                 userid = chefFinalOrders.getUserID();
-                                                hashMap.put("ChefId", chefFinalOrders.getChefID());
-                                                hashMap.put("DishId", chefFinalOrders.getDishID());
+                                                hashMap.put("ChefID", chefFinalOrders.getChefID());
+                                                hashMap.put("DishID", chefFinalOrders.getDishID());
                                                 hashMap.put("DishName", chefFinalOrders.getDishName());
                                                 hashMap.put("DishPrice", chefFinalOrders.getDishPrice());
                                                 hashMap.put("DishQuantity", chefFinalOrders.getDishQuantity());
                                                 hashMap.put("RandomUID", RandomUID);
                                                 hashMap.put("TotalPrice", chefFinalOrders.getTotalPrice());
-                                                hashMap.put("UserId", chefFinalOrders.getUserID());
+                                                hashMap.put("UserID", chefFinalOrders.getUserID());
+                                                hashMap.put("ImageURL",chefFinalOrders.getImageURL());
                                                 FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(deliveryId).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                                                 FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                                             }
@@ -148,24 +149,23 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                                                     String formattedDateTime = currentDateTime.format(formatter);
                                                     String chefid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                     hashMap1.put("Address", chefFinalOrders1.getAddress());
-                                                    hashMap1.put("ChefId", chefid);
+                                                    hashMap1.put("ChefID", chefid);
                                                     hashMap1.put("ChefName", ChefName);
                                                     hashMap1.put("GrandTotalPrice", chefFinalOrders1.getGrandTotalPrice());
                                                     hashMap1.put("MobileNumber", chefFinalOrders1.getMobileNumber());
                                                     hashMap1.put("Name", chefFinalOrders1.getName());
                                                     hashMap1.put("RandomUID", RandomUID);
-                                                    hashMap1.put("Status", "Đơn hàng đã chuẩn bị");
-                                                    hashMap1.put("UserId", userid);
+                                                    hashMap1.put("UserID", userid);
                                                     hashMap1.put("DateTime",formattedDateTime);
                                                     hashMap1.put("AceptDate",chefFinalOrders1.getAceptDate());
-                                                    hashMap1.put("ShippingDate",chefFinalOrders1.getShippingDate());
+                                                    hashMap1.put("DeliveryDate",chefFinalOrders1.getDeliveryDate());
                                                     FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(deliveryId).child(RandomUID).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("Status").setValue("Đơn hàng đã được chuẩn bị...").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đã được chuẩn bị...").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
                                                                             FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {

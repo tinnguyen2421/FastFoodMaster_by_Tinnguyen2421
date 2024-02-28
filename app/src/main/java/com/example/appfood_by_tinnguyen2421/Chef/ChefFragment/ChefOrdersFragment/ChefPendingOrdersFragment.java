@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefPendingOrdersAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefPendingOrders1;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +30,7 @@ import java.util.List;
 public class ChefPendingOrdersFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private List<ChefPendingOrders1> chefPendingOrders1List;
+    private List<ChefFinalOrders1> chefPendingOrders1List;
     private ChefPendingOrdersAdapter adapter;
     private DatabaseReference databaseReference;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -82,7 +82,7 @@ public class ChefPendingOrdersFragment extends Fragment {
                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ChefPendingOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefPendingOrders1.class);
+                            ChefFinalOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
                             chefPendingOrders1List.add(chefPendingOrders1);
                             adapter = new ChefPendingOrdersAdapter(getContext(),chefPendingOrders1List);
                             recyclerView.setAdapter(adapter);

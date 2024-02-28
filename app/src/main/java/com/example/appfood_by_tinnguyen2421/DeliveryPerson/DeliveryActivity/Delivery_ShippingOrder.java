@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.Delivery_FoodPanelBottomNavigation;
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
 import com.example.appfood_by_tinnguyen2421.SendNotification.Client;
@@ -87,14 +87,14 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DeliveryShipFinalOrders1 deliveryShipFinalOrders1 = dataSnapshot.getValue(DeliveryShipFinalOrders1.class);
-                grandtotal.setText(deliveryShipFinalOrders1.getGrandTotalPrice()+"đ");
-                Address.setText(deliveryShipFinalOrders1.getAddress());
-                Custname.setText("Tên khách hàng:"+deliveryShipFinalOrders1.getName());
-                MobileNumber.setText("Số điện thoại:" + deliveryShipFinalOrders1.getMobileNumber());
-                ChefName.setText("Tên cửa hàng: " + deliveryShipFinalOrders1.getChefName());
-                userid = deliveryShipFinalOrders1.getUserId();
-                Chefid = deliveryShipFinalOrders1.getChefId();
+                DeliveryShipOrders1 deliveryShipOrders1 = dataSnapshot.getValue(DeliveryShipOrders1.class);
+                grandtotal.setText(deliveryShipOrders1.getGrandTotalPrice()+"đ");
+                Address.setText(deliveryShipOrders1.getAddress());
+                Custname.setText("Tên khách hàng:"+deliveryShipOrders1.getName());
+                MobileNumber.setText("Số điện thoại:" + deliveryShipOrders1.getMobileNumber());
+                ChefName.setText("Tên cửa hàng: " + deliveryShipOrders1.getChefName());
+                userid = deliveryShipOrders1.getUserID();
+                Chefid = deliveryShipOrders1.getChefID();
                 //get Date
                 LocalDateTime currentDateTime = LocalDateTime.now();
 

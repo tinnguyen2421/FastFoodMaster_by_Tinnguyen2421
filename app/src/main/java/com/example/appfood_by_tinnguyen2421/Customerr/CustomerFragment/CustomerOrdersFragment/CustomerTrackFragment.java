@@ -15,9 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerTrackAdapter;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders1;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +32,7 @@ import java.util.List;
 public class CustomerTrackFragment extends Fragment {
 
     RecyclerView recyclerView;
-    private List<CustomerPaymentOrders> customerPaymentOrdersList;
+    private List<CustomerOrders> customerOrdersList;
     private CustomerTrackAdapter adapter;
     DatabaseReference databaseReference;
     TextView grandtotal,orderStatus;
@@ -52,7 +51,7 @@ public class CustomerTrackFragment extends Fragment {
         orderInfo=v.findViewById(R.id.OrdersInfo);
         otherInfo=v.findViewById(R.id.OtherInfo);
         orderStatus=v.findViewById(R.id.OrderStatus);
-        customerPaymentOrdersList = new ArrayList<>();
+        customerOrdersList = new ArrayList<>();
         CustomerTrackOrder();
 
         return v;
@@ -64,17 +63,17 @@ public class CustomerTrackFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                customerPaymentOrdersList.clear();
+                customerOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("Dishes");
                     data.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                CustomerPaymentOrders customerPaymentOrders = snapshot1.getValue(CustomerPaymentOrders.class);
-                                customerPaymentOrdersList.add(customerPaymentOrders);
+                                CustomerOrders customerOrders = snapshot1.getValue(CustomerOrders.class);
+                                customerOrdersList.add(customerOrders);
                             }
-                            if (customerPaymentOrdersList.size() == 0) {
+                            if (customerOrdersList.size() == 0) {
                                 total.setVisibility(View.INVISIBLE);
                                 orderInfo.setVisibility(View.INVISIBLE);
                                 otherInfo.setVisibility(View.INVISIBLE);
@@ -83,7 +82,7 @@ public class CustomerTrackFragment extends Fragment {
                                 orderInfo.setVisibility(View.VISIBLE);
                                 otherInfo.setVisibility(View.VISIBLE);
                             }
-                            adapter = new CustomerTrackAdapter(getContext(), customerPaymentOrdersList);
+                            adapter = new CustomerTrackAdapter(getContext(), customerOrdersList);
                             recyclerView.setAdapter(adapter);
                         }
 
@@ -96,10 +95,10 @@ public class CustomerTrackFragment extends Fragment {
                     reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            CustomerFinalOrders1 customerFinalOrders1 = dataSnapshot.getValue(CustomerFinalOrders1.class);
+                            CustomerOrders1 customerOrders1 = dataSnapshot.getValue(CustomerOrders1.class);
                             try{
-                                orderStatus.setText(customerFinalOrders1.getOrderStatus());
-                                grandtotal.setText(customerFinalOrders1.getGrandTotalPrice()+"đ");
+                                orderStatus.setText(customerOrders1.getOrderStatus());
+                                grandtotal.setText(customerOrders1.getGrandTotalPrice()+"đ");
                             }catch (Exception e){
                                 Log.d("CustomerTrackFragment", "onDataChange: "+e);
                             }

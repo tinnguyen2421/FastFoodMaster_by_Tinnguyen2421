@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryAdapter.DeliveryShipOrderFragmentAdapter;
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders1;
+
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +32,7 @@ public class DeliveryShipOrderFragment extends Fragment {
 
 
     private RecyclerView recyclerView;
-    private List<DeliveryShipFinalOrders1> deliveryShipFinalOrders1List;
+    private List<DeliveryShipOrders1> deliveryShipOrders1List;
     private DeliveryShipOrderFragmentAdapter adapter;
     private DatabaseReference databaseReference;
 
@@ -42,7 +43,7 @@ public class DeliveryShipOrderFragment extends Fragment {
         recyclerView = view.findViewById(R.id.delishiporder);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        deliveryShipFinalOrders1List = new ArrayList<>();
+        deliveryShipOrders1List = new ArrayList<>();
         DeliveryShipfinalOrder();
         return view;
 
@@ -59,15 +60,15 @@ public class DeliveryShipOrderFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                deliveryShipFinalOrders1List.clear();
+                deliveryShipOrders1List.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("DeliveryShipFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("OtherInformation");
                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            DeliveryShipFinalOrders1 deliveryShipFinalOrders1 = dataSnapshot.getValue(DeliveryShipFinalOrders1.class);
-                            deliveryShipFinalOrders1List.add(deliveryShipFinalOrders1);
-                            adapter = new DeliveryShipOrderFragmentAdapter(getContext(),deliveryShipFinalOrders1List);
+                            DeliveryShipOrders1 deliveryShipOrders1 = dataSnapshot.getValue(DeliveryShipOrders1.class);
+                            deliveryShipOrders1List.add(deliveryShipOrders1);
+                            adapter = new DeliveryShipOrderFragmentAdapter(getContext(),deliveryShipOrders1List);
                             recyclerView.setAdapter(adapter);
                         }
 

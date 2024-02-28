@@ -3,9 +3,9 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefFinalOrders {
 
-    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID;
+    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID,ImageURL;
 
-    public ChefFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
+    public ChefFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId,String imageURL) {
         ChefID = chefId;
         DishID = dishId;
         DishName = dishName;
@@ -14,6 +14,16 @@ public class ChefFinalOrders {
         RandomUID = randomUID;
         TotalPrice = totalPrice;
         UserID = userId;
+        ImageURL=imageURL;
+
+    }
+
+    public String getImageURL() {
+        return ImageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        ImageURL = imageURL;
     }
 
     public ChefFinalOrders()

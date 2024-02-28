@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryActivity.DeliveryShipOrderView;
 import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryActivity.Delivery_ShippingOrder;
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
 import com.example.appfood_by_tinnguyen2421.SendNotification.Client;
@@ -37,12 +38,12 @@ import retrofit2.Response;
 public class DeliveryShipOrderFragmentAdapter extends RecyclerView.Adapter<DeliveryShipOrderFragmentAdapter.ViewHolder> {
 
     private Context context;
-    private List<DeliveryShipFinalOrders1> deliveryShipFinalOrders1list;
+    private List<DeliveryShipOrders1> deliveryShipOrders1List;
     private APIService apiService;
 
 
-    public DeliveryShipOrderFragmentAdapter(Context context, List<DeliveryShipFinalOrders1> deliveryShipFinalOrders1list) {
-        this.deliveryShipFinalOrders1list = deliveryShipFinalOrders1list;
+    public DeliveryShipOrderFragmentAdapter(Context context, List<DeliveryShipOrders1> deliveryShipOrders1List) {
+        this.deliveryShipOrders1List = deliveryShipOrders1List;
         this.context = context;
     }
 
@@ -57,13 +58,13 @@ public class DeliveryShipOrderFragmentAdapter extends RecyclerView.Adapter<Deliv
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final DeliveryShipFinalOrders1 deliveryShipFinalOrders1 = deliveryShipFinalOrders1list.get(position);
+        final DeliveryShipOrders1 deliveryShipOrders1 = deliveryShipOrders1List.get(position);
         holder.Stt.setText("Đơn hàng số:"+position+1);
-        holder.Address.setText("Địa chỉ:"+deliveryShipFinalOrders1.getAddress());
-        holder.grandtotalprice.setText("Tổng đơn hàng:" + deliveryShipFinalOrders1.getGrandTotalPrice()+"đ");
-        holder.mobilenumber.setText("Số điện thoại:" + deliveryShipFinalOrders1.getMobileNumber());
-        final String random = deliveryShipFinalOrders1.getRandomUID();
-        final String userid = deliveryShipFinalOrders1.getUserId();
+        holder.Address.setText("Địa chỉ:"+deliveryShipOrders1.getAddress());
+        holder.grandtotalprice.setText("Tổng đơn hàng:" + deliveryShipOrders1.getGrandTotalPrice()+"đ");
+        holder.mobilenumber.setText("Số điện thoại:" + deliveryShipOrders1.getMobileNumber());
+        final String random = deliveryShipOrders1.getRandomUID();
+        final String userid = deliveryShipOrders1.getUserID();
         holder.Vieworder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +131,7 @@ public class DeliveryShipOrderFragmentAdapter extends RecyclerView.Adapter<Deliv
 
     @Override
     public int getItemCount() {
-        return deliveryShipFinalOrders1list.size();
+        return deliveryShipOrders1List.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

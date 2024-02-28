@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerEditProfile;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerOrdersHistory;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.MainMenu;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -123,8 +123,8 @@ public class CustomerProfileFragment extends Fragment {
                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            CustomerFinalOrders1 customerFinalOrders1 = dataSnapshot.getValue(CustomerFinalOrders1.class);
-                            double orderAmount = Double.parseDouble(customerFinalOrders1.getGrandTotalPrice());
+                            CustomerOrders1 customerOrders1 = dataSnapshot.getValue(CustomerOrders1.class);
+                            double orderAmount = Double.parseDouble(customerOrders1.getGrandTotalPrice());
                             orderAmounts.add(orderAmount);
                             if (orderAmounts.size() == dataSnapshot.getChildrenCount()) {
                                 for (double amount : orderAmounts) {

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -18,9 +18,9 @@ import java.util.List;
 public class ChefOrdertobePrepareViewAdapter extends RecyclerView.Adapter<ChefOrdertobePrepareViewAdapter.ViewHolder> {
 
     private Context mcontext;
-    private List<ChefWaitingOrders> chefWaitingOrderslist;
+    private List<ChefFinalOrders> chefWaitingOrderslist;
 
-    public ChefOrdertobePrepareViewAdapter(Context context, List<ChefWaitingOrders> chefWaitingOrderslist) {
+    public ChefOrdertobePrepareViewAdapter(Context context, List<ChefFinalOrders> chefWaitingOrderslist) {
         this.chefWaitingOrderslist = chefWaitingOrderslist;
         this.mcontext = context;
     }
@@ -35,7 +35,7 @@ public class ChefOrdertobePrepareViewAdapter extends RecyclerView.Adapter<ChefOr
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final ChefWaitingOrders chefWaitingOrders = chefWaitingOrderslist.get(position);
+        final ChefFinalOrders chefWaitingOrders = chefWaitingOrderslist.get(position);
         holder.dishname.setText(position+1+"."+chefWaitingOrders.getDishName());
         holder.price.setText("Giá: " + chefWaitingOrders.getDishPrice()+"đ");
         holder.quantity.setText("× " + chefWaitingOrders.getDishQuantity());

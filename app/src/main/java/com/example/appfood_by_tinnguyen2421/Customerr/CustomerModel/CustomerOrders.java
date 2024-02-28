@@ -1,33 +1,41 @@
 package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class CustomerFinalOrders {
+public class CustomerOrders {
 
-    private String ChefId, DishID,DishName, DishPrice,DishQuantity,RandomUID,TotalPrice,UserId;
+    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID,ImageURL;
 
-    public CustomerFinalOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
-        ChefId = chefId;
+    public String getImageURL() {
+        return ImageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        ImageURL = imageURL;
+    }
+
+    public CustomerOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId, String imageURL) {
+        ChefID = chefId;
         DishID = dishId;
         DishName = dishName;
         DishPrice = dishPrice;
         DishQuantity = dishQuantity;
         RandomUID = randomUID;
         TotalPrice = totalPrice;
-        UserId = userId;
+        UserID = userId;
+        ImageURL=imageURL;
     }
 
-    public CustomerFinalOrders()
+    public CustomerOrders()
     {
 
     }
 
-
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
     public String getDishID() {
@@ -78,11 +86,11 @@ public class CustomerFinalOrders {
         TotalPrice = totalPrice;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getUserID() {
+        return UserID;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 }

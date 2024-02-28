@@ -1,23 +1,20 @@
 package com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel;
 
-import java.util.Date;
-
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class DeliveryShipOrders1 {
 
-    private String Address, ChefId, ChefName, GrandTotalPrice, MobileNumber, Name, RandomUID, Status, UserId,Date;
+    private String Address, ChefID, ChefName, GrandTotalPrice, MobileNumber, Name, RandomUID, UserID,Date;
 
-    public DeliveryShipOrders1(String address, String chefId, String chefName, String grandTotalPrice, String mobileNumber, String name, String randomUID, String status, String userId,String date) {
+    public DeliveryShipOrders1(String address, String chefId, String chefName, String grandTotalPrice, String mobileNumber, String name, String randomUID, String userId,String date) {
         Address = address;
-        ChefId = chefId;
+        ChefID = chefId;
         ChefName = chefName;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
         Name = name;
         RandomUID = randomUID;
-        Status = status;
-        UserId = userId;
+        UserID = userId;
         Date=date;
     }
 
@@ -41,12 +38,12 @@ public class DeliveryShipOrders1 {
         Address = address;
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
     public String getChefName() {
@@ -89,19 +86,11 @@ public class DeliveryShipOrders1 {
         RandomUID = randomUID;
     }
 
-    public String getStatus() {
-        return Status;
+    public String getUserID() {
+        return UserID;
     }
 
-    public void setStatus(String status) {
-        Status = status;
-    }
-
-    public String getUserId() {
-        return UserId;
-    }
-
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 }

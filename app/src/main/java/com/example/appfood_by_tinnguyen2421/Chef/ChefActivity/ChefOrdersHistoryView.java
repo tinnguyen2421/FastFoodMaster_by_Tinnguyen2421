@@ -82,7 +82,7 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
                 int a=chefFinalOrders1.getRandomUID().length()-10;
                 idOrders.setText(chefFinalOrders1.getRandomUID().substring(a));
                 cusName.setText(chefFinalOrders1.getName());
-                ShippingTime.setText(chefFinalOrders1.getShippingDate());
+                ShippingTime.setText(chefFinalOrders1.getDeliveryDate());
 
             }
             @Override

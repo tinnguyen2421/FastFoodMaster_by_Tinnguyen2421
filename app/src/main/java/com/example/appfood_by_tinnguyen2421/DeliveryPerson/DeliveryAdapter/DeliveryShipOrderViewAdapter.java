@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -20,10 +20,10 @@ public class DeliveryShipOrderViewAdapter extends RecyclerView.Adapter<DeliveryS
 
 
     private Context mcontext;
-    private List<DeliveryShipFinalOrders> deliveryShipFinalOrderslist;
+    private List<DeliveryShipOrders> deliveryShipOrdersList;
 
-    public DeliveryShipOrderViewAdapter(Context context, List<DeliveryShipFinalOrders> deliveryShipFinalOrderslist) {
-        this.deliveryShipFinalOrderslist = deliveryShipFinalOrderslist;
+    public DeliveryShipOrderViewAdapter(Context context, List<DeliveryShipOrders> deliveryShipFinalOrderslist) {
+        this.deliveryShipOrdersList = deliveryShipFinalOrderslist;
         this.mcontext = context;
     }
 
@@ -37,16 +37,16 @@ public class DeliveryShipOrderViewAdapter extends RecyclerView.Adapter<DeliveryS
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final DeliveryShipFinalOrders deliveryShipFinalOrders = deliveryShipFinalOrderslist.get(position);
-        holder.dishname.setText(position+1+"."+deliveryShipFinalOrders.getDishName());
-        holder.price.setText("Giá:" + deliveryShipFinalOrders.getDishPrice()+"đ");
-        holder.quantity.setText("× " + deliveryShipFinalOrders.getDishQuantity());
-        holder.totalprice.setText("Tổng tiền:" + deliveryShipFinalOrders.getTotalPrice()+"đ");
+        final DeliveryShipOrders deliveryShipOrders = deliveryShipOrdersList.get(position);
+        holder.dishname.setText(position+1+"."+deliveryShipOrders.getDishName());
+        holder.price.setText("Giá:" + deliveryShipOrders.getDishPrice()+"đ");
+        holder.quantity.setText("× " + deliveryShipOrders.getDishQuantity());
+        holder.totalprice.setText("Tổng tiền:" + deliveryShipOrders.getTotalPrice()+"đ");
     }
 
     @Override
     public int getItemCount() {
-        return deliveryShipFinalOrderslist.size();
+        return deliveryShipOrdersList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

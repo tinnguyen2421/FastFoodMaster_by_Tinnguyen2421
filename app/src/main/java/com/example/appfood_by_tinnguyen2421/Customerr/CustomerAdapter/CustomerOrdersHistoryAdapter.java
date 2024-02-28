@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerOrdersHistoryView;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,9 +23,9 @@ import java.util.List;
 
 public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerOrdersHistoryAdapter.ViewHolder> {
     private Context context;
-    private List<CustomerFinalOrders1> customerFinalOrders1List;
-    public CustomerOrdersHistoryAdapter(Context context, List<CustomerFinalOrders1> customerFinalOrders1List ) {
-        this.customerFinalOrders1List = customerFinalOrders1List;
+    private List<CustomerOrders1> customerOrders1List;
+    public CustomerOrdersHistoryAdapter(Context context, List<CustomerOrders1> customerOrders1List ) {
+        this.customerOrders1List = customerOrders1List;
         this.context = context;
     }
     @NonNull
@@ -37,20 +37,18 @@ public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerO
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CustomerFinalOrders1 customerFinalOrders1=customerFinalOrders1List.get(position);
+        CustomerOrders1 customerOrders1=customerOrders1List.get(position);
         holder.Numb.setText(String.valueOf(position+1));
-        holder.NameCus.setText(customerFinalOrders1.getName());
-        holder.Address.setText(customerFinalOrders1.getAddress());
-        holder.PhoneNumb.setText(customerFinalOrders1.getMobileNumber());
-        holder.Status.setText(customerFinalOrders1.getStatus());
-        holder.GrandTotal.setText(customerFinalOrders1.getGrandTotalPrice());
-        holder.SendDate.setText(customerFinalOrders1.getDate());
-        holder.AceptDate.setText(customerFinalOrders1.getAceptDate());
+        holder.NameCus.setText(customerOrders1.getName());
+        holder.Address.setText(customerOrders1.getAddress());
+        holder.PhoneNumb.setText(customerOrders1.getMobileNumber());
+        holder.GrandTotal.setText(customerOrders1.getGrandTotalPrice());
+        holder.SendDate.setText(customerOrders1.getOrderDate());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(context, CustomerOrdersHistoryView.class);
-                intent.putExtra("RandomUIDD",customerFinalOrders1.getRandomUID());
+                intent.putExtra("RandomUIDD",customerOrders1.getRandomUID());
                 context.startActivity(intent);
             }
         });
@@ -62,7 +60,7 @@ public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerO
                 builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerFinalOrders1.getRandomUID()).removeValue();
+                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders1.getRandomUID()).removeValue();
                         AlertDialog.Builder food = new AlertDialog.Builder(context);
                         food.setMessage("Đơn hàng đã được xóa");
                         food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -91,7 +89,7 @@ public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerO
 
     @Override
     public int getItemCount() {
-        return customerFinalOrders1List.size();
+        return customerOrders1List.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView GrandTotal,Status,Address,PhoneNumb,NameCus,Numb,SendDate,AceptDate,btnDelete;

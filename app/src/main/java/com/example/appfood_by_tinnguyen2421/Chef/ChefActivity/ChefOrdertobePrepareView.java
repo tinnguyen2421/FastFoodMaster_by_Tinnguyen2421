@@ -3,7 +3,6 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefOrdertobePrepareViewAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders1;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
 import com.example.appfood_by_tinnguyen2421.SendNotification.Client;
@@ -47,7 +46,7 @@ import retrofit2.Response;
 public class ChefOrdertobePrepareView extends AppCompatActivity {
 
     RecyclerView recyclerViewdish;
-    private List<ChefWaitingOrders> chefWaitingOrdersList;
+    private List<ChefFinalOrders> chefWaitingOrdersList;
     private ChefOrdertobePrepareViewAdapter adapter;
     DatabaseReference reference;
     String RandomUID, userid;
@@ -87,7 +86,7 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                 chefWaitingOrdersList.clear();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChefWaitingOrders chefWaitingOrders = snapshot.getValue(ChefWaitingOrders.class);
+                    ChefFinalOrders chefWaitingOrders = snapshot.getValue(ChefFinalOrders.class);
                     chefWaitingOrdersList.add(chefWaitingOrders);
                 }
                 if (chefWaitingOrdersList.size() == 0) {
@@ -106,7 +105,7 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                        final ChefWaitingOrders chefWaitingOrders = dataSnapshot1.getValue(ChefWaitingOrders.class);
+                                        final ChefFinalOrders chefWaitingOrders = dataSnapshot1.getValue(ChefFinalOrders.class);
                                         HashMap<String, String> hashMap = new HashMap<>();
                                         String dishid = chefWaitingOrders.getDishID();
                                         userid = chefWaitingOrders.getUserID();
@@ -119,25 +118,25 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                                         hashMap.put("RandomUID", chefWaitingOrders.getRandomUID());
                                         hashMap.put("TotalPrice", chefWaitingOrders.getTotalPrice());
                                         hashMap.put("UserID", chefWaitingOrders.getUserID());
+                                        hashMap.put("ImageURL",chefWaitingOrders.getImageURL());
                                         FirebaseDatabase.getInstance().getReference("ChefFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").child(dishid).setValue(hashMap);
                                     }
                                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation");
                                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            final ChefWaitingOrders1 chefWaitingOrders1 = dataSnapshot.getValue(ChefWaitingOrders1.class);
+                                            final ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
                                             HashMap<String, String> hashMap1 = new HashMap<>();
-                                            hashMap1.put("Address", chefWaitingOrders1.getAddress());
-                                            hashMap1.put("GrandTotalPrice", chefWaitingOrders1.getGrandTotalPrice());
-                                            hashMap1.put("MobileNumber", chefWaitingOrders1.getMobileNumber());
-                                            hashMap1.put("Name", chefWaitingOrders1.getName());
+                                            hashMap1.put("Address", chefFinalOrders1.getAddress());
+                                            hashMap1.put("GrandTotalPrice", chefFinalOrders1.getGrandTotalPrice());
+                                            hashMap1.put("MobileNumber", chefFinalOrders1.getMobileNumber());
+                                            hashMap1.put("Name", chefFinalOrders1.getName());
                                             hashMap1.put("RandomUID", RandomUID);
-                                            hashMap1.put("Status", "Cửa hàng đang chuẩn bị cho đơn hàng của bạn...");
-                                            hashMap1.put("AceptDate",chefWaitingOrders1.getAceptDate());
+                                            hashMap1.put("AceptDate", chefFinalOrders1.getAceptDate());
                                             FirebaseDatabase.getInstance().getReference("ChefFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                            FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("Status").setValue("Cửa hàng đang chuẩn bị đơn hàng cho bạn...").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đang chuẩn bị...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -220,12 +219,12 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ChefWaitingOrders1 chefWaitingOrders1 = dataSnapshot.getValue(ChefWaitingOrders1.class);
-                grandtotal.setText(  chefWaitingOrders1.getGrandTotalPrice()+"đ");
-                note.setText(chefWaitingOrders1.getNote());
-                address.setText(chefWaitingOrders1.getAddress());
-                name.setText(chefWaitingOrders1.getName());
-                number.setText("Số điện thoại" + chefWaitingOrders1.getMobileNumber());
+                ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
+                grandtotal.setText(  chefFinalOrders1.getGrandTotalPrice()+"đ");
+                note.setText(chefFinalOrders1.getNote());
+                address.setText(chefFinalOrders1.getAddress());
+                name.setText(chefFinalOrders1.getName());
+                number.setText("Số điện thoại" + chefFinalOrders1.getMobileNumber());
 
             }
 

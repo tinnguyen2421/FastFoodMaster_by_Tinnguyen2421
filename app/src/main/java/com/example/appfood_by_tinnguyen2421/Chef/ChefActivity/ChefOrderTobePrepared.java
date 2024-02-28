@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefOrderTobePreparedAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders1;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ChefOrderTobePrepared extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private List<ChefWaitingOrders1> chefWaitingOrders1List;
+    private List<ChefFinalOrders1> chefFinalOrders1List;
     private ChefOrderTobePreparedAdapter adapter;
     private DatabaseReference databaseReference;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -38,19 +38,19 @@ public class ChefOrderTobePrepared extends AppCompatActivity {
         recyclerView = findViewById(R.id.Recycle_orderstobeprepared);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(ChefOrderTobePrepared.this));
-        chefWaitingOrders1List = new ArrayList<>();
+        chefFinalOrders1List = new ArrayList<>();
         swipeRefreshLayout = findViewById(R.id.Swipe1);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        adapter = new ChefOrderTobePreparedAdapter(ChefOrderTobePrepared.this, chefWaitingOrders1List);
+        adapter = new ChefOrderTobePreparedAdapter(ChefOrderTobePrepared.this, chefFinalOrders1List);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                chefWaitingOrders1List.clear();
+                chefFinalOrders1List.clear();
                 recyclerView = findViewById(R.id.Recycle_orderstobeprepared);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ChefOrderTobePrepared.this));
-                chefWaitingOrders1List = new ArrayList<>();
+                chefFinalOrders1List = new ArrayList<>();
                 cheforderstobePrepare();
             }
         });
@@ -65,15 +65,15 @@ public class ChefOrderTobePrepared extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    chefWaitingOrders1List.clear();
+                    chefFinalOrders1List.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("OtherInformation");
                         data.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ChefWaitingOrders1 chefWaitingOrders1 = dataSnapshot.getValue(ChefWaitingOrders1.class);
-                                chefWaitingOrders1List.add(chefWaitingOrders1);
-                                adapter = new ChefOrderTobePreparedAdapter(ChefOrderTobePrepared.this, chefWaitingOrders1List);
+                                ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
+                                chefFinalOrders1List.add(chefFinalOrders1);
+                                adapter = new ChefOrderTobePreparedAdapter(ChefOrderTobePrepared.this, chefFinalOrders1List);
                                 recyclerView.setAdapter(adapter);
                                 swipeRefreshLayout.setRefreshing(false);
                             }

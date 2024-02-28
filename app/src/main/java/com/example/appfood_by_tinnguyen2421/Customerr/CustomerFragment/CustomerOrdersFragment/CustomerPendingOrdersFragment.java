@@ -7,13 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.PendingOrdersAdapter;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPendingOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +25,7 @@ import java.util.List;
 
 public class CustomerPendingOrdersFragment extends Fragment {
     RecyclerView recyclerView;
-    private List<CustomerPaymentOrders> customerPaymentOrdersList;
+    private List<CustomerOrders> customerOrdersList;
     private PendingOrdersAdapter adapter;
     DatabaseReference databaseReference;
     public CustomerPendingOrdersFragment() {
@@ -41,7 +39,7 @@ public class CustomerPendingOrdersFragment extends Fragment {
         recyclerView = v.findViewById(R.id.Recycleorders);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        customerPaymentOrdersList = new ArrayList<>();
+        customerOrdersList = new ArrayList<>();
         CustomerpendingOrders();
         return v;
     }
@@ -51,17 +49,17 @@ public class CustomerPendingOrdersFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                customerPaymentOrdersList.clear();
+                customerOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("Dishes");
                     data.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                CustomerPaymentOrders customerPaymentOrders = snapshot1.getValue(CustomerPaymentOrders.class);
-                                customerPaymentOrdersList.add(customerPaymentOrders);
+                                CustomerOrders customerOrders = snapshot1.getValue(CustomerOrders.class);
+                                customerOrdersList.add(customerOrders);
                             }
-                            adapter = new PendingOrdersAdapter(getContext(), customerPaymentOrdersList);
+                            adapter = new PendingOrdersAdapter(getContext(), customerOrdersList);
                             recyclerView.setAdapter(adapter);
                         }
                         @Override

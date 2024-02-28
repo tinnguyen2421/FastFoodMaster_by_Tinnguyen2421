@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerPaymentOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 
@@ -20,10 +20,10 @@ import java.util.List;
 public class PayableOrderAdapter extends RecyclerView.Adapter<PayableOrderAdapter.ViewHolder> {
 
     private Context context;
-    private List<CustomerPaymentOrders> customerPaymentOrderslist;
+    private List<CustomerOrders> customerOrderslist;
 
-    public PayableOrderAdapter(Context context, List<CustomerPaymentOrders> customerPendingOrderslist) {
-        this.customerPaymentOrderslist = customerPendingOrderslist;
+    public PayableOrderAdapter(Context context, List<CustomerOrders> customerPendingOrderslist) {
+        this.customerOrderslist = customerPendingOrderslist;
         this.context = context;
     }
 
@@ -37,11 +37,11 @@ public class PayableOrderAdapter extends RecyclerView.Adapter<PayableOrderAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final CustomerPaymentOrders customerPaymentOrders = customerPaymentOrderslist.get(position);
-        holder.Dishname.setText(position+1+"."+customerPaymentOrders.getDishName());
-        //holder.Price.setText("Giá:" + customerPaymentOrders.getDishPrice()+"đ");
-        if (customerPaymentOrders != null && customerPaymentOrders.getDishPrice() != null) {
-            String priceString = customerPaymentOrders.getDishPrice();
+        final CustomerOrders customerOrders = customerOrderslist.get(position);
+        holder.Dishname.setText(position+1+"."+ customerOrders.getDishName());
+        //holder.Price.setText("Giá:" + customerOrders.getDishPrice()+"đ");
+        if (customerOrders != null && customerOrders.getDishPrice() != null) {
+            String priceString = customerOrders.getDishPrice();
             // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
             String priceWithoutComma = priceString.replace(",", "").trim();
             try {
@@ -56,9 +56,9 @@ public class PayableOrderAdapter extends RecyclerView.Adapter<PayableOrderAdapte
                 e.printStackTrace();
             }
         }
-        holder.Quantity.setText("× " + customerPaymentOrders.getDishQuantity());
-        if (customerPaymentOrders != null && customerPaymentOrders.getTotalPrice() != null) {
-            String totalPriceString = customerPaymentOrders.getTotalPrice();
+        holder.Quantity.setText("× " + customerOrders.getDishQuantity());
+        if (customerOrders != null && customerOrders.getTotalPrice() != null) {
+            String totalPriceString = customerOrders.getTotalPrice();
             // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
             String totalPriceWithoutComma = totalPriceString.replace(",", "").trim();
             try {
@@ -73,12 +73,12 @@ public class PayableOrderAdapter extends RecyclerView.Adapter<PayableOrderAdapte
                 e.printStackTrace();
             }
         }
-        //holder.Totalprice.setText("Tổng tiền: " + customerPaymentOrders.getTotalPrice()+"đ");
+        //holder.Totalprice.setText("Tổng tiền: " + customerOrders.getTotalPrice()+"đ");
     }
 
     @Override
     public int getItemCount() {
-        return customerPaymentOrderslist.size();
+        return customerOrderslist.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

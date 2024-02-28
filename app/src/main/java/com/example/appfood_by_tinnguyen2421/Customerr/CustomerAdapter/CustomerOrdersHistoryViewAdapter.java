@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -17,11 +17,11 @@ import java.util.List;
 public class CustomerOrdersHistoryViewAdapter extends RecyclerView.Adapter<CustomerOrdersHistoryViewAdapter.ViewHolder>
 {
     private Context mcontext;
-    private List<CustomerFinalOrders> customerFinalOrdersList;
+    private List<CustomerOrders> customerOrdersList;
 
-    public CustomerOrdersHistoryViewAdapter(Context mcontext, List<CustomerFinalOrders> customerFinalOrdersList) {
+    public CustomerOrdersHistoryViewAdapter(Context mcontext, List<CustomerOrders> customerOrdersList) {
         this.mcontext = mcontext;
-        this.customerFinalOrdersList = customerFinalOrdersList;
+        this.customerOrdersList = customerOrdersList;
     }
 
     @NonNull
@@ -33,16 +33,16 @@ public class CustomerOrdersHistoryViewAdapter extends RecyclerView.Adapter<Custo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final CustomerFinalOrders customerOrdersHistoryModel=customerFinalOrdersList.get(position);
-        holder.dishname.setText(position+1+"."+customerOrdersHistoryModel.getDishName());
-        holder.price.setText("Giá tiền: " + customerOrdersHistoryModel.getDishPrice()+"đ");
-        holder.quantity.setText("× " + customerOrdersHistoryModel.getDishQuantity());
-        holder.totalprice.setText("Tổng cộng:" + customerOrdersHistoryModel.getTotalPrice()+"đ");
+        final CustomerOrders customerOrders=customerOrdersList.get(position);
+        holder.dishname.setText(position+1+"."+customerOrders.getDishName());
+        holder.price.setText("Giá tiền: " + customerOrders.getDishPrice()+"đ");
+        holder.quantity.setText("× " + customerOrders.getDishQuantity());
+        holder.totalprice.setText("Tổng cộng:" + customerOrders.getTotalPrice()+"đ");
     }
 
     @Override
     public int getItemCount() {
-        return customerFinalOrdersList.size();
+        return customerOrdersList.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
 

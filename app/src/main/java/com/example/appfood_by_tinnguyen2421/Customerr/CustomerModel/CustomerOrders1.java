@@ -1,46 +1,38 @@
 package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class CustomerFinalOrders1 {
+public class CustomerOrders1 {
 
-    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,Status,Date,AceptDate,ShippingDate,OrderStatus;
+    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID, OrderDate, PaymentMethod,OrderStatus,ShippingDate;
 
-    public String getDate() {
-        return Date;
+    public String getOrderDate() {
+        return OrderDate;
     }
 
-    public void setDate(String date) {
-        Date = date;
+    public void setOrderDate(String orderDate) {
+        OrderDate = orderDate;
     }
 
-    public String getShippingDate() {
-        return ShippingDate;
-    }
-
-    public void setShippingDate(String shippingDate) {
-        ShippingDate = shippingDate;
-    }
-
-    public CustomerFinalOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String status, String date, String aceptDate, String shippingDate,String orderStatus) {
+    public CustomerOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String date, String paymentMethod, String orderStatus,String shippingDate) {
         Address = address;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
         Name = name;
         Note = note;
         RandomUID = randomUID;
-        Status = status;
-        Date=date;
-        AceptDate=aceptDate;
-        ShippingDate=shippingDate;
+        OrderDate =date;
+        PaymentMethod =paymentMethod;
         OrderStatus=orderStatus;
+        ShippingDate=shippingDate;
+
     }
 
-    public String getAceptDate() {
-        return AceptDate;
+    public String getPaymentMethod() {
+        return PaymentMethod;
     }
 
-    public void setAceptDate(String aceptDate) {
-        AceptDate = aceptDate;
+    public void setPaymentMethod(String paymentMethod) {
+        PaymentMethod = paymentMethod;
     }
 
     public String getOrderStatus() {
@@ -51,9 +43,16 @@ public class CustomerFinalOrders1 {
         OrderStatus = orderStatus;
     }
 
-    public CustomerFinalOrders1()
-    {
+    public CustomerOrders1() {
 
+    }
+
+    public String getShippingDate() {
+        return ShippingDate;
+    }
+
+    public void setShippingDate(String shippingDate) {
+        ShippingDate = shippingDate;
     }
 
     public String getAddress() {
@@ -102,13 +101,5 @@ public class CustomerFinalOrders1 {
 
     public void setRandomUID(String randomUID) {
         RandomUID = randomUID;
-    }
-
-    public String getStatus() {
-        return Status;
-    }
-
-    public void setStatus(String status) {
-        Status = status;
     }
 }

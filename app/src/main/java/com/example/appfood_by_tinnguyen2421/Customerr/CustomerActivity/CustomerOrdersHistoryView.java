@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerOrdersHistoryViewAdapter;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
+import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
 import com.example.appfood_by_tinnguyen2421.SendNotification.Client;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class CustomerOrdersHistoryView extends AppCompatActivity {
     RecyclerView recyclerView;
-    private List<CustomerFinalOrders> customerOrdersHistoryList;
+    private List<CustomerOrders> customerOrdersList;
     private CustomerOrdersHistoryViewAdapter adapter;
     DatabaseReference reference;
     String RandomUID;
@@ -42,7 +42,7 @@ public class CustomerOrdersHistoryView extends AppCompatActivity {
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(CustomerOrdersHistoryView.this));
-        customerOrdersHistoryList = new ArrayList<>();
+        customerOrdersList = new ArrayList<>();
         CustomerordersHistoryView();
     }
     private void CustomerordersHistoryView() {
@@ -51,12 +51,12 @@ public class CustomerOrdersHistoryView extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                customerOrdersHistoryList.clear();
+                customerOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    CustomerFinalOrders customerFinalOrders = snapshot.getValue(CustomerFinalOrders.class);
-                    customerOrdersHistoryList.add(customerFinalOrders);
+                    CustomerOrders customerOrders = snapshot.getValue(CustomerOrders.class);
+                    customerOrdersList.add(customerOrders);
                 }
-                adapter = new CustomerOrdersHistoryViewAdapter(CustomerOrdersHistoryView.this, customerOrdersHistoryList);
+                adapter = new CustomerOrdersHistoryViewAdapter(CustomerOrdersHistoryView.this, customerOrdersList);
                 recyclerView.setAdapter(adapter);
             }
             @Override
@@ -68,16 +68,16 @@ public class CustomerOrdersHistoryView extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                CustomerFinalOrders1 customerFinalOrders1 = dataSnapshot.getValue(CustomerFinalOrders1.class);
+                CustomerOrders1 customerOrders1 = dataSnapshot.getValue(CustomerOrders1.class);
                 grantotal=findViewById(R.id.txtGrandTotal);
                 idOrders=findViewById(R.id.txtOrdersID);
                 cusName=findViewById(R.id.txtCusName);
                 ShippingTime=findViewById(R.id.txtDatetime);
-                grantotal.setText(customerFinalOrders1.getGrandTotalPrice());
-                int a=customerFinalOrders1.getRandomUID().length()-10;
-                idOrders.setText(customerFinalOrders1.getRandomUID().substring(a));
-                cusName.setText(customerFinalOrders1.getName());
-                ShippingTime.setText(customerFinalOrders1.getShippingDate());
+                grantotal.setText(customerOrders1.getGrandTotalPrice());
+                int a=customerOrders1.getRandomUID().length()-10;
+                idOrders.setText(customerOrders1.getRandomUID().substring(a));
+                cusName.setText(customerOrders1.getName());
+                ShippingTime.setText(customerOrders1.getShippingDate());
 
             }
             @Override

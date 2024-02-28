@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryAdapter.DeliveryShipOrderViewAdapter;
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders;
-import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipFinalOrders1;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders;
+import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +28,7 @@ import java.util.List;
 public class DeliveryShipOrderView extends AppCompatActivity {
 
     RecyclerView recyclerViewdish;
-    private List<DeliveryShipFinalOrders> deliveryShipFinalOrdersList;
+    private List<DeliveryShipOrders> deliveryShipOrdersList;
     private DeliveryShipOrderViewAdapter adapter;
     DatabaseReference reference;
     String RandomUID;
@@ -48,7 +48,7 @@ public class DeliveryShipOrderView extends AppCompatActivity {
         address = (TextView) findViewById(R.id.ShipAddress);
         name = (TextView) findViewById(R.id.ShipName);
         number = (TextView) findViewById(R.id.ShipNumber);
-        deliveryShipFinalOrdersList = new ArrayList<>();
+        deliveryShipOrdersList = new ArrayList<>();
         deliveryfinalorders();
     }
 
@@ -60,18 +60,18 @@ public class DeliveryShipOrderView extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                deliveryShipFinalOrdersList.clear();
+                deliveryShipOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DeliveryShipFinalOrders deliveryShipFinalOrders = snapshot.getValue(DeliveryShipFinalOrders.class);
-                    deliveryShipFinalOrdersList.add(deliveryShipFinalOrders);
+                    DeliveryShipOrders deliveryShipOrders = snapshot.getValue(DeliveryShipOrders.class);
+                    deliveryShipOrdersList.add(deliveryShipOrders);
                 }
-                if (deliveryShipFinalOrdersList.size() == 0) {
+                if (deliveryShipOrdersList.size() == 0) {
                     l1.setVisibility(View.INVISIBLE);
 
                 } else {
                     l1.setVisibility(View.VISIBLE);
                 }
-                adapter = new DeliveryShipOrderViewAdapter(DeliveryShipOrderView.this, deliveryShipFinalOrdersList);
+                adapter = new DeliveryShipOrderViewAdapter(DeliveryShipOrderView.this, deliveryShipOrdersList);
                 recyclerViewdish.setAdapter(adapter);
             }
 
@@ -85,12 +85,12 @@ public class DeliveryShipOrderView extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DeliveryShipFinalOrders1 deliveryShipFinalOrders1 = dataSnapshot.getValue(DeliveryShipFinalOrders1.class);
-                grandtotal.setText( deliveryShipFinalOrders1.getGrandTotalPrice()+"đ");
-                address.setText(deliveryShipFinalOrders1.getAddress());
-                name.setText(deliveryShipFinalOrders1.getName());
-                number.setText("Số điện thoại :" + deliveryShipFinalOrders1.getMobileNumber());
-                ChefName.setText("Tên Cửa hàng :" + deliveryShipFinalOrders1.getChefName());
+                DeliveryShipOrders1 deliveryShipOrders1 = dataSnapshot.getValue(DeliveryShipOrders1.class);
+                grandtotal.setText( deliveryShipOrders1.getGrandTotalPrice()+"đ");
+                address.setText(deliveryShipOrders1.getAddress());
+                name.setText(deliveryShipOrders1.getName());
+                number.setText("Số điện thoại :" + deliveryShipOrders1.getMobileNumber());
+                ChefName.setText("Tên Cửa hàng :" + deliveryShipOrders1.getChefName());
 
             }
 

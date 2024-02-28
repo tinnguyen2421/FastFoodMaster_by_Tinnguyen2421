@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefOrderTobePreparedAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders1;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ChefOrderTobePreparedFragment extends Fragment {
     private RecyclerView recyclerView;
-    private List<ChefWaitingOrders1> chefWaitingOrders1List;
+    private List<ChefFinalOrders1> chefFinalOrders1List;
     private ChefOrderTobePreparedAdapter adapter;
     private DatabaseReference databaseReference;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -39,23 +39,23 @@ public class ChefOrderTobePreparedFragment extends Fragment {
         recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        chefWaitingOrders1List = new ArrayList<>();
+        chefFinalOrders1List = new ArrayList<>();
         swipeRefreshLayout = v.findViewById(R.id.Swipe1);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        adapter = new ChefOrderTobePreparedAdapter(getContext(), chefWaitingOrders1List);
+        adapter = new ChefOrderTobePreparedAdapter(getContext(), chefFinalOrders1List);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                chefWaitingOrders1List.clear();
+                chefFinalOrders1List.clear();
                 recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                chefWaitingOrders1List = new ArrayList<>();
+                chefFinalOrders1List = new ArrayList<>();
                 cheforderstobePrepare();
             }
         });
-        if(chefWaitingOrders1List.size()==0)
+        if(chefFinalOrders1List.size()==0)
         {
             recyclerView.setBackgroundResource(R.drawable.empty_cart);
         }
@@ -71,15 +71,15 @@ public class ChefOrderTobePreparedFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    chefWaitingOrders1List.clear();
+                    chefFinalOrders1List.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("OtherInformation");
                         data.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ChefWaitingOrders1 chefWaitingOrders1 = dataSnapshot.getValue(ChefWaitingOrders1.class);
-                                chefWaitingOrders1List.add(chefWaitingOrders1);
-                                adapter = new ChefOrderTobePreparedAdapter(getContext(), chefWaitingOrders1List);
+                                ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
+                                chefFinalOrders1List.add(chefFinalOrders1);
+                                adapter = new ChefOrderTobePreparedAdapter(getContext(), chefFinalOrders1List);
                                 recyclerView.setAdapter(adapter);
                                 swipeRefreshLayout.setRefreshing(false);
                             }

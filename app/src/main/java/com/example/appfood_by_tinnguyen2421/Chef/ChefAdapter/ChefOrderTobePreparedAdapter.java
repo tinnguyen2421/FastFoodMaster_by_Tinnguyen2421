@@ -11,9 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefOrderTobePrepared;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefOrdertobePrepareView;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefWaitingOrders1;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
@@ -22,10 +21,10 @@ import java.util.List;
 public class ChefOrderTobePreparedAdapter extends RecyclerView.Adapter<ChefOrderTobePreparedAdapter.ViewHolder> {
 
     private Context context;
-    private List<ChefWaitingOrders1> chefWaitingOrders1list;
+    private List<ChefFinalOrders1> chefFinalOrders1List;
 
-    public ChefOrderTobePreparedAdapter(Context context, List<ChefWaitingOrders1> chefWaitingOrders1list) {
-        this.chefWaitingOrders1list = chefWaitingOrders1list;
+    public ChefOrderTobePreparedAdapter(Context context, List<ChefFinalOrders1> chefFinalOrders1List) {
+        this.chefFinalOrders1List = chefFinalOrders1List;
         this.context = context;
     }
 
@@ -39,11 +38,11 @@ public class ChefOrderTobePreparedAdapter extends RecyclerView.Adapter<ChefOrder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        ChefWaitingOrders1 chefWaitingOrders1 = chefWaitingOrders1list.get(position);
+        ChefFinalOrders1 chefFinalOrders1 = chefFinalOrders1List.get(position);
         holder.STT.setText("Đơn hàng số:"+position+1);
-        holder.Address.setText("Địa chỉ:"+chefWaitingOrders1.getAddress());
-        holder.grandtotalprice.setText("Tổng đơn hàng:" + chefWaitingOrders1.getGrandTotalPrice()+"đ");
-        final String random = chefWaitingOrders1.getRandomUID();
+        holder.Address.setText("Địa chỉ:"+ chefFinalOrders1.getAddress());
+        holder.grandtotalprice.setText("Tổng đơn hàng:" + chefFinalOrders1.getGrandTotalPrice()+"đ");
+        final String random = chefFinalOrders1.getRandomUID();
 
 
         holder.Vieworder.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +58,7 @@ public class ChefOrderTobePreparedAdapter extends RecyclerView.Adapter<ChefOrder
 
     @Override
     public int getItemCount() {
-        return chefWaitingOrders1list.size();
+        return chefFinalOrders1List.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

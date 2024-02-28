@@ -102,6 +102,8 @@ public class ChefLoginEmail extends AppCompatActivity {
                     finish();
 
                 }
+
+
             });
 
             Forgotpassword.setOnClickListener(new View.OnClickListener() {

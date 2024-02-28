@@ -3,17 +3,18 @@ package com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class DeliveryShipOrders {
 
-    private String ChefId,DishId,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice,UserId;
+    private String ChefID, DishID,DishName,DishPrice,DishQuantity,RandomUID,TotalPrice, UserID,ImageURL;
 
-    public DeliveryShipOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId) {
-        ChefId = chefId;
-        DishId = dishId;
+    public DeliveryShipOrders(String chefId, String dishId, String dishName, String dishPrice, String dishQuantity, String randomUID, String totalPrice, String userId,String imageURL) {
+        ChefID = chefId;
+        DishID = dishId;
         DishName = dishName;
         DishPrice = dishPrice;
         DishQuantity = dishQuantity;
         RandomUID = randomUID;
         TotalPrice = totalPrice;
-        UserId = userId;
+        UserID = userId;
+        ImageURL=imageURL;
     }
 
     public DeliveryShipOrders()
@@ -21,20 +22,20 @@ public class DeliveryShipOrders {
 
     }
 
-    public String getChefId() {
-        return ChefId;
+    public String getChefID() {
+        return ChefID;
     }
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
+    public void setChefID(String chefID) {
+        ChefID = chefID;
     }
 
-    public String getDishId() {
-        return DishId;
+    public String getDishID() {
+        return DishID;
     }
 
-    public void setDishId(String dishId) {
-        DishId = dishId;
+    public void setDishID(String dishID) {
+        DishID = dishID;
     }
 
     public String getDishName() {
@@ -57,6 +58,14 @@ public class DeliveryShipOrders {
         return DishQuantity;
     }
 
+    public String getImageURL() {
+        return ImageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        ImageURL = imageURL;
+    }
+
     public void setDishQuantity(String dishQuantity) {
         DishQuantity = dishQuantity;
     }
@@ -77,11 +86,11 @@ public class DeliveryShipOrders {
         TotalPrice = totalPrice;
     }
 
-    public String getUserId() {
-        return UserId;
+    public String getUserID() {
+        return UserID;
     }
 
-    public void setUserId(String userId) {
-        UserId = userId;
+    public void setUserID(String userID) {
+        UserID = userID;
     }
 }

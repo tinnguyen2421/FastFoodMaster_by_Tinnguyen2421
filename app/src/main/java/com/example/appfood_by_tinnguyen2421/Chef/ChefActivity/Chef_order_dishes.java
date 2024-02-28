@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefOrderDishesAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefPendingOrders;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +24,7 @@ public class Chef_order_dishes extends AppCompatActivity {
     //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
     RecyclerView recyclerViewdish;
-    private List<ChefPendingOrders> chefPendingOrdersList;
+    private List<ChefFinalOrders> chefPendingOrdersList;
     private ChefOrderDishesAdapter adapter;
     DatabaseReference reference;
     String RandomUID;
@@ -50,7 +50,7 @@ public class Chef_order_dishes extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chefPendingOrdersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChefPendingOrders chefPendingOrders = snapshot.getValue(ChefPendingOrders.class);
+                    ChefFinalOrders chefPendingOrders = snapshot.getValue(ChefFinalOrders.class);
                     chefPendingOrdersList.add(chefPendingOrders);
                 }
                 adapter = new ChefOrderDishesAdapter(Chef_order_dishes.this, chefPendingOrdersList);
