@@ -99,10 +99,10 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Customer cust = dataSnapshot.getValue(Customer.class);
-                    State = cust.getState();
+                    State = cust.getDistrict();
                     City = cust.getCity();
-                    Sub = cust.getSuburban();
-                    LocalAdd= cust.getLocalAddress();
+                    Sub = cust.getWard();
+                    LocalAdd= cust.getAddress();
                     diachii.setText(LocalAdd+","+Sub+","+City+","+State);
                     customerCate();
                     customerDishes();

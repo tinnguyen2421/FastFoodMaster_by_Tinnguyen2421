@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/cheflayout"
-    tools:context="com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefFoodPanel_BottomNavigation">
+    tools:context="com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigation">
 
     <FrameLayout
 

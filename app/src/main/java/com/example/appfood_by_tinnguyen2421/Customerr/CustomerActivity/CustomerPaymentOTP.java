@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerFoodPanel_BottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -180,7 +180,7 @@ public class CustomerPaymentOTP extends AppCompatActivity {
                                                                                                     public void onClick(DialogInterface dialog, int which) {
 
                                                                                                         dialog.dismiss();
-                                                                                                        Intent b = new Intent(CustomerPaymentOTP.this, CustomerFoodPanel_BottomNavigation.class);
+                                                                                                        Intent b = new Intent(CustomerPaymentOTP.this, CustomerBottomNavigation.class);
                                                                                                         b.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                                                         startActivity(b);
                                                                                                         finish();

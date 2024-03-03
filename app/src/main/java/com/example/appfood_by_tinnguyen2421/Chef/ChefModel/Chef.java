@@ -3,29 +3,24 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class Chef {
 
-    private String Area,City, ConfirmPassword,EmailID,Fname,House,Lname,Mobile,Password,Postcode, State,Suburban;
+    private String City, ConfirmPassword,EmailID,Fname, Address,Lname,Mobile,Password, District, Ward;
 
-    public Chef(String Area, String city, String confirmPassword, String emailID, String fname, String house, String lname, String mobile, String password, String postcode, String state, String suburban) {
-        this.Area = Area;
-        City = city;
+    public Chef( String city, String confirmPassword, String emailID, String fname, String address, String lname, String mobile, String password, String district, String ward) {
         ConfirmPassword = confirmPassword;
         EmailID = emailID;
         Fname = fname;
-        House = house;
         Lname = lname;
         Mobile = mobile;
         Password = password;
-        Postcode = postcode;
-        State = state;
-        Suburban = suburban;
+        City = city;
+        District = district;
+        Ward = ward;
+        Address = address;
     }
 
     public Chef() {
     }
 
-    public String getArea() {
-        return Area;
-    }
 
     public String getCity() {
         return City;
@@ -43,8 +38,8 @@ public class Chef {
         return Fname;
     }
 
-    public String getHouse() {
-        return House;
+    public String getAddress() {
+        return Address;
     }
 
     public String getLname() {
@@ -59,15 +54,11 @@ public class Chef {
         return Password;
     }
 
-    public String getPostcode() {
-        return Postcode;
+    public String getDistrict() {
+        return District;
     }
 
-    public String getState() {
-        return State;
-    }
-
-    public String getSuburban() {
-        return Suburban;
+    public String getWard() {
+        return Ward;
     }
 }

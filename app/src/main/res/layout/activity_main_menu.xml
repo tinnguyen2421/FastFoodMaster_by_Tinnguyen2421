@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_menu"
     tools:context=".MainMenu">
 
     <ImageView
@@ -16,7 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearlayout"
         android:layout_width="275dp"
@@ -43,16 +43,6 @@
             android:layout_gravity="center"
             android:src="@drawable/titleimg4" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:fontFamily="cursive"
-            android:text="Eat Homemade Anywhere !"
-            android:textAlignment="center"
-            android:textColor="@color/Blacklogo"
-            android:textSize="22dp" />
-
         <Button
             android:id="@+id/SignwithEmail"
             android:layout_width="230dp"
@@ -63,6 +53,7 @@
             android:paddingLeft="10dp"
             android:text="Đăng nhập bằng Email"
             android:textColor="@color/white" />
+
 
         <Button
             android:id="@+id/SignwithPhone"

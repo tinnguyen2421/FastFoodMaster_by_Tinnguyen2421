@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_Update_Delete_Dish">
+    tools:context="com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefUpdateDish">
 
     <ImageButton
         android:id="@+id/imageupload"

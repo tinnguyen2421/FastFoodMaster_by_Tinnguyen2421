@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:20.0.1'
     implementation 'com.google.firebase:firebase-messaging:20.2.3'
     implementation files('image cropper')
+    implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
 
 
     testImplementation 'junit:junit:4.13.2'

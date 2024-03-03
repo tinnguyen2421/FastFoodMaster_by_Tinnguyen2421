@@ -178,7 +178,7 @@ public class CustomerCartFragment extends Fragment {
                                                                 @Override
                                                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                                                                     if (home.isChecked()) {
-                                                                        localaddress.setText(customer.getLocalAddress() + ", " + customer.getSuburban());
+                                                                        localaddress.setText(customer.getAddress() + ", " + customer.getWard());
                                                                     } else if (other.isChecked()) {
                                                                         localaddress.getText().clear();
                                                                         Toast.makeText(getContext(), "Kiểm tra", Toast.LENGTH_SHORT).show();

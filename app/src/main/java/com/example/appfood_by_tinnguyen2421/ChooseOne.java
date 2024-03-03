@@ -9,14 +9,10 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.appfood_by_tinnguyen2421.ChefAccount.ChefLoginEmail;
+import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
 import com.example.appfood_by_tinnguyen2421.ChefAccount.ChefRegisteration;
-import com.example.appfood_by_tinnguyen2421.ChefAccount.Chefloginphone;
-import com.example.appfood_by_tinnguyen2421.CustomerAccount.CustomerLoginEmail;
-import com.example.appfood_by_tinnguyen2421.CustomerAccount.CustomerLoginPhone;
+import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
 import com.example.appfood_by_tinnguyen2421.CustomerAccount.CustomerRegisteration;
-import com.example.appfood_by_tinnguyen2421.DeliveryAccount.DeliveryLoginEmail;
-import com.example.appfood_by_tinnguyen2421.DeliveryAccount.DeliveryLoginPhone;
 import com.example.appfood_by_tinnguyen2421.DeliveryAccount.DeliveryRegisteration;
 
 
@@ -26,7 +22,6 @@ import com.example.appfood_by_tinnguyen2421.DeliveryAccount.DeliveryRegisteratio
 public class ChooseOne extends AppCompatActivity {
 
     Button Chef, Customer, DeliveryPerson;
-    Intent intent;
     String type;
     ConstraintLayout bgimage;
 
@@ -59,19 +54,18 @@ public class ChooseOne extends AppCompatActivity {
         bgimage = findViewById(R.id.back3);
         bgimage.setBackgroundDrawable(animationDrawable);
         animationDrawable.start();
-        intent = getIntent();
-        type = intent.getStringExtra("Home").toString().trim();
+        type = getIntent().getStringExtra("Home").toString().trim();
 
         Chef.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (type.equals("Email")) {
-                    Intent loginemail = new Intent(ChooseOne.this, ChefLoginEmail.class);
+                    Intent loginemail = new Intent(ChooseOne.this, LoginEmail.class);
                     startActivity(loginemail);
                     finish();
                 }
                 if (type.equals("Phone")) {
-                    Intent loginphone = new Intent(ChooseOne.this, Chefloginphone.class);
+                    Intent loginphone = new Intent(ChooseOne.this, LoginPhone.class);
                     startActivity(loginphone);
                     finish();
                 }
@@ -89,12 +83,12 @@ public class ChooseOne extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (type.equals("Email")) {
-                    Intent loginemailcust = new Intent(ChooseOne.this, CustomerLoginEmail.class);
+                    Intent loginemailcust = new Intent(ChooseOne.this, LoginEmail.class);
                     startActivity(loginemailcust);
                     finish();
                 }
                 if (type.equals("Phone")) {
-                    Intent loginphonecust = new Intent(ChooseOne.this, CustomerLoginPhone.class);
+                    Intent loginphonecust = new Intent(ChooseOne.this, LoginPhone.class);
                     startActivity(loginphonecust);
                     finish();
                 }
@@ -113,12 +107,12 @@ public class ChooseOne extends AppCompatActivity {
                     startActivity(Registerdelivery);
                 }
                 if (type.equals("Phone")) {
-                    Intent loginphone = new Intent(ChooseOne.this, DeliveryLoginPhone.class);
+                    Intent loginphone = new Intent(ChooseOne.this, LoginPhone.class);
                     startActivity(loginphone);
                     finish();
                 }
                 if (type.equals("Email")) {
-                    Intent loginemail = new Intent(ChooseOne.this, DeliveryLoginEmail.class);
+                    Intent loginemail = new Intent(ChooseOne.this, LoginEmail.class);
                     startActivity(loginemail);
                     finish();
                 }

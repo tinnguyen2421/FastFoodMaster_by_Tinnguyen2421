@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
+import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,8 +69,6 @@ public class DeliveryRegisteration extends AppCompatActivity {
         cfpass = (TextInputLayout) findViewById(R.id.confirmpassword);
         mobileno = (TextInputLayout) findViewById(R.id.mobileno);
         houseno = (TextInputLayout) findViewById(R.id.Houseno);
-        area = (TextInputLayout) findViewById(R.id.Areaa);
-        postcode = (TextInputLayout) findViewById(R.id.Postcodee);
         statespin = (Spinner) findViewById(R.id.State);
         Cityspin = (Spinner) findViewById(R.id.City);
         Emaill = (Button) findViewById(R.id.emaillid);
@@ -235,7 +235,6 @@ public class DeliveryRegisteration extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         HashMap<String, String> hashMappp = new HashMap<>();
-                                        hashMappp.put("Area", Area);
                                         hashMappp.put("City", cityy);
                                         hashMappp.put("ConfirmPassword", confirmpassword);
                                         hashMappp.put("EmailID", emailid);
@@ -244,7 +243,6 @@ public class DeliveryRegisteration extends AppCompatActivity {
                                         hashMappp.put("Lname", lname);
                                         hashMappp.put("Mobile", mobile);
                                         hashMappp.put("Password", password);
-                                        hashMappp.put("Postcode", Postcode);
                                         hashMappp.put("State", statee);
                                         hashMappp.put("Suburban", suburban);
                                         firebaseDatabase.getInstance().getReference("DeliveryPerson").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -304,7 +302,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent e = new Intent(DeliveryRegisteration.this, DeliveryLoginPhone.class);
+                Intent e = new Intent(DeliveryRegisteration.this, LoginPhone.class);
                 startActivity(e);
                 finish();
             }
@@ -313,7 +311,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
         Emaill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a = new Intent(DeliveryRegisteration.this, DeliveryLoginEmail.class);
+                Intent a = new Intent(DeliveryRegisteration.this, LoginEmail.class);
                 startActivity(a);
                 finish();
             }

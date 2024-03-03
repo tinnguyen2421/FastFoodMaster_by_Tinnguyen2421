@@ -10,6 +10,9 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
+import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
+
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class MainMenu extends AppCompatActivity {
@@ -68,8 +71,8 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent signemail = new Intent(MainMenu.this, ChooseOne.class);
-                signemail.putExtra("Home", "Email");
+                Intent signemail = new Intent(MainMenu.this, LoginEmail.class);
+                //signemail.putExtra("Home", "Email");
                 startActivity(signemail);
                 finish();
             }
@@ -78,8 +81,8 @@ public class MainMenu extends AppCompatActivity {
         signinphone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signphone = new Intent(MainMenu.this, ChooseOne.class);
-                signphone.putExtra("Home", "Phone");
+                Intent signphone = new Intent(MainMenu.this, LoginPhone.class);
+                //signphone.putExtra("Home", "Phone");
                 startActivity(signphone);
                 finish();
             }

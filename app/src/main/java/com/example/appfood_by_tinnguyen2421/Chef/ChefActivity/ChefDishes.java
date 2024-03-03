@@ -65,13 +65,13 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Chef chef = dataSnapshot.getValue(Chef.class);
-                        State = chef.getState();
+                        State = chef.getDistrict();
                         City = chef.getCity();
-                        Sub = chef.getSuburban();
+                        Sub = chef.getWard();
                         addDishes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(ChefDishes.this, Chef_PostDish.class));
+                                startActivity(new Intent(ChefDishes.this, ChefPostDish.class));
                             }
                         });
                         Chefmenu();

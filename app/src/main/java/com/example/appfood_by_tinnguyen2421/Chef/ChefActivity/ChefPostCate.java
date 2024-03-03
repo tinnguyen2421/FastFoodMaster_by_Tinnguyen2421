@@ -38,23 +38,17 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.UUID;
 
-
-
-public class Chef_PostCate extends AppCompatActivity {
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+public class ChefPostCate extends AppCompatActivity {
 
     ImageButton imageButton;
     Button post_cate;
     EditText DishesID;
     TextInputLayout nameCatee, motaa;
-    String cateID,CateName, Mota;
+    String cateID, CateName, Mota;
     Uri imageuri;
-    private Uri mCropimageuri;
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseDatabase firebaseDatabase;
@@ -64,7 +58,7 @@ public class Chef_PostCate extends AppCompatActivity {
     StorageReference ref;
     String ChefId;
     String RandomUId;
-    String State, City, Sub;
+    String District, City, Ward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +66,11 @@ public class Chef_PostCate extends AppCompatActivity {
         setContentView(R.layout.activity_chef_post_cate);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        DishesID = (EditText) findViewById(R.id.dishes_ID);
-        nameCatee = (TextInputLayout) findViewById(R.id.nameCate);
-        motaa = (TextInputLayout) findViewById(R.id.Mo_ta);
+        DishesID = findViewById(R.id.dishes_ID);
+        nameCatee = findViewById(R.id.nameCate);
+        motaa = findViewById(R.id.Mo_ta);
 
-        post_cate = (Button) findViewById(R.id.postCate);
+        post_cate = findViewById(R.id.postCate);
         FAuth = FirebaseAuth.getInstance();
         databaseReference = firebaseDatabase.getInstance().getReference("FoodSupplyDetails");
         try {
@@ -86,10 +80,10 @@ public class Chef_PostCate extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Chef chefc = dataSnapshot.getValue(Chef.class);
-                    State = chefc.getState();
+                    District = chefc.getDistrict();
                     City = chefc.getCity();
-                    Sub = chefc.getSuburban();
-                    imageButton = (ImageButton) findViewById(R.id.imageupload);
+                    Ward = chefc.getWard();
+                    imageButton = findViewById(R.id.imageupload);
                     imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -103,7 +97,7 @@ public class Chef_PostCate extends AppCompatActivity {
                         public void onClick(View v) {
 
                             cateID = DishesID.getText().toString().trim();
-                            CateName =nameCatee.getEditText().getText().toString().trim();
+                            CateName = nameCatee.getEditText().getText().toString().trim();
                             Mota = motaa.getEditText().getText().toString().trim();
                             if (isValid()) {
                                 uploadImage();
@@ -132,49 +126,47 @@ public class Chef_PostCate extends AppCompatActivity {
         motaa.setError("");
 
 
-        boolean isvalidCateName = false,  isvalidMota = false, isvalid = false;
+        boolean isValidCateName = false, isValidMota = false, isValid = false;
         if (TextUtils.isEmpty(CateName)) {
             nameCatee.setErrorEnabled(true);
             nameCatee.setError("Tên thể loại không được để trống");
         } else {
             nameCatee.setError(null);
-            isvalidCateName = true;
+            isValidCateName = true;
         }
         if (TextUtils.isEmpty(Mota)) {
             motaa.setErrorEnabled(true);
             motaa.setError("Mô tả không được để trống");
         } else {
 
-            if (Mota.length()> 30) {
+            if (Mota.length() > 30) {
                 motaa.setErrorEnabled(true);
                 motaa.setError("Mô tả thể loại không được vượt quá 30 kí tự ");
-            } else if (Mota.length()< 3){
+            } else if (Mota.length() < 3) {
                 motaa.setErrorEnabled(true);
                 motaa.setError("Mô tả thể loại không được nhỏ hơn 3 kí tự ");
-            }
-            else
-            {
-                isvalidMota = true;
+            } else {
+                isValidMota = true;
             }
         }
 
 
-        isvalid = (isvalidCateName && isvalidMota ) ? true : false;
+        isValid = (isValidCateName && isValidMota) ? true : false;
 
-        return isvalid;
+        return isValid;
     }
 
     private void uploadImage() {
 
         if (imageuri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(Chef_PostCate.this);
+            final ProgressDialog progressDialog = new ProgressDialog(ChefPostCate.this);
             progressDialog.setTitle("Đang tải ảnh...");
             progressDialog.show();
             RandomUId = UUID.randomUUID().toString();
             ref = storageReference.child(RandomUId);
             ChefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-//tải hình ảnh lên Firebase Storage thông qua đối tượng ref
+            // Upload hình ảnh lên Firebase Storage thông qua đối tượng ref
             ref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
 
@@ -184,25 +176,27 @@ public class Chef_PostCate extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             RandomUId = UUID.randomUUID().toString();
-                                Categories info = new Categories(cateID,CateName,Mota, String.valueOf(uri),RandomUId);
-                            firebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId)
+                            Categories info = new Categories(cateID, CateName, Mota, String.valueOf(uri), RandomUId);
+                            firebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId)
                                     .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             progressDialog.dismiss();
-                                            Toast.makeText(Chef_PostCate.this, "Đăng thể loại thành công", Toast.LENGTH_SHORT).show();//Chuyển từ postdish sang home
+
+                                            if(isValid())
+                                            {finish();
+                                                Toast.makeText(ChefPostCate.this, "Đăng thể loại thành công", Toast.LENGTH_SHORT).show();}
                                         }
                                     });
                         }
                     });
-
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
                     progressDialog.dismiss();
-                    Toast.makeText(Chef_PostCate.this,e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChefPostCate.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -219,64 +213,24 @@ public class Chef_PostCate extends AppCompatActivity {
 
 
     private void onSelectImageClick(View v) {
-
+        // Mở activity để chọn ảnh
         CropImage.startPickImageActivity(this);
     }
 
     @Override
     @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             imageuri = CropImage.getPickImageResultUri(this, data);
-
+            ((ImageButton) findViewById(R.id.imageupload)).setImageURI(imageuri);
             if (CropImage.isReadExternalStoragePermissionsRequired(this, imageuri)) {
-                mCropimageuri = imageuri;
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
 
             } else {
-
-                startCropImageActivity(imageuri);
+                uploadImage();
             }
         }
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                ((ImageButton) findViewById(R.id.imageupload)).setImageURI(result.getUri());
-                Toast.makeText(this, "Cắt ảnh thành công", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(this, "Cắt ảnh thất bại" + result.getError(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mCropimageuri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startCropImageActivity(mCropimageuri);
-        } else {
-            Toast.makeText(this, "cancelling,required permission not granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void startCropImageActivity(Uri imageuri) {
-
-        CropImage.activity(imageuri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMultiTouchEnabled(true)
-                .start(this);
-
-
-    }
 }
-
-

@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefDishes;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_Update_Cate;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefUpdateCategories;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +37,7 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
     DatabaseReference dataaa;
     private Context mcont;
     private List<Categories> categoriesList;
-    String State, City, Sub;
+    String District, City, Ward;
     public ChefCateAdapter(Context context, List<Categories> categoriesList) {
         this.categoriesList = categoriesList;
         this.mcont = context;
@@ -70,7 +70,7 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
         holder.edt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1=new Intent(mcont, Chef_Update_Cate.class);
+                Intent intent1=new Intent(mcont, ChefUpdateCategories.class);
                 intent1.putExtra("mtl",categories.getRandomUID());
                 mcont.startActivity(intent1);
             }
@@ -84,23 +84,23 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Chef chefc = dataSnapshot.getValue(Chef.class);
-                        State = chefc.getState();
+                        District = chefc.getDistrict();
                         City = chefc.getCity();
-                        Sub = chefc.getSuburban();
+                        Ward = chefc.getWard();
                         AlertDialog.Builder builder = new AlertDialog.Builder(mcont);
                         builder.setMessage("Bạn có chắc chắn muốn xóa món ăn này");
                         builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                firebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(categories.getRandomUID()).removeValue();
+                                firebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(categories.getRandomUID()).removeValue();
 
                                 AlertDialog.Builder food = new AlertDialog.Builder(mcont);
                                 food.setMessage("Thể loại đã được xóa");
                                 food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        //mcont.startActivity(new Intent((Context) mcont, ChefFoodPanel_BottomNavigation.class));
+                                        //mcont.startActivity(new Intent((Context) mcont, ChefBottomNavigation.class));
                                     }
                                 });
                                 AlertDialog alertt = food.create();

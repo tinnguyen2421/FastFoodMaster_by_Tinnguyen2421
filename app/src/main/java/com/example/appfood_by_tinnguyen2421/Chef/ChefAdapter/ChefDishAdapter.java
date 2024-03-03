@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_Update_Delete_Dish;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefUpdateDish;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.R;
 
@@ -65,7 +65,7 @@ public class ChefDishAdapter extends RecyclerView.Adapter<ChefDishAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mcont, Chef_Update_Delete_Dish.class);
+                Intent intent = new Intent(mcont, ChefUpdateDish.class);
                 intent.putExtra("updatedeletedish", updateDishModel.getRandomUID());
                 mcont.startActivity(intent);
 

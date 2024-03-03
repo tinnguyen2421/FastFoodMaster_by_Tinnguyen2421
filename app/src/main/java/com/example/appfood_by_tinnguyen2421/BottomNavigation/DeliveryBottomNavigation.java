@@ -18,7 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
-public class Delivery_FoodPanelBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class DeliveryBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
     @Override
@@ -55,9 +55,6 @@ public class Delivery_FoodPanelBottomNavigation extends AppCompatActivity implem
                 }
             }
         });
-        //String refreshToken = String.valueOf(FirebaseMessaging.getInstance().getToken());
-        //Token token = new Token(refreshToken);
-        //FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
     }
 
     private boolean loaddeliveryfragment(Fragment fragment) {

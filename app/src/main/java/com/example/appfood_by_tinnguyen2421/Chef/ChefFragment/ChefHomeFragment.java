@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.appfood_by_tinnguyen2421.Categories;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_PostCate;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPostCate;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefCateAdapter;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
@@ -71,7 +71,7 @@ public class ChefHomeFragment extends Fragment {
     private ChefCateAdapter adapterCate;
     DatabaseReference dataaa;
     FloatingActionButton add;
-    private String State, City, Sub, Address;
+    private String District, City, Ward, Address;
 
 
     @Nullable
@@ -100,20 +100,19 @@ public class ChefHomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                if (chefc != null)
-                    State = chefc.getState();
+                if (chefc != null) District = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
-                Address = chefc.getArea();
+                Ward = chefc.getWard();
+                Address = chefc.getAddress();
                 ResName.setText(chefc.getFname() + chefc.getLname());
-                ResAddress.setText(Address + "," + Sub + "," + City + "," + State);
+                ResAddress.setText(Address + "," + Ward + "," + City + "," + District);
                 checkStatus();
                 chefCate();
 
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(getContext(), Chef_PostCate.class));
+                        startActivity(new Intent(getContext(), ChefPostCate.class));
                     }
                 });
                 ResStatus.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +133,7 @@ public class ChefHomeFragment extends Fragment {
 
     private void chefCate() {
         String userid = FirebaseAuth.getInstance().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub).child(userid);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(userid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,7 +141,6 @@ public class ChefHomeFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Categories categories = snapshot.getValue(Categories.class);
                     categoriesList.add(categories);
-
                 }
                 adapterCate = new ChefCateAdapter(getContext(), categoriesList);
                 RecyclerCate.setAdapter(adapterCate);

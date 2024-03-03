@@ -211,9 +211,9 @@ public class ChefVoucherFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getState();
+                State = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
+                Sub = chefc.getWard();
                 DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
                 databaseReference1.child(userid).addValueEventListener(new ValueEventListener() {
                     @Override

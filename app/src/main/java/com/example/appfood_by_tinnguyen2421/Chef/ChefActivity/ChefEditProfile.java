@@ -44,13 +44,13 @@ public class ChefEditProfile extends AppCompatActivity {
     String[] Q3 = {"P1", "P2", "P3", "P4", "P5", "P9", "P10", "P11", "P12", "P13", "P14"};
 
     EditText firstname, lastname, address;
-    Spinner State, City, Suburban;
+    Spinner citySpinner, districtSpinner, wardSpinner;
     TextView mobileno, Email;
     Button Update;
     LinearLayout password;
     DatabaseReference databaseReference, data;
     FirebaseDatabase firebaseDatabase;
-    String statee, cityy, suburban, email, passwordd, confirmpass;
+    String city, district, Ward, email, passwordd, confirmpass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +60,9 @@ public class ChefEditProfile extends AppCompatActivity {
         lastname = findViewById(R.id.lnamee);
         address = findViewById(R.id.address);
         Email = findViewById(R.id.emailID);
-        State = findViewById(R.id.statee);
-        City = findViewById(R.id.cityy);
-        Suburban = findViewById(R.id.sub);
+        citySpinner = findViewById(R.id.statee);
+        districtSpinner = findViewById(R.id.cityy);
+        wardSpinner = findViewById(R.id.sub);
         mobileno = findViewById(R.id.mobilenumber);
         Update = findViewById(R.id.update);
         password = findViewById(R.id.passwordlayout);
@@ -74,43 +74,43 @@ public class ChefEditProfile extends AppCompatActivity {
                 final Chef chef = dataSnapshot.getValue(Chef.class);
                 firstname.setText(chef.getFname());
                 lastname.setText(chef.getLname());
-                address.setText(chef.getArea());
+                address.setText(chef.getAddress());
                 mobileno.setText(chef.getMobile());
                 Email.setText(chef.getEmailID());
-                State.setSelection(getIndexByString(State, chef.getState()));
-                State.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                citySpinner.setSelection(getIndexByString(citySpinner, chef.getDistrict()));
+                citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        statee = value.toString().trim();
-                        if (statee.equals("Thành Phố Hồ Chí Minh")) {
+                        city = value.toString().trim();
+                        if (city.equals("Thành Phố Hồ Chí Minh")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TP_HCM) {
                                 list.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
-                            City.setAdapter(arrayAdapter);
+                            districtSpinner.setAdapter(arrayAdapter);
                         }
-                        if (statee.equals("Thành Phố Hà Nội")) {
+                        if (city.equals("Thành Phố Hà Nội")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TP_HàNội) {
                                 list.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
 
-                            City.setAdapter(arrayAdapter);
+                            districtSpinner.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, chef.getCity()));
-                        if (statee.equals("Tỉnh Tiền Giang")) {
+                        districtSpinner.setSelection(getIndexByString(districtSpinner, chef.getCity()));
+                        if (city.equals("Tỉnh Tiền Giang")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TiềnGiang) {
                                 list.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, list);
 
-                            City.setAdapter(arrayAdapter);
+                            districtSpinner.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, chef.getCity()));
+                        districtSpinner.setSelection(getIndexByString(districtSpinner, chef.getCity()));
                     }
 
                     @Override
@@ -119,38 +119,38 @@ public class ChefEditProfile extends AppCompatActivity {
                     }
                 });
 
-                City.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        cityy = value.toString().trim();
-                        if (cityy.equals("Q1")) {
+                        district = value.toString().trim();
+                        if (district.equals("Q1")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q1) {
                                 listt.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
-                            Suburban.setAdapter(arrayAdapter);
+                            wardSpinner.setAdapter(arrayAdapter);
                         }
 
-                        if (cityy.equals("Q2")) {
+                        if (district.equals("Q2")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q2) {
                                 listt.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
-                            Suburban.setAdapter(arrayAdapter);
+                            wardSpinner.setAdapter(arrayAdapter);
                         }
 
-                        if (cityy.equals("Q3")) {
+                        if (district.equals("Q3")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q3) {
                                 listt.add(text);
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ChefEditProfile.this, android.R.layout.simple_spinner_item, listt);
-                            Suburban.setAdapter(arrayAdapter);
+                            wardSpinner.setAdapter(arrayAdapter);
                         }
-                        Suburban.setSelection(getIndexByString(Suburban, chef.getSuburban()));
+                        wardSpinner.setSelection(getIndexByString(wardSpinner, chef.getWard()));
                     }
 
                     @Override
@@ -158,11 +158,11 @@ public class ChefEditProfile extends AppCompatActivity {
 
                     }
                 });
-                Suburban.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        suburban = value.toString().trim();
+                        Ward = value.toString().trim();
                     }
 
                     @Override
@@ -207,16 +207,16 @@ public class ChefEditProfile extends AppCompatActivity {
                         String Address = address.getText().toString().trim();
 
                         HashMap<String, String> hashMappp = new HashMap<>();
-                        hashMappp.put("Area", Address);
-                        hashMappp.put("City", cityy);
+                        hashMappp.put("Address", Address);
+                        hashMappp.put("District", district);
                         hashMappp.put("ConfirmPassword", confirmpass);
                         hashMappp.put("FirstName", Fname);
                         hashMappp.put("EmailID", email);
                         hashMappp.put("LastName", Lname);
                         hashMappp.put("Mobileno", String.valueOf(mobilenoo));
                         hashMappp.put("Password", passwordd);
-                        hashMappp.put("State", statee);
-                        hashMappp.put("Suburban", suburban);
+                        hashMappp.put("City", city);
+                        hashMappp.put("Ward", Ward);
                         firebaseDatabase.getInstance().getReference("Chef").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
                         AlertDialog.Builder builder = new AlertDialog.Builder(ChefEditProfile.this);
                         Toast.makeText(ChefEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();

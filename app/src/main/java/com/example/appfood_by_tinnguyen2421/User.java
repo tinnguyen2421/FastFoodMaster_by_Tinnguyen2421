@@ -5,6 +5,14 @@ public class User {
 
     String Role;
 
+    public String getRole() {
+        return Role;
+    }
+
+    public void setRole(String role) {
+        Role = role;
+    }
+
     public User(String role)
     {
         Role=role;

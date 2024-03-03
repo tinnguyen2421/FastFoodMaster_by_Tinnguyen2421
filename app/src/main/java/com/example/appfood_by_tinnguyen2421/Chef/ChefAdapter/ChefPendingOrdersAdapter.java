@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.Chef_order_dishes;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefOrderDishes;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
@@ -92,7 +92,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
         holder.Vieworder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Chef_order_dishes.class);
+                Intent intent = new Intent(context, ChefOrderDishes.class);
                 intent.putExtra("RandomUID", random);
                 context.startActivity(intent);
             }

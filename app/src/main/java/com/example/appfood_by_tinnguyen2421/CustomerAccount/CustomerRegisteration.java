@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
+import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,9 +54,9 @@ public class CustomerRegisteration extends AppCompatActivity {
     FirebaseAuth FAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String statee;
-    String cityy;
-    String suburban;
+    String city;
+    String district;
+    String ward;
     String email;
     String password;
     String firstname;
@@ -96,8 +98,8 @@ public class CustomerRegisteration extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Object value = parent.getItemAtPosition(position);
-                    statee = value.toString().trim();
-                    if (statee.equals("Thành Phố Hồ Chí Minh")) {
+                    city = value.toString().trim();
+                    if (city.equals("Thành Phố Hồ Chí Minh")) {
                         ArrayList<String> list = new ArrayList<>();
                         for (String text : TP_HCM) {
                             list.add(text);
@@ -106,7 +108,7 @@ public class CustomerRegisteration extends AppCompatActivity {
 
                         Distric.setAdapter(arrayAdapter);
                     }
-                    if (statee.equals("Thành Phố Hà Nội")) {
+                    if (city.equals("Thành Phố Hà Nội")) {
                         ArrayList<String> list = new ArrayList<>();
                         for (String text : TP_HàNội) {
                             list.add(text);
@@ -115,7 +117,7 @@ public class CustomerRegisteration extends AppCompatActivity {
 
                         Distric.setAdapter(arrayAdapter);
                     }
-                    if (statee.equals("Tỉnh Tiền Giang")) {
+                    if (city.equals("Tỉnh Tiền Giang")) {
                         ArrayList<String> list = new ArrayList<>();
                         for (String text : TiềnGiang) {
                             list.add(text);
@@ -137,8 +139,8 @@ public class CustomerRegisteration extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Object value = parent.getItemAtPosition(position);
-                    cityy = value.toString().trim();
-                    if (cityy.equals("Q1")) {
+                    district = value.toString().trim();
+                    if (district.equals("Q1")) {
                         ArrayList<String> listt = new ArrayList<>();
                         for (String text : Q1) {
                             listt.add(text);
@@ -147,7 +149,7 @@ public class CustomerRegisteration extends AppCompatActivity {
                         Ward.setAdapter(arrayAdapter);
                     }
 
-                    if (cityy.equals("Q2")) {
+                    if (district.equals("Q2")) {
                         ArrayList<String> listt = new ArrayList<>();
                         for (String text : Q2) {
                             listt.add(text);
@@ -156,7 +158,7 @@ public class CustomerRegisteration extends AppCompatActivity {
                         Ward.setAdapter(arrayAdapter);
                     }
 
-                    if (cityy.equals("Q3")) {
+                    if (district.equals("Q3")) {
                         ArrayList<String> listt = new ArrayList<>();
                         for (String text : Q3) {
                             listt.add(text);
@@ -177,8 +179,8 @@ public class CustomerRegisteration extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Object value = parent.getItemAtPosition(position);
-                    suburban = value.toString().trim();
-                    if (suburban.equals("Phường Bến Nghé")) {
+                    ward = value.toString().trim();
+                    if (ward.equals("Phường Bến Nghé")) {
                         ArrayList<String> listt = new ArrayList<>();
                         for (String text : Q1) {
                             listt.add(text);
@@ -244,16 +246,16 @@ public class CustomerRegisteration extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             HashMap<String, String> hashMappp = new HashMap<>();
-                                            hashMappp.put("City", cityy);
                                             hashMappp.put("ConfirmPassword", confirmpass);
                                             hashMappp.put("EmailID", email);
                                             hashMappp.put("FirstName", firstname);
                                             hashMappp.put("LastName", lastname);
                                             hashMappp.put("Mobileno", mobileno);
                                             hashMappp.put("Password", password);
-                                            hashMappp.put("LocalAddress", Localaddress);
-                                            hashMappp.put("State", statee);
-                                            hashMappp.put("Suburban", suburban);
+                                            hashMappp.put("Address", Localaddress);
+                                            hashMappp.put("City", city);
+                                            hashMappp.put("District", district);
+                                            hashMappp.put("Ward", ward);
                                             firebaseDatabase.getInstance().getReference("Customer")
                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                     .setValue(hashMappp).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -275,7 +277,7 @@ public class CustomerRegisteration extends AppCompatActivity {
 
                                                                                 dialog.dismiss();
                                                                                 String phonenumber = Cpp.getSelectedCountryCodeWithPlus() + mobileno;
-                                                                                Intent b = new Intent(CustomerRegisteration.this, CustomerRegisteration.class);
+                                                                                Intent b = new Intent(CustomerRegisteration.this, CustomerVerifyPhone.class);
                                                                                 b.putExtra("phonenumber", phonenumber);
                                                                                 startActivity(b);
 
@@ -317,7 +319,7 @@ public class CustomerRegisteration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(CustomerRegisteration.this, CustomerLoginEmail.class);
+                Intent i = new Intent(CustomerRegisteration.this, LoginEmail.class);
                 startActivity(i);
                 finish();
             }
@@ -327,7 +329,7 @@ public class CustomerRegisteration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent e = new Intent(CustomerRegisteration.this, CustomerLoginPhone.class);
+                Intent e = new Intent(CustomerRegisteration.this, LoginPhone.class);
                 startActivity(e);
                 finish();
             }
@@ -337,17 +339,6 @@ public class CustomerRegisteration extends AppCompatActivity {
     }
 
     String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    String namepattern="[^a-zA-Z0-9 ]";
-    String numberPattern = "\\d+";
-//else if (firstname.matches(".*" + namepattern + ".*")) {
-  //      fname.setErrorEnabled(true);
-    //    fname.setError("Họ và tên lót không được chứa kí tự đặc biệt");
-    //}
-    //else if (firstname.matches(numberPattern)) {
-      //  fname.setErrorEnabled(true);
-        //fname.setError("Họ và tên lót không được là số");
-    //}
-
     public boolean isValid() {
         emaill.setErrorEnabled(false);
         emaill.setError("");

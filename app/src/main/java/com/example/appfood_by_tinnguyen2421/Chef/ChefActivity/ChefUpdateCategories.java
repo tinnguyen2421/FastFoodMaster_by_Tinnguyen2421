@@ -43,7 +43,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 
-public class Chef_Update_Cate extends AppCompatActivity {
+public class ChefUpdateCategories extends AppCompatActivity {
     private ArrayList<String> categoryList;
     ImageButton imageButton;
     Uri imageuri;
@@ -63,14 +63,14 @@ public class Chef_Update_Cate extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     DatabaseReference dataaa;
-    String State, City, Sub;
-    EditText edtCateID;
+    String District, City, Ward;
+    EditText CateID;
     Button update_Cate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_update_cate);
-        edtCateID=findViewById(R.id.Cate_id);
+        CateID =findViewById(R.id.Cate_id);
         CateName=findViewById(R.id.cate_name);
         DesCate=findViewById(R.id.MotaCate);
         update_Cate=findViewById(R.id.Updatedishh);
@@ -84,14 +84,14 @@ public class Chef_Update_Cate extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getState();
+                District = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
+                Ward = chefc.getWard();
                 update_Cate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v)
                     {
-                        cateIDD=edtCateID.getText().toString().trim();
+                        cateIDD= CateID.getText().toString().trim();
                         CateNamee=CateName.getEditText().getText().toString().trim();
                         DesCatee = DesCate.getEditText().getText().toString().trim();
                         if (isValid()) {
@@ -105,17 +105,17 @@ public class Chef_Update_Cate extends AppCompatActivity {
                 });
 
                 String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                progressDialog = new ProgressDialog(Chef_Update_Cate.this);
-                databaseReference = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub).child(useridd).child(RandomUId);
+                progressDialog = new ProgressDialog(ChefUpdateCategories.this);
+                databaseReference = FirebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(useridd).child(RandomUId);
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         UpdateCateModel updateCateModel = dataSnapshot.getValue(UpdateCateModel.class);
-                        edtCateID.setText( updateCateModel.getCateID());
+                        CateID.setText( updateCateModel.getCateID());
                         DesCate.getEditText().setText(updateCateModel.getMota());
                         CateName.getEditText().setText(updateCateModel.getTentheloai());
-                        Glide.with(Chef_Update_Cate.this).load(updateCateModel.getImage()).into(imageButton);
+                        Glide.with(ChefUpdateCategories.this).load(updateCateModel.getImage()).into(imageButton);
                         dburi = updateCateModel.getImage();
                     }
                     @Override
@@ -214,7 +214,7 @@ public class Chef_Update_Cate extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(Chef_Update_Cate.this, "Thất bại : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChefUpdateCategories.this, "Thất bại : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -231,13 +231,13 @@ public class Chef_Update_Cate extends AppCompatActivity {
     private void updatedesc(String uri) {
         ChefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Categories info = new Categories( cateIDD,CateNamee, DesCatee, uri,RandomUId);
-        firebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub)
+        firebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward)
                 .child(ChefId).child(RandomUId)
                 .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         progressDialog.dismiss();
-                        Toast.makeText(Chef_Update_Cate.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChefUpdateCategories.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

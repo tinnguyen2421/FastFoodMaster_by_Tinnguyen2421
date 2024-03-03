@@ -1,4 +1,4 @@
-package com.example.appfood_by_tinnguyen2421.ChefAccount;
+package com.example.appfood_by_tinnguyen2421.Account;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.ChefAccount.ChefRegisteration;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hbb20.CountryCodePicker;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class Chefloginphone extends AppCompatActivity {
+public class LoginPhone extends AppCompatActivity {
     TextInputLayout phonenumb;
     EditText num;
     Button sendotp,signinemail;
@@ -27,7 +28,7 @@ public class Chefloginphone extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chefloginphone);
+        setContentView(R.layout.activity_loginphone);
 
         num=(EditText)findViewById(R.id.number);
         sendotp=(Button)findViewById(R.id.otp);
@@ -47,11 +48,10 @@ public class Chefloginphone extends AppCompatActivity {
                         if(numberr.isEmpty()||numberr.length()>11||numberr.length()<10)
                         {
                             num.setError("Vui lòng không để trống và nhập đúng số điện thoại");
-
                         }
                         else {
                             String phonenumber = cpp.getSelectedCountryCodeWithPlus() + numberr;
-                            Intent b = new Intent(Chefloginphone.this, Chefsendotp.class);
+                            Intent b = new Intent(LoginPhone.this, SendOTP.class);
                             b.putExtra("phonenumber", phonenumber);
                             startActivity(b);
                             finish();
@@ -63,7 +63,7 @@ public class Chefloginphone extends AppCompatActivity {
         txtsignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a=new Intent(Chefloginphone.this, ChefRegisteration.class);
+                Intent a=new Intent(LoginPhone.this, ChefRegisteration.class);
                 startActivity(a);
                 finish();
             }
@@ -73,7 +73,7 @@ public class Chefloginphone extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent em=new Intent(Chefloginphone.this, ChefLoginEmail.class);
+                Intent em=new Intent(LoginPhone.this, LoginEmail.class);
                 startActivity(em);
                 finish();
             }

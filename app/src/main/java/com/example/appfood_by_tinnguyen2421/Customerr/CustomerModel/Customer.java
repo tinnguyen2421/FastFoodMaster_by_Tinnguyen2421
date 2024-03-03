@@ -4,24 +4,24 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
 public class Customer {
 
 
-    private String City,ConfirmPassword,EmailID,FirstName,LastName,Mobileno,Password,State,Suburban,LocalAddress;
+    private String City,ConfirmPassword,EmailID,FirstName,LastName,Mobileno,Password, District, Ward, Address;
 
     public Customer() {
 
 
     }
 
-    public Customer(String City, String confirmPassword, String emailID, String firstName, String lastName, String mobileno, String password, String state, String suburban, String localAddress) {
-        this.City = City;
+    public Customer(String city, String confirmPassword, String emailID, String firstName, String lastName, String mobileno, String password, String district, String ward, String address) {
         ConfirmPassword=confirmPassword;
         EmailID = emailID;
         FirstName=firstName;
         LastName=lastName;
         Mobileno = mobileno;
         Password = password;
-        State = state;
-        Suburban = suburban;
-        LocalAddress=localAddress;
+        City = city;
+        District = district;
+        Ward = ward;
+        Address = address;
     }
 
     public String getCity() {
@@ -80,27 +80,27 @@ public class Customer {
         Password = password;
     }
 
-    public String getState() {
-        return State;
+    public String getDistrict() {
+        return District;
     }
 
-    public void setState(String state) {
-        State = state;
+    public void setDistrict(String district) {
+        District = district;
     }
 
-    public String getSuburban() {
-        return Suburban;
+    public String getWard() {
+        return Ward;
     }
 
-    public void setSuburban(String suburban) {
-        Suburban = suburban;
+    public void setWard(String ward) {
+        Ward = ward;
     }
 
-    public String getLocalAddress() {
-        return LocalAddress;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setLocalAddress(String localAddress) {
-        LocalAddress = localAddress;
+    public void setAddress(String address) {
+        Address = address;
     }
 }

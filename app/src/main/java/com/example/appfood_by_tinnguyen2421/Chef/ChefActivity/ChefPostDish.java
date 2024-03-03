@@ -50,7 +50,7 @@ import java.util.UUID;
 
 
 
-public class Chef_PostDish extends AppCompatActivity {
+public class ChefPostDish extends AppCompatActivity {
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 
@@ -77,7 +77,7 @@ public class Chef_PostDish extends AppCompatActivity {
     StorageReference ref;
     String ChefId;
     String RandomUId;
-    String State, City, Sub;
+    String District, City, Ward;
     private double giaGocDouble, giaGiamDouble, tiLeDouble;
 
     @Override
@@ -117,9 +117,9 @@ public class Chef_PostDish extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Chef chefc = dataSnapshot.getValue(Chef.class);
-                    State = chefc.getState();
+                    District = chefc.getDistrict();
                     City = chefc.getCity();
-                    Sub = chefc.getSuburban();
+                    Ward = chefc.getWard();
                     showdataspinner();
                     imageButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -168,10 +168,10 @@ public class Chef_PostDish extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getState();
+                District = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
-                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub);
+                Ward = chefc.getWard();
+                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(District).child(City).child(Ward);
                 databaseReference1.child(userid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -180,7 +180,7 @@ public class Chef_PostDish extends AppCompatActivity {
                         {
                             categoryList.add(item.child("CateID").getValue(String.class));
                         }
-                        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(Chef_PostDish.this, com.hbb20.R.layout.support_simple_spinner_dropdown_item,categoryList);
+                        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(ChefPostDish.this, com.hbb20.R.layout.support_simple_spinner_dropdown_item,categoryList);
                         spinner.setAdapter(arrayAdapter);
                     }
                     @Override
@@ -195,7 +195,7 @@ public class Chef_PostDish extends AppCompatActivity {
     }
     private void uploadImage() {
         if (imageuri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(Chef_PostDish.this);
+            final ProgressDialog progressDialog = new ProgressDialog(ChefPostDish.this);
             progressDialog.setTitle("Đang tải ảnh...");
             progressDialog.show();
             RandomUId = UUID.randomUUID().toString();
@@ -208,13 +208,13 @@ public class Chef_PostDish extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             FoodSupplyDetails info = new FoodSupplyDetails(cateID,dishes, price, description, String.valueOf(uri), RandomUId, ChefId,discount,title,Discounting,AvailableDish);
-                            firebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId)
+                            firebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(District).child(Ward).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUId)
                                     .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(Chef_PostDish.this, "Đăng món thành công", Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(Chef_PostDish.this, ChefDishes.class );
+                                    Toast.makeText(ChefPostDish.this, "Đăng món thành công", Toast.LENGTH_SHORT).show();
+                                    Intent intent=new Intent(ChefPostDish.this, ChefDishes.class );
                                     startActivity(intent);
                                 }
                             });
@@ -226,7 +226,7 @@ public class Chef_PostDish extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
 
                     progressDialog.dismiss();
-                    Toast.makeText(Chef_PostDish.this,e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChefPostDish.this,e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -240,7 +240,7 @@ public class Chef_PostDish extends AppCompatActivity {
         }
         else
         {
-            final ProgressDialog progressDialog = new ProgressDialog(Chef_PostDish.this);
+            final ProgressDialog progressDialog = new ProgressDialog(ChefPostDish.this);
             progressDialog.setTitle("Hình ảnh không được để trống...");
             progressDialog.show();
         }

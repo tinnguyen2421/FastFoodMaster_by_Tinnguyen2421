@@ -21,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
-import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerFoodPanel_BottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDishesAdapter;
@@ -101,9 +101,9 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Customer cust = dataSnapshot.getValue(Customer.class);
-                        State = cust.getState();
+                        State = cust.getDistrict();
                         City = cust.getCity();
-                        Sub = cust.getSuburban();
+                        Sub = cust.getWard();
                         customermenu();
                     }
                     @Override
@@ -123,9 +123,9 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Customer cust = dataSnapshot.getValue(Customer.class);
-                State = cust.getState();
+                State = cust.getDistrict();
                 City = cust.getCity();
-                Sub = cust.getSuburban();
+                Sub = cust.getWard();
                 RandomId = getIntent().getStringExtra("FoodMenu");
                 ChefID = getIntent().getStringExtra("ChefId");
                 databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(ChefID).child(RandomId);
@@ -163,7 +163,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                 Chef chef = dataSnapshot.getValue(Chef.class);
                                 String name = "<b>" + "Tên cửa hàng: " + "</b>" + chef.getFname() + " " + chef.getLname();
                                 ChefName.setText(Html.fromHtml(name));
-                                String loc = "<b>" + "Địa chỉ: " + "</b>" + chef.getSuburban();
+                                String loc = "<b>" + "Địa chỉ: " + "</b>" + chef.getWard();
                                 ChefLoaction.setText(Html.fromHtml(loc));
                                 custID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 databaseReference = FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(custID).child(RandomId);
@@ -273,7 +273,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                             public void onClick(DialogInterface dialog, int which) {
 
                                                 dialog.dismiss();
-                                                Intent intent = new Intent(OrderDish.this, CustomerFoodPanel_BottomNavigation.class);
+                                                Intent intent = new Intent(OrderDish.this, CustomerBottomNavigation.class);
                                                 startActivity(intent);
                                                 finish();
 

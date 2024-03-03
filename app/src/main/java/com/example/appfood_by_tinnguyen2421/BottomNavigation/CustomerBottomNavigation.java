@@ -31,7 +31,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 //import com.google.firebase.iid.FirebaseInstanceId;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class CustomerBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
     TextView titletoolbar;
@@ -40,10 +40,6 @@ public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_panel__bottom_navigation);
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
-        //toolbar = findViewById(R.id.toolbar);
-        //titletoolbar = findViewById(R.id.toolbar_title);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //titletoolbar.setText("Thực đơn hôm nay");
         navigationView.setOnNavigationItemSelectedListener(this);
         UpdateToken();
         String name = getIntent().getStringExtra("PAGE");
@@ -67,7 +63,6 @@ public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implem
     }
 
     private void UpdateToken() {
-        //FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -80,9 +75,6 @@ public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implem
                 }
             }
         });
-        //String refreshToken = String.valueOf(FirebaseMessaging.getInstance().getToken());
-        //Token token = new Token(refreshToken);
-        //FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -112,8 +104,6 @@ public class CustomerFoodPanel_BottomNavigation extends AppCompatActivity implem
            case R.id.Track:
                 fragment = new CustomerVoucherFragment();
                 break;
-
-
             case R.id.Profile:
                 fragment = new CustomerProfileFragment();
                 break;

@@ -81,7 +81,6 @@ public class DeliveryPendingOrderFragmentAdapter extends RecyclerView.Adapter<De
                 context.startActivity(intent);
             }
         });
-
         holder.Accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefFoodPanel_BottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.FoodSupplyDetails;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
@@ -55,7 +55,7 @@ import java.util.UUID;
 
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class Chef_Update_Delete_Dish extends AppCompatActivity {
+public class ChefUpdateDish extends AppCompatActivity {
     private ArrayList<String> categoryList;
 
     Spinner spinnerCate;
@@ -106,9 +106,9 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getState();
+                State = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
+                Sub = chefc.getWard();
                 showdataspinner();
                 loadDishInformation();
                 Update_dish.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +135,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
                 Delete_dish.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Chef_Update_Delete_Dish.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ChefUpdateDish.this);
                         builder.setMessage("Bạn có chắc chắn muốn xóa món ăn này");
                         builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                             @Override
@@ -143,13 +143,13 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
 
                                 firebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(ID).removeValue();
 
-                                AlertDialog.Builder food = new AlertDialog.Builder(Chef_Update_Delete_Dish.this);
+                                AlertDialog.Builder food = new AlertDialog.Builder(ChefUpdateDish.this);
                                 food.setMessage("Món ăn của bạn đã được xóa");
                                 food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
-                                        startActivity(new Intent(Chef_Update_Delete_Dish.this, ChefFoodPanel_BottomNavigation.class));
+                                        startActivity(new Intent(ChefUpdateDish.this, ChefBottomNavigation.class));
                                     }
                                 });
                                 AlertDialog alertt = food.create();
@@ -194,9 +194,9 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getState();
+                State = chefc.getDistrict();
                 City = chefc.getCity();
-                Sub = chefc.getSuburban();
+                Sub = chefc.getWard();
                 DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub);
                 databaseReference1.child(userid).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -206,7 +206,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
                         {
                             categoryList.add(item.child("CateID").getValue(String.class));
                         }
-                        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(Chef_Update_Delete_Dish.this, com.hbb20.R.layout.support_simple_spinner_dropdown_item,categoryList);
+                        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(ChefUpdateDish.this, com.hbb20.R.layout.support_simple_spinner_dropdown_item,categoryList);
                         spinnerCate.setAdapter(arrayAdapter);
                     }
                     @Override
@@ -221,7 +221,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
     }
     public void loadDishInformation(){
         String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        progressDialog = new ProgressDialog(Chef_Update_Delete_Dish.this);
+        progressDialog = new ProgressDialog(ChefUpdateDish.this);
         databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(useridd).child(ID);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -229,7 +229,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
                 UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
                 dish.getEditText().setText( updateDishModel.getDishName());
                 pri.getEditText().setText(updateDishModel.getDishPrice());
-                Glide.with(Chef_Update_Delete_Dish.this).load(updateDishModel.getImageURL()).into(imageButton);
+                Glide.with(ChefUpdateDish.this).load(updateDishModel.getImageURL()).into(imageButton);
                 dburi = updateDishModel.getImageURL();
                 desc.getEditText().setText(updateDishModel.getDescription());
                 if(updateDishModel.getAvailableDish().equals("true"))
@@ -373,7 +373,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(Chef_Update_Delete_Dish.this, "Thất bại : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChefUpdateDish.this, "Thất bại : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -396,7 +396,7 @@ public class Chef_Update_Delete_Dish extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
-                Toast.makeText(Chef_Update_Delete_Dish.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChefUpdateDish.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.appfood_by_tinnguyen2421.CustomerAccount.CustomerForgotPassword;
+import com.example.appfood_by_tinnguyen2421.Account.ForgotPassword;
+import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerBottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.DeliveryBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,13 +33,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CustomerPassword extends AppCompatActivity {
+public class CustomerChangePassword extends AppCompatActivity {
 
 
     TextInputLayout current, neww, confirm;
     Button change_pwd;
     TextView forgot;
-    String cur, ne, conf, email, password;
+    String cur, ne, conf, email;
+    DatabaseReference mDatabase;
     DatabaseReference databaseReference;
 
 
@@ -49,9 +54,41 @@ public class CustomerPassword extends AppCompatActivity {
         change_pwd = (Button) findViewById(R.id.change);
         forgot = (TextView) findViewById(R.id.forgot_pwd);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("User").child(FirebaseAuth.getInstance().getUid() + "/Role");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                switch (role) {
+                    case "Chef":
+                        changePassword("Chef");
+                        break;
+                    case "Customer":
+                        changePassword("Customer");
+                        break;
+                    case "DeliveryPerson":
+                        changePassword("DeliveryPerson");
+                        break;
+                    default:
+                        //mDialog.dismiss();
+                        //Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();                                                                break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void changePassword(String role)
+    {
         final String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+        databaseReference = FirebaseDatabase.getInstance().getReference(role).child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -60,7 +97,7 @@ public class CustomerPassword extends AppCompatActivity {
                 email = customer.getEmailID();
 
 
-                change_pwd.setOnClickListener(new View.OnClickListener() {
+                     change_pwd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -85,17 +122,17 @@ public class CustomerPassword extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
 
                                                     String userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                    FirebaseDatabase.getInstance().getReference("Customer").child(userid).child("Password").setValue(ne);
-                                                    FirebaseDatabase.getInstance().getReference("Customer").child(userid).child("ConfirmPassword").setValue(conf);
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("Password").setValue(ne);
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("ConfirmPassword").setValue(conf);
 
-                                                    Toast.makeText(CustomerPassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(CustomerChangePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(CustomerPassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(CustomerChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(CustomerPassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CustomerChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -108,7 +145,7 @@ public class CustomerPassword extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent aa=new Intent(CustomerPassword.this, CustomerForgotPassword.class);
+                        Intent aa=new Intent(CustomerChangePassword.this, ForgotPassword.class);
                         startActivity(aa);
                     }
                 });
@@ -120,9 +157,7 @@ public class CustomerPassword extends AppCompatActivity {
 
             }
         });
-
     }
-
     public boolean isvalid() {
         neww.setErrorEnabled(false);
         neww.setError("");

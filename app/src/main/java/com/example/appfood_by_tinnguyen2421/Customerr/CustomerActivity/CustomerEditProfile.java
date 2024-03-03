@@ -74,10 +74,10 @@ public class CustomerEditProfile extends AppCompatActivity {
                 final Customer customer = dataSnapshot.getValue(Customer.class);
                 firstname.setText(customer.getFirstName());
                 lastname.setText(customer.getLastName());
-                address.setText(customer.getLocalAddress());
+                address.setText(customer.getAddress());
                 mobileno.setText(customer.getMobileno());
                 Email.setText(customer.getEmailID());
-                State.setSelection(getIndexByString(State, customer.getState()));
+                State.setSelection(getIndexByString(State, customer.getDistrict()));
                 State.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -150,7 +150,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, listt);
                             Suburban.setAdapter(arrayAdapter);
                         }
-                        Suburban.setSelection(getIndexByString(Suburban, customer.getSuburban()));
+                        Suburban.setSelection(getIndexByString(Suburban, customer.getWard()));
                     }
 
                     @Override
@@ -240,7 +240,7 @@ public class CustomerEditProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(CustomerEditProfile.this, CustomerPassword.class);
+                Intent intent = new Intent(CustomerEditProfile.this, CustomerChangePassword.class);
                 startActivity(intent);
             }
         });

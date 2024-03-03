@@ -25,7 +25,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 
 
-public class ChefFoodPanel_BottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class ChefBottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +60,6 @@ public class ChefFoodPanel_BottomNavigation extends AppCompatActivity implements
                 }
             }
         });
-        //String refreshToken = String.valueOf(FirebaseMessaging.getInstance().getToken());
-        //Token token = new Token(refreshToken);
-        //FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
     }
 
     private boolean loadcheffragment(Fragment fragment) {

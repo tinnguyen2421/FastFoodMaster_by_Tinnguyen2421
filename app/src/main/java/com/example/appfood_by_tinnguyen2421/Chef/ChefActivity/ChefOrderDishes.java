@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chef_order_dishes extends AppCompatActivity {
+public class ChefOrderDishes extends AppCompatActivity {
     //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
     RecyclerView recyclerViewdish;
@@ -53,7 +53,7 @@ public class Chef_order_dishes extends AppCompatActivity {
                     ChefFinalOrders chefPendingOrders = snapshot.getValue(ChefFinalOrders.class);
                     chefPendingOrdersList.add(chefPendingOrders);
                 }
-                adapter = new ChefOrderDishesAdapter(Chef_order_dishes.this, chefPendingOrdersList);
+                adapter = new ChefOrderDishesAdapter(ChefOrderDishes.this, chefPendingOrdersList);
                 recyclerViewdish.setAdapter(adapter);
 
             }

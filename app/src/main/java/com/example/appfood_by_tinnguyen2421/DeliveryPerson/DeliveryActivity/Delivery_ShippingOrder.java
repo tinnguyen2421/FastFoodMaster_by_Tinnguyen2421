@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.BottomNavigation.Delivery_FoodPanelBottomNavigation;
+import com.example.appfood_by_tinnguyen2421.BottomNavigation.DeliveryBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.DeliveryPerson.DeliveryModel.DeliveryShipOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
@@ -159,7 +159,7 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                                                                     public void onClick(DialogInterface dialog, int which) {
 
                                                                         dialog.dismiss();
-                                                                        Intent intent = new Intent(Delivery_ShippingOrder.this, Delivery_FoodPanelBottomNavigation.class);
+                                                                        Intent intent = new Intent(Delivery_ShippingOrder.this, DeliveryBottomNavigation.class);
                                                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                         startActivity(intent);
                                                                         finish();

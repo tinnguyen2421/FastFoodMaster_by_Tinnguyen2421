@@ -58,9 +58,9 @@ RecyclerView rcvHome;
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Customer cust = dataSnapshot.getValue(Customer.class);
-                        State = cust.getState();
+                        State = cust.getDistrict();
                         City = cust.getCity();
-                        Sub = cust.getSuburban();
+                        Sub = cust.getWard();
 
                         customermenu();
 

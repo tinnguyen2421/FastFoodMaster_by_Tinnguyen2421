@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
-import com.example.appfood_by_tinnguyen2421.ChefAccount.ChefForgotPassword;
+import com.example.appfood_by_tinnguyen2421.Account.ForgotPassword;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -108,7 +108,7 @@ public class ChefChangePassword extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent aa=new Intent(ChefChangePassword.this, ChefForgotPassword.class);
+                        Intent aa=new Intent(ChefChangePassword.this, ForgotPassword.class);
                         startActivity(aa);
                     }
                 });
