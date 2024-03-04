@@ -1,6 +1,5 @@
 package com.example.appfood_by_tinnguyen2421.Account;
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,45 +27,32 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ChangePassword extends AppCompatActivity {
 
+    private TextInputLayout currentPwdInputLayout, newPwdInputLayout, confirmPwdInputLayout;
+    private Button changePwdButton;
+    private TextView forgotPwdTextView;
+    private String email;
 
-    TextInputLayout current, neww, confirm;
-    Button change_pwd;
-    TextView forgot;
-    String cur, ne, conf, email;
-    DatabaseReference mDatabase;
-    DatabaseReference databaseReference;
-
+    private DatabaseReference mDatabase;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_password);
-        current = (TextInputLayout) findViewById(R.id.current_pwd);
-        neww = (TextInputLayout) findViewById(R.id.new_pwd);
-        confirm = (TextInputLayout) findViewById(R.id.confirm_pwd);
-        change_pwd = (Button) findViewById(R.id.change);
-        forgot = (TextView) findViewById(R.id.forgot_pwd);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("User").child(FirebaseAuth.getInstance().getUid() + "/Role");
+        currentPwdInputLayout = findViewById(R.id.current_pwd);
+        newPwdInputLayout = findViewById(R.id.new_pwd);
+        confirmPwdInputLayout = findViewById(R.id.confirm_pwd);
+        changePwdButton = findViewById(R.id.change);
+        forgotPwdTextView = findViewById(R.id.forgot_pwd);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference("User")
+                .child(FirebaseAuth.getInstance().getUid() + "/Role");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String role = dataSnapshot.getValue(String.class);
-                switch (role) {
-                    case "Chef":
-                        changePassword("Chef");
-                        break;
-                    case "UserModel":
-                        changePassword("UserModel");
-                        break;
-                    case "DeliveryPerson":
-                        changePassword("DeliveryPerson");
-                        break;
-                    default:
-                        //mDialog.dismiss();
-                        //Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();                                                                break;
-                }
+                changePassword(role);
             }
 
             @Override
@@ -75,50 +60,40 @@ public class ChangePassword extends AppCompatActivity {
 
             }
         });
-
-
     }
 
-    private void changePassword(String role)
-    {
-        final String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference(role).child(userid);
+    private void changePassword(String role) {
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference(role).child(userId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
                 email = userModel.getEmailID();
 
-
-                     change_pwd.setOnClickListener(new View.OnClickListener() {
+                changePwdButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String curPwd = currentPwdInputLayout.getEditText().getText().toString().trim();
+                        String newPwd = newPwdInputLayout.getEditText().getText().toString().trim();
+                        String confirmPwd = confirmPwdInputLayout.getEditText().getText().toString().trim();
 
-                        cur = current.getEditText().getText().toString().trim();
-                        ne = neww.getEditText().getText().toString().trim();
-                        conf = confirm.getEditText().getText().toString().trim();
-
-
-                        if (isvalid()) {
-
-
-                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            AuthCredential credential = EmailAuthProvider.getCredential(email, cur);
+                        if (isValid(curPwd, newPwd, confirmPwd)) {
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            AuthCredential credential = EmailAuthProvider.getCredential(email, curPwd);
 
                             user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        user.updatePassword(ne).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        user.updatePassword(newPwd).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-
-                                                    String userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("Password").setValue(ne);
-                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("ConfirmPassword").setValue(conf);
-
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userId)
+                                                            .child("Password").setValue(newPwd);
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userId)
+                                                            .child("ConfirmPassword").setValue(confirmPwd);
                                                     Toast.makeText(ChangePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(ChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -130,20 +105,17 @@ public class ChangePassword extends AppCompatActivity {
                                     }
                                 }
                             });
-
                         }
                     }
                 });
 
-                forgot.setOnClickListener(new View.OnClickListener() {
+                forgotPwdTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Intent aa=new Intent(ChangePassword.this, ForgotPassword.class);
-                        startActivity(aa);
+                        Intent intent = new Intent(ChangePassword.this, ForgotPassword.class);
+                        startActivity(intent);
                     }
                 });
-
             }
 
             @Override
@@ -152,49 +124,46 @@ public class ChangePassword extends AppCompatActivity {
             }
         });
     }
-    public boolean isvalid() {
-        neww.setErrorEnabled(false);
-        neww.setError("");
-        confirm.setErrorEnabled(false);
-        confirm.setError("");
 
-        boolean isValidnewpassword = false, isValidconfirmpasswoord = false, isvalid = false;
-        if (TextUtils.isEmpty(ne)) {
-            neww.setErrorEnabled(true);
-            neww.setError("Mật khẩu mới không được bỏ trống");
+    public boolean isValid(String curPwd, String newPwd, String confirmPwd) {
+        newPwdInputLayout.setErrorEnabled(false);
+        newPwdInputLayout.setError("");
+        confirmPwdInputLayout.setErrorEnabled(false);
+        confirmPwdInputLayout.setError("");
 
+        boolean isValidNewPassword = false, isValidConfirmPassword = false, isValid = false;
+
+        if (TextUtils.isEmpty(newPwd)) {
+            newPwdInputLayout.setErrorEnabled(true);
+            newPwdInputLayout.setError("Mật khẩu mới không được bỏ trống");
         } else {
-            if (ne.length() < 6) {
-                neww.setErrorEnabled(true);
-                neww.setError("Mật khẩu quá yếu");
-                confirm.setError("Mật khẩu quá yếu");
-            } else if (ne.length() >30) {
-                neww.setErrorEnabled(true);
-                neww.setError("Mật khẩu không vượt quá 30 ký tự");
-                confirm.setError("Mật khẩu không vượt quá 30 ký tự");
-
+            if (newPwd.length() < 6) {
+                newPwdInputLayout.setErrorEnabled(true);
+                newPwdInputLayout.setError("Mật khẩu quá yếu");
+                confirmPwdInputLayout.setError("Mật khẩu quá yếu");
+            } else if (newPwd.length() > 30) {
+                newPwdInputLayout.setErrorEnabled(true);
+                newPwdInputLayout.setError("Mật khẩu không vượt quá 30 ký tự");
+                confirmPwdInputLayout.setError("Mật khẩu không vượt quá 30 ký tự");
             } else {
-                isValidnewpassword = true;
+                isValidNewPassword = true;
             }
         }
 
-        if (TextUtils.isEmpty(conf)) {
-            confirm.setErrorEnabled(true);
-            confirm.setError("Xác nhận mật khẩu không được để trống");
-
-
+        if (TextUtils.isEmpty(confirmPwd)) {
+            confirmPwdInputLayout.setErrorEnabled(true);
+            confirmPwdInputLayout.setError("Xác nhận mật khẩu không được để trống");
         } else {
-            if (!ne.equals(conf)) {
-                neww.setErrorEnabled(true);
-                neww.setError("Mật khẩu không khớp");
-                confirm.setError("Mật khẩu không khớp");
+            if (!newPwd.equals(confirmPwd)) {
+                newPwdInputLayout.setErrorEnabled(true);
+                newPwdInputLayout.setError("Mật khẩu không khớp");
+                confirmPwdInputLayout.setError("Mật khẩu không khớp");
             } else {
-                isValidconfirmpasswoord = true;
+                isValidConfirmPassword = true;
             }
         }
-        isvalid = (isValidnewpassword && isValidconfirmpasswoord) ? true : false;
-        return isvalid;
 
+        isValid = isValidNewPassword && isValidConfirmPassword;
+        return isValid;
     }
-
 }
