@@ -39,7 +39,6 @@ public class LoginPhone extends AppCompatActivity {
         txtsignup=(TextView)findViewById(R.id.acsignup);
         FAuth=FirebaseAuth.getInstance();
 
-
             sendotp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

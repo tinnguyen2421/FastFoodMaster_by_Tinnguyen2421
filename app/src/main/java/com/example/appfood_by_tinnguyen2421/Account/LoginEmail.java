@@ -27,163 +27,138 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class LoginEmail extends AppCompatActivity {
 
-
-    TextInputLayout email, pass;
-    Button Signout,SignInphone;
-    TextView btnFogotPassword;
+    TextInputLayout emailInput, passInput;
+    Button signInButton, signInPhoneButton;
+    TextView forgotPasswordText, registerText;
     DatabaseReference mDatabase;
-    TextView btnRegisteration;
-    FirebaseAuth FAuth;
-    String em;
-    String pwd;
+    FirebaseAuth firebaseAuth;
+    String email, password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_email);
-        try {
-            email = (TextInputLayout) findViewById(R.id.Lemail);
-            pass = (TextInputLayout) findViewById(R.id.Lpassword);
-            Signout = (Button) findViewById(R.id.button4);
-            btnRegisteration = (TextView) findViewById(R.id.textView3);
-            btnFogotPassword =(TextView)findViewById(R.id.forgotpass);
-            SignInphone=(Button)findViewById(R.id.btnphone);
 
-            FAuth = FirebaseAuth.getInstance();
+        initializeViews();
+        setupButtonClickListeners();
+    }
 
-            Signout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+    private void initializeViews() {
+        emailInput = findViewById(R.id.Lemail);
+        passInput = findViewById(R.id.Lpassword);
+        signInButton = findViewById(R.id.button4);
+        registerText = findViewById(R.id.textView3);
+        forgotPasswordText = findViewById(R.id.forgotpass);
+        signInPhoneButton = findViewById(R.id.btnphone);
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
 
-                    em = email.getEditText().getText().toString().trim();
-                    pwd = pass.getEditText().getText().toString().trim();
-                    if (isValid()) {
+    private void setupButtonClickListeners() {
+        signInButton.setOnClickListener(v -> signIn());
+        registerText.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, CustomerRegisteration.class)));
+        forgotPasswordText.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, ForgotPassword.class)));
+        signInPhoneButton.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, LoginPhone.class)));
+    }
 
-                        final ProgressDialog mDialog = new ProgressDialog(LoginEmail.this);
-                        mDialog.setCanceledOnTouchOutside(false);
-                        mDialog.setCancelable(false);
-                        mDialog.setMessage("Đang đăng nhập...");
-                        mDialog.show();
-                        FAuth.signInWithEmailAndPassword(em, pwd)
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        mDialog.dismiss();
-                                        FirebaseUser currentUser = FAuth.getCurrentUser();
-                                        if (currentUser != null && currentUser.isEmailVerified()) {
-                                            mDatabase = FirebaseDatabase.getInstance().getReference("User").child(FirebaseAuth.getInstance().getUid() + "/Role");
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        String role = dataSnapshot.getValue(String.class);
-                                                        switch (role) {
-                                                            case "Chef":
-                                                                startActivity(new Intent(LoginEmail.this, ChefBottomNavigation.class));
-                                                                finish();
-                                                                break;
-                                                            case "UserModel":
-                                                                startActivity(new Intent(LoginEmail.this, CustomerBottomNavigation.class));
-                                                                finish();
-                                                                break;
-                                                            case "DeliveryPerson":
-                                                                startActivity(new Intent(LoginEmail.this, DeliveryBottomNavigation.class));
-                                                                finish();
-                                                                break;
-                                                            default:
-                                                                mDialog.dismiss();
-                                                                Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();                                                                break;
-                                                        }
-
-                                                }
-
-
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    // Xử lý khi có lỗi xảy ra
-                                                }
-                                            });
-                                        } else {
-                                            mDialog.dismiss();
-                                            ReusableCodeForAll.ShowAlert(LoginEmail.this,"Lỗi đăng nhập","Email này chưa được đăng ki");                                        }
-                                    } else {
-                                        mDialog.dismiss();
-                                        ReusableCodeForAll.ShowAlert(LoginEmail.this,"Lỗi đăng nhập","Thông tin tài khoản hoặc mật khẩu không chính xác");
-                                    }
-                                });
-
-                    }
-                }
-            });
-
-            btnRegisteration.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent Register = new Intent(LoginEmail.this, CustomerRegisteration.class);
-                    startActivity(Register);
-
-                }
-            });
-
-            btnFogotPassword.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent a=new Intent(LoginEmail.this, ForgotPassword.class);
-                    startActivity(a);
-
-                }
-            });
-            SignInphone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(LoginEmail.this, LoginPhone.class);
-                    startActivity(intent);
-                }
-            });
-        }catch (Exception e){
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    private void signIn() {
+        email = emailInput.getEditText().getText().toString().trim();
+        password = passInput.getEditText().getText().toString().trim();
+        if (isValid()) {
+            ProgressDialog progressDialog = createProgressDialog();
+            progressDialog.show();
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            handleSignInSuccess(progressDialog);
+                        } else {
+                            handleSignInFailure(progressDialog);
+                        }
+                    });
         }
     }
 
-    String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    public boolean isValid() {
-        email.setErrorEnabled(false);
-        email.setError("");
-        pass.setErrorEnabled(false);
-        pass.setError("");
+    private ProgressDialog createProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(LoginEmail.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Đang đăng nhập...");
+        return progressDialog;
+    }
 
-        boolean isvalidemail=false,isvalidpassword=false,isvalid=false;
-        if (TextUtils.isEmpty(em))
-        {
-            email.setErrorEnabled(true);
-            email.setError("Email không được để trống");
+    private void handleSignInSuccess(ProgressDialog progressDialog) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null && currentUser.isEmailVerified()) {
+            checkUserRole(progressDialog);
+        } else {
+            progressDialog.dismiss();
+            ReusableCodeForAll.ShowAlert(LoginEmail.this, "Lỗi đăng nhập", "Thông tin tài khoản hoặc mật khẩu không chính xác");
         }
-        else {
-            if (em.matches(emailpattern))
-            {
-                isvalidemail=true;
-            }
-            else {
-                email.setErrorEnabled(true);
-                email.setError("Email không hợp lệ");
+    }
+
+    private void handleSignInFailure(ProgressDialog progressDialog) {
+        progressDialog.dismiss();
+        ReusableCodeForAll.ShowAlert(LoginEmail.this, "Lỗi đăng nhập", "Thông tin tài khoản hoặc mật khẩu không chính xác");
+    }
+
+    private void checkUserRole(ProgressDialog progressDialog) {
+        mDatabase = FirebaseDatabase.getInstance().getReference("User").child(firebaseAuth.getUid() + "/Role");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                switch (role) {
+                    case "Chef":
+                        startActivity(new Intent(LoginEmail.this, ChefBottomNavigation.class));
+                        finish();
+                        break;
+                    case "Customer":
+                        startActivity(new Intent(LoginEmail.this, CustomerBottomNavigation.class));
+                        finish();
+                        break;
+                    case "DeliveryPerson":
+                        startActivity(new Intent(LoginEmail.this, DeliveryBottomNavigation.class));
+                        finish();
+                        break;
+                    default:
+                        progressDialog.dismiss();
+                        Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+    }
+
+    private boolean isValid() {
+        emailInput.setErrorEnabled(false);
+        emailInput.setError("");
+        passInput.setErrorEnabled(false);
+        passInput.setError("");
+
+        boolean isValidEmail = false, isValidPassword = false;
+        if (TextUtils.isEmpty(email)) {
+            emailInput.setErrorEnabled(true);
+            emailInput.setError("Email không được để trống");
+        } else {
+            if (email.matches("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")) {
+                isValidEmail = true;
+            } else {
+                emailInput.setErrorEnabled(true);
+                emailInput.setError("Email không hợp lệ");
+            }
         }
-        if (TextUtils.isEmpty(pwd))
-        {
-            pass.setErrorEnabled(true);
-            pass.setError("Mật khẩu không được để trống");
+        if (TextUtils.isEmpty(password)) {
+            passInput.setErrorEnabled(true);
+            passInput.setError("Mật khẩu không được để trống");
+        } else {
+            isValidPassword = true;
         }
-        else {
-            isvalidpassword=true;
-        }
-        isvalid = (isvalidemail && isvalidpassword) ? true : false;
-        return isvalid;
+        return isValidEmail && isValidPassword;
     }
 }
-
-

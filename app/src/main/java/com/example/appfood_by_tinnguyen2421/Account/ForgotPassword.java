@@ -9,79 +9,75 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+
 public class ForgotPassword extends AppCompatActivity {
 
-    TextInputLayout forgetpassword;
-    Button Reset;
-    FirebaseAuth FAuth;
-    String pgp;
+    private TextInputLayout forgetPasswordLayout;
+    private Button resetPassWordButton;
+    private FirebaseAuth firebaseAuth;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        forgetpassword = (TextInputLayout) findViewById(R.id.Emailid);
-        Reset = (Button) findViewById(R.id.button2);
-        FAuth = FirebaseAuth.getInstance();
 
+        forgetPasswordLayout = findViewById(R.id.Emailid);
+        resetPassWordButton = findViewById(R.id.button2);
+        firebaseAuth = FirebaseAuth.getInstance();
 
-            Reset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pgp = forgetpassword.getEditText().getText().toString().trim();
-                    if (isvalid()) {
-                        final ProgressDialog mDialog = new ProgressDialog(ForgotPassword.this);
-                        mDialog.setCancelable(false);
-                        mDialog.setCanceledOnTouchOutside(false);
-                        mDialog.setMessage("Đang thực hiện...");
-                        mDialog.show();
-                        FAuth.sendPasswordResetEmail(forgetpassword.getEditText().getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    mDialog.dismiss();
-                                    ReusableCodeForAll.ShowAlert(ForgotPassword.this, "", "Mật khẩu đã được gửi đến Email của bạn");
-                                } else {
-                                    mDialog.dismiss();
-                                    ReusableCodeForAll.ShowAlert(ForgotPassword.this, "Lỗi", task.getException().getMessage());
-                                }
+        resetPassWordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = forgetPasswordLayout.getEditText().getText().toString().trim();
+                if (isValid()) {
+                    final ProgressDialog progressDialog = new ProgressDialog(ForgotPassword.this);
+                    progressDialog.setCancelable(false);
+                    progressDialog.setMessage("Đang thực hiện...");
+                    progressDialog.show();
+
+                    firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                ReusableCodeForAll.ShowAlert(ForgotPassword.this, "", "Mật khẩu đã được gửi đến Email của bạn");
+                            } else {
+                                ReusableCodeForAll.ShowAlert(ForgotPassword.this, "Lỗi", task.getException().getMessage());
                             }
-                        });
-                    }
+                        }
+                    });
                 }
-            });
-
-        }
-
-    public boolean isvalid() {
-        forgetpassword.setErrorEnabled(false);
-        forgetpassword.setError("");
-        boolean isValidEmail = false,isvalid = false;
-        if (TextUtils.isEmpty(pgp)) {
-            forgetpassword.setErrorEnabled(true);
-            forgetpassword.setError("Email không được để trống");
-        }
-        else {
-            if (pgp.matches(emailpattern))
-            {
-                isValidEmail=true;
             }
-            else {
-                forgetpassword.setErrorEnabled(true);
-                forgetpassword.setError("Email không hợp lệ");
-            }
-        }
-        isvalid = (isValidEmail) ? true : false;
-        return isvalid;
+        });
     }
-    String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+    private boolean isValid() {
+        forgetPasswordLayout.setErrorEnabled(false);
+        forgetPasswordLayout.setError("");
+        boolean isValidEmail = false, isValid = false;
+
+        if (TextUtils.isEmpty(email)) {
+            forgetPasswordLayout.setErrorEnabled(true);
+            forgetPasswordLayout.setError("Email không được để trống");
+        } else {
+            if (email.matches(emailPattern)) {
+                isValidEmail = true;
+            } else {
+                forgetPasswordLayout.setErrorEnabled(true);
+                forgetPasswordLayout.setError("Email không hợp lệ");
+            }
+        }
+
+        isValid = isValidEmail;
+        return isValid;
+    }
+
+    private static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 }
