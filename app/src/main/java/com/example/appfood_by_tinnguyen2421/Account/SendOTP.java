@@ -30,191 +30,167 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+
 public class SendOTP extends AppCompatActivity {
 
-    String verificationId;
-    FirebaseAuth FAuth;
-    Button verify;
-    TextView txt;
-    String phonenumber;
-    DatabaseReference mDatabase;
-    Button Resend;
-    EditText entercode;
+    private String verificationId;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private EditText enterCodeEditText;
+    private TextView resendTextView;
+    private Button verifyButton;
+    private Button resendButton;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendotp);
 
-        phonenumber = getIntent().getStringExtra("phonenumber").trim();
-        sendverificationcode(phonenumber);
-        entercode = (EditText) findViewById(R.id.phoneno);
-        txt = (TextView) findViewById(R.id.text);
-        Resend = (Button) findViewById(R.id.Resendotp);
-        FAuth = FirebaseAuth.getInstance();
-        Resend.setVisibility(View.INVISIBLE);
-        txt.setVisibility(View.INVISIBLE);
-        verify = (Button) findViewById(R.id.Verify);
-        verify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference("User");
 
+        phoneNumber = getIntent().getStringExtra("phonenumber").trim();
+        sendVerificationCode(phoneNumber);
 
-                Resend.setVisibility(View.INVISIBLE);
-                String code = entercode.getText().toString().trim();
+        enterCodeEditText = findViewById(R.id.phoneno);
+        resendTextView = findViewById(R.id.text);
+        resendButton = findViewById(R.id.Resendotp);
+        resendButton.setVisibility(View.INVISIBLE);
 
-                if (code.isEmpty() && code.length() < 6) {
-                    entercode.setError("Vui lòng nhập đúng code");
-                    entercode.requestFocus();
-                    return;
-                }
-                verifyCode(code);
-            }
-        });
+        verifyButton = findViewById(R.id.Verify);
+        verifyButton.setOnClickListener(v -> verifyCode());
 
+        setupResendButton();
+    }
+
+    private void setupResendButton() {
         new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                txt.setVisibility(View.VISIBLE);
-                txt.setText("Gửi lại code sau " + millisUntilFinished / 1000 + " giây");
+                resendTextView.setVisibility(View.VISIBLE);
+                resendTextView.setText("Gửi lại code sau " + millisUntilFinished / 1000 + " giây");
             }
 
             @Override
             public void onFinish() {
-                Resend.setVisibility(View.VISIBLE);
-                txt.setVisibility(View.INVISIBLE);
-
+                resendButton.setVisibility(View.VISIBLE);
+                resendTextView.setVisibility(View.INVISIBLE);
             }
         }.start();
 
-        Resend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Resend.setVisibility(View.INVISIBLE);
-                Resendotp(phonenumber);
-                new CountDownTimer(60000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        txt.setVisibility(View.VISIBLE);
-                        txt.setText("Gửi lại code sau " + millisUntilFinished / 1000 + " giây");
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        Resend.setVisibility(View.VISIBLE);
-                        txt.setVisibility(View.INVISIBLE);
-
-                    }
-                }.start();
-
-            }
+        resendButton.setOnClickListener(v -> {
+            resendButton.setVisibility(View.INVISIBLE);
+            sendVerificationCode(phoneNumber);
+            startResendCountdown();
         });
     }
 
-    private void Resendotp(String phonenumber) {
+    private void startResendCountdown() {
+        new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                resendTextView.setVisibility(View.VISIBLE);
+                resendTextView.setText("Gửi lại code sau " + millisUntilFinished / 1000 + " giây");
+            }
 
-        sendverificationcode(phonenumber);
+            @Override
+            public void onFinish() {
+                resendButton.setVisibility(View.VISIBLE);
+                resendTextView.setVisibility(View.INVISIBLE);
+            }
+        }.start();
     }
 
+    private void verifyCode() {
+        String code = enterCodeEditText.getText().toString().trim();
+        if (code.isEmpty() || code.length() < 6) {
+            enterCodeEditText.setError("Vui lòng nhập đúng code");
+            enterCodeEditText.requestFocus();
+            return;
+        }
 
-    private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInwithCredential(credential);
+        signInWithCredential(credential);
     }
 
-    private void signInwithCredential(PhoneAuthCredential credential) {
-        FAuth.signInWithCredential(credential)
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser currentUser = FAuth.getCurrentUser();
+                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                         if (currentUser != null) {
-                            mDatabase = FirebaseDatabase.getInstance().getReference("User").child(currentUser.getUid() + "/Role");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String role = dataSnapshot.getValue(String.class);
-                                    switch (role) {
-                                        case "Chef":
-                                            startActivity(new Intent(SendOTP.this, ChefBottomNavigation.class));
-                                            finish();
-                                            break;
-                                        case "UserModel":
-                                            startActivity(new Intent(SendOTP.this, CustomerBottomNavigation.class));
-                                            finish();
-                                            break;
-                                        case "DeliveryPerson":
-                                            startActivity(new Intent(SendOTP.this, DeliveryBottomNavigation.class));
-                                            finish();
-                                            break;
-                                        default:
-                                            Toast.makeText(SendOTP.this, "Số điện thoại này chưa được đăng kí", Toast.LENGTH_SHORT).show();
-                                            break;
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    // Xử lý khi có lỗi xảy ra
-                                }
-                            });
+                            checkUserRole(currentUser.getUid());
                         } else {
-                            ReusableCodeForAll.ShowAlert(SendOTP.this,"Lỗi đăng nhập","Số điện thoại này chưa được đăng ki");
+                            ReusableCodeForAll.ShowAlert(SendOTP.this, "Lỗi đăng nhập", "Số điện thoại này chưa được đăng kí");
                         }
                     } else {
-                        ReusableCodeForAll.ShowAlert(SendOTP.this,"Lỗi đăng nhập","Mã xác thực không chính xác");
+                        ReusableCodeForAll.ShowAlert(SendOTP.this, "Lỗi đăng nhập", "Mã xác thực không chính xác");
                     }
                 });
     }
 
-
-// het
-    private void sendverificationcode(String number) {
-
-        //PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                //number,
-                //60L,
-              //  TimeUnit.SECONDS,
-            //    (Activity) TaskExecutors.MAIN_THREAD,
-          //      mCallBack
-        //);
-        //het
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-                .setPhoneNumber(number)
+    private void sendVerificationCode(String phoneNumber) {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(this)
-                .setCallbacks(mCallBack).build();
+                .setCallbacks(phoneAuthCallbacks)
+                .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
+    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks phoneAuthCallbacks =
+            new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                @Override
+                public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                    super.onCodeSent(s, forceResendingToken);
+                    verificationId = s;
+                }
 
-            verificationId = s;
+                @Override
+                public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                    String code = phoneAuthCredential.getSmsCode();
+                    if (code != null) {
+                        enterCodeEditText.setText(code);
+                        verifyCode();
+                    }
+                }
 
-        }
+                @Override
+                public void onVerificationFailed(FirebaseException e) {
+                    Toast.makeText(SendOTP.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            };
 
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
-
-            String code = phoneAuthCredential.getSmsCode();
-            if (code != null) {
-                entercode.setText(code);
-                verifyCode(code);
-
+    private void checkUserRole(String userId) {
+        databaseReference.child(userId + "/Role").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                switch (role) {
+                    case "Chef":
+                        startActivity(new Intent(SendOTP.this, ChefBottomNavigation.class));
+                        finish();
+                        break;
+                    case "Customer":
+                        startActivity(new Intent(SendOTP.this, CustomerBottomNavigation.class));
+                        finish();
+                        break;
+                    case "DeliveryPerson":
+                        startActivity(new Intent(SendOTP.this, DeliveryBottomNavigation.class));
+                        finish();
+                        break;
+                    default:
+                        Toast.makeText(SendOTP.this, "Số điện thoại này chưa được đăng kí", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
-        }
 
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-
-            Toast.makeText(SendOTP.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
+    }
 }
-
