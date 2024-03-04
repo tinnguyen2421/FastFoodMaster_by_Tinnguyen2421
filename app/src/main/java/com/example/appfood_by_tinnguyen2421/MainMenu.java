@@ -72,7 +72,6 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent signemail = new Intent(MainMenu.this, LoginEmail.class);
-                //signemail.putExtra("Home", "Email");
                 startActivity(signemail);
                 finish();
             }
@@ -82,7 +81,6 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent signphone = new Intent(MainMenu.this, LoginPhone.class);
-                //signphone.putExtra("Home", "Phone");
                 startActivity(signphone);
                 finish();
             }
