@@ -1,7 +1,6 @@
-package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
+package com.example.appfood_by_tinnguyen2421.Account;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,8 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
-import com.example.appfood_by_tinnguyen2421.Account.ForgotPassword;
+
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,38 +27,71 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ChefChangePassword extends AppCompatActivity {
+public class ChangePassword extends AppCompatActivity {
 
 
     TextInputLayout current, neww, confirm;
     Button change_pwd;
     TextView forgot;
-    String cur, ne, conf, email, password;
+    String cur, ne, conf, email;
+    DatabaseReference mDatabase;
     DatabaseReference databaseReference;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chef_change_password);
+        setContentView(R.layout.activity_customer_password);
         current = (TextInputLayout) findViewById(R.id.current_pwd);
         neww = (TextInputLayout) findViewById(R.id.new_pwd);
         confirm = (TextInputLayout) findViewById(R.id.confirm_pwd);
         change_pwd = (Button) findViewById(R.id.change);
         forgot = (TextView) findViewById(R.id.forgot_pwd);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("User").child(FirebaseAuth.getInstance().getUid() + "/Role");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                switch (role) {
+                    case "Chef":
+                        changePassword("Chef");
+                        break;
+                    case "UserModel":
+                        changePassword("UserModel");
+                        break;
+                    case "DeliveryPerson":
+                        changePassword("DeliveryPerson");
+                        break;
+                    default:
+                        //mDialog.dismiss();
+                        //Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();                                                                break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void changePassword(String role)
+    {
         final String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chef").child(userid);
+        databaseReference = FirebaseDatabase.getInstance().getReference(role).child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Chef chef = dataSnapshot.getValue(Chef.class);
-                email = chef.getEmailID();
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                email = userModel.getEmailID();
 
 
-                change_pwd.setOnClickListener(new View.OnClickListener() {
+                     change_pwd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -85,17 +116,17 @@ public class ChefChangePassword extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
 
                                                     String userid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                    FirebaseDatabase.getInstance().getReference("Chef").child(userid).child("Password").setValue(ne);
-                                                    FirebaseDatabase.getInstance().getReference("Chef").child(userid).child("ConfirmPassword").setValue(conf);
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("Password").setValue(ne);
+                                                    FirebaseDatabase.getInstance().getReference(role).child(userid).child("ConfirmPassword").setValue(conf);
 
-                                                    Toast.makeText(ChefChangePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ChangePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(ChefChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(ChefChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -108,7 +139,7 @@ public class ChefChangePassword extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent aa=new Intent(ChefChangePassword.this, ForgotPassword.class);
+                        Intent aa=new Intent(ChangePassword.this, ForgotPassword.class);
                         startActivity(aa);
                     }
                 });
@@ -120,9 +151,7 @@ public class ChefChangePassword extends AppCompatActivity {
 
             }
         });
-
     }
-
     public boolean isvalid() {
         neww.setErrorEnabled(false);
         neww.setError("");

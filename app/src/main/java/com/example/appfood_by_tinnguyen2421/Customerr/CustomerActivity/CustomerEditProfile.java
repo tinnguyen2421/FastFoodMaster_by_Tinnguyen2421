@@ -16,7 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
+import com.example.appfood_by_tinnguyen2421.Account.ChangePassword;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -67,17 +68,17 @@ public class CustomerEditProfile extends AppCompatActivity {
         Update = findViewById(R.id.update);
         password = findViewById(R.id.passwordlayout);
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+        databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final Customer customer = dataSnapshot.getValue(Customer.class);
-                firstname.setText(customer.getFirstName());
-                lastname.setText(customer.getLastName());
-                address.setText(customer.getAddress());
-                mobileno.setText(customer.getMobileno());
-                Email.setText(customer.getEmailID());
-                State.setSelection(getIndexByString(State, customer.getDistrict()));
+                final UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                firstname.setText(userModel.getFirstName());
+                lastname.setText(userModel.getLastName());
+                address.setText(userModel.getAddress());
+                mobileno.setText(userModel.getPhoneNumber());
+                Email.setText(userModel.getEmailID());
+                State.setSelection(getIndexByString(State, userModel.getDistrict()));
                 State.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -100,7 +101,7 @@ public class CustomerEditProfile extends AppCompatActivity {
 
                             City.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, customer.getCity()));
+                        City.setSelection(getIndexByString(City, userModel.getCity()));
                         if (statee.equals("Tỉnh Tiền Giang")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TiềnGiang) {
@@ -110,7 +111,7 @@ public class CustomerEditProfile extends AppCompatActivity {
 
                             City.setAdapter(arrayAdapter);
                         }
-                        City.setSelection(getIndexByString(City, customer.getCity()));
+                        City.setSelection(getIndexByString(City, userModel.getCity()));
                     }
 
                     @Override
@@ -150,7 +151,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, listt);
                             Suburban.setAdapter(arrayAdapter);
                         }
-                        Suburban.setSelection(getIndexByString(Suburban, customer.getWard()));
+                        Suburban.setSelection(getIndexByString(Suburban, userModel.getWard()));
                     }
 
                     @Override
@@ -188,15 +189,15 @@ public class CustomerEditProfile extends AppCompatActivity {
             public void onClick(View v) {
 
                 String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                data = FirebaseDatabase.getInstance().getReference("Customer").child(useridd);
+                data = FirebaseDatabase.getInstance().getReference("UserModel").child(useridd);
                 data.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Customer customer = dataSnapshot.getValue(Customer.class);
-                        confirmpass = customer.getConfirmPassword();
-                        email = customer.getEmailID();
-                        passwordd = customer.getPassword();
-                        long mobilenoo = Long.parseLong(customer.getMobileno());String Fname = firstname.getText().toString().trim();
+                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                        confirmpass = userModel.getConfirmPassword();
+                        email = userModel.getEmailID();
+                        passwordd = userModel.getPassword();
+                        long mobilenoo = Long.parseLong(userModel.getPhoneNumber());String Fname = firstname.getText().toString().trim();
                         String Lname = lastname.getText().toString().trim();
                         String Address = address.getText().toString().trim();
                         HashMap<String, String> hashMappp = new HashMap<>();
@@ -210,7 +211,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                         hashMappp.put("LocalAddress", Address);
                         hashMappp.put("State", statee);
                         hashMappp.put("Suburban", suburban);
-                        firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
+                        firebaseDatabase.getInstance().getReference("UserModel").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
                         AlertDialog.Builder builder = new AlertDialog.Builder(CustomerEditProfile.this);
                         Toast.makeText(CustomerEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
 
@@ -240,7 +241,7 @@ public class CustomerEditProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(CustomerEditProfile.this, CustomerChangePassword.class);
+                Intent intent = new Intent(CustomerEditProfile.this, ChangePassword.class);
                 startActivity(intent);
             }
         });

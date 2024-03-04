@@ -250,7 +250,7 @@ public class CustomerRegisteration extends AppCompatActivity {
                                             hashMappp.put("EmailID", email);
                                             hashMappp.put("FirstName", firstname);
                                             hashMappp.put("LastName", lastname);
-                                            hashMappp.put("Mobileno", mobileno);
+                                            hashMappp.put("PhoneNumber", mobileno);
                                             hashMappp.put("Password", password);
                                             hashMappp.put("Address", Localaddress);
                                             hashMappp.put("City", city);

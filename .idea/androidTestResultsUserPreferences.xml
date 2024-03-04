@@ -82,6 +82,21 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-669297352">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="GEDMSCSWNBPZEMFY" value="120" />
+                  <entry key="OPPO&#10; CPH1989" value="120" />
+                  <entry key="Pixel_4a_API_30" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-570675180">
           <value>
             <AndroidTestResultsTableState>
@@ -154,6 +169,7 @@
                 <map>
                   <entry key="Copy_of_Pixel_4a_API_30" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_4a_API_30" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -209,6 +225,9 @@
                 <map>
                   <entry key="Copy_of_Pixel_4a_API_30" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="GEDMSCSWNBPZEMFY" value="120" />
+                  <entry key="OPPO" value="120" />
+                  <entry key="OPPO&#10; CPH1989" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -222,6 +241,20 @@
                 <map>
                   <entry key="Copy_of_Pixel_4a_API_30" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1339485732">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="GEDMSCSWNBPZEMFY" value="120" />
+                  <entry key="OPPO&#10; CPH1989" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>

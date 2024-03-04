@@ -23,10 +23,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerPaymentOTP;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerCartAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Cart;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.example.appfood_by_tinnguyen2421.SendNotification.APIService;
@@ -139,11 +139,11 @@ public class CustomerCartFragment extends Fragment {
                         }
                     });
                     String UserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    data = FirebaseDatabase.getInstance().getReference("Customer").child(UserID);
+                    data = FirebaseDatabase.getInstance().getReference("UserModel").child(UserID);
                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            final Customer customer = dataSnapshot.getValue(Customer.class);
+                            final UserModel userModel = dataSnapshot.getValue(UserModel.class);
                             placeorder.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -178,7 +178,7 @@ public class CustomerCartFragment extends Fragment {
                                                                 @Override
                                                                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                                                                     if (home.isChecked()) {
-                                                                        localaddress.setText(customer.getAddress() + ", " + customer.getWard());
+                                                                        localaddress.setText(userModel.getAddress() + ", " + userModel.getWard());
                                                                     } else if (other.isChecked()) {
                                                                         localaddress.getText().clear();
                                                                         Toast.makeText(getContext(), "Kiểm tra", Toast.LENGTH_SHORT).show();
@@ -228,9 +228,9 @@ public class CustomerCartFragment extends Fragment {
                                                                                     HashMap<String, String> hashMap1 = new HashMap<>();
                                                                                     hashMap1.put("Address", address);
                                                                                     hashMap1.put("GrandTotalPrice", String.valueOf(grandtotal));
-                                                                                    hashMap1.put("MobileNumber", customer.getMobileno());
+                                                                                    hashMap1.put("MobileNumber", userModel.getPhoneNumber());
                                                                                     hashMap1.put("RandomUID",RandomUId);
-                                                                                    hashMap1.put("Name", customer.getFirstName() + " " + customer.getLastName());
+                                                                                    hashMap1.put("Name", userModel.getFirstName() + " " + userModel.getLastName());
                                                                                     hashMap1.put("Note", Addnote);
                                                                                     hashMap1.put("OrderDate", formattedDateTime);
                                                                                     hashMap1.put("PaymentMethod", String.valueOf(radioGroup.getCheckedRadioButtonId()));

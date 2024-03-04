@@ -21,12 +21,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerBottomNavigation;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDishesAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Cart;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +52,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     RecyclerView rv_reviews;
     TextView Foodname, ChefName, ChefLoaction, FoodQuantity, FoodPrice, FoodDescription;
     DatabaseReference databaseReference, dataaa, chefdata, reference, data, dataref;
-    String State, City, Sub, dishname;
+    String District, City, Ward, dishname;
     //ex
     SwipeRefreshLayout swipeRefreshLayout;
     private CustomerDishesAdapter adapter;
@@ -96,14 +96,14 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
                 String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+                dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
                 dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Customer cust = dataSnapshot.getValue(Customer.class);
-                        State = cust.getDistrict();
+                        UserModel cust = dataSnapshot.getValue(UserModel.class);
+                        District = cust.getDistrict();
                         City = cust.getCity();
-                        Sub = cust.getWard();
+                        Ward = cust.getWard();
                         customermenu();
                     }
                     @Override
@@ -118,17 +118,17 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
 
     {
         final String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+        dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Customer cust = dataSnapshot.getValue(Customer.class);
-                State = cust.getDistrict();
+                UserModel cust = dataSnapshot.getValue(UserModel.class);
+                District = cust.getDistrict();
                 City = cust.getCity();
-                Sub = cust.getWard();
+                Ward = cust.getWard();
                 RandomId = getIntent().getStringExtra("FoodMenu");
                 ChefID = getIntent().getStringExtra("ChefId");
-                databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(ChefID).child(RandomId);
+                databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(District).child(Ward).child(ChefID).child(RandomId);
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -160,8 +160,8 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                         chefdata.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Chef chef = dataSnapshot.getValue(Chef.class);
-                                String name = "<b>" + "Tên cửa hàng: " + "</b>" + chef.getFname() + " " + chef.getLname();
+                                UserModel chef = dataSnapshot.getValue(UserModel.class);
+                                String name = "<b>" + "Tên cửa hàng: " + "</b>" + chef.getFirstName() + " " + chef.getLastName();
                                 ChefName.setText(Html.fromHtml(name));
                                 String loc = "<b>" + "Địa chỉ: " + "</b>" + chef.getWard();
                                 ChefLoaction.setText(Html.fromHtml(loc));
@@ -218,7 +218,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                     }
 
                                     if (ChefID.equals(cart1.getChefID())) {
-                                        data = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(ChefID).child(RandomId);
+                                        data = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(District).child(City).child(Ward).child(ChefID).child(RandomId);
                                         data.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -283,7 +283,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                                         alert.show();
                                     }
                                 } else {
-                                    data = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(ChefID).child(RandomId);
+                                    data = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(District).child(City).child(Ward).child(ChefID).child(RandomId);
                                     data.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -351,7 +351,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private void customermenu() {
 
         swipeRefreshLayout.setRefreshing(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(District).child(City).child(Ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

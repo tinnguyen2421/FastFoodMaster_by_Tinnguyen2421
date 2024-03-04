@@ -19,8 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -79,7 +79,7 @@ public class ChefPostCate extends AppCompatActivity {
             dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Chef chefc = dataSnapshot.getValue(Chef.class);
+                    UserModel chefc = dataSnapshot.getValue(UserModel.class);
                     District = chefc.getDistrict();
                     City = chefc.getCity();
                     Ward = chefc.getWard();
@@ -182,9 +182,8 @@ public class ChefPostCate extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             progressDialog.dismiss();
-
                                             if(isValid())
-                                            {finish();
+                                            {
                                                 Toast.makeText(ChefPostCate.this, "Đăng thể loại thành công", Toast.LENGTH_SHORT).show();}
                                         }
                                     });

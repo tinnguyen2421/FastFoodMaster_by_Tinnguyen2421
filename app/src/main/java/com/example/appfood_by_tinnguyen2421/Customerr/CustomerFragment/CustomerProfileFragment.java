@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerEditProfile;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerOrdersHistory;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.MainMenu;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -52,12 +52,12 @@ public class CustomerProfileFragment extends Fragment {
         CusTotall=v.findViewById(R.id.CusTotal);
         //CustomerHistoryOrders();
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final Customer customer = snapshot.getValue(Customer.class);
-                CusNamee.setText(customer.getFirstName()+customer.getLastName());
+                final UserModel userModel = snapshot.getValue(UserModel.class);
+                CusNamee.setText(userModel.getFirstName()+ userModel.getLastName());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

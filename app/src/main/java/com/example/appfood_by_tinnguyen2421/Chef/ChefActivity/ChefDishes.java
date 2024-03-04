@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefDishAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,7 +35,7 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
     DatabaseReference dataaa, databaseReference;
     String Matl;
     SwipeRefreshLayout swipeRefreshLayout;
-    String State,City,Sub;
+    String District,City, Ward;
     FloatingActionButton addDishes;
 
     @Override
@@ -64,10 +64,10 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
                 dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Chef chef = dataSnapshot.getValue(Chef.class);
-                        State = chef.getDistrict();
+                        UserModel chef = dataSnapshot.getValue(UserModel.class);
+                        District = chef.getDistrict();
                         City = chef.getCity();
-                        Sub = chef.getWard();
+                        Ward = chef.getWard();
                         addDishes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -87,7 +87,7 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
     private void Chefmenu() {
 
         swipeRefreshLayout.setRefreshing(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(District).child(Ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

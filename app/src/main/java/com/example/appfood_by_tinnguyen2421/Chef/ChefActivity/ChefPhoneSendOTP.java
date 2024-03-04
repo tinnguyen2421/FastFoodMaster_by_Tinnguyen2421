@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,8 +60,8 @@ public class ChefPhoneSendOTP extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Chef chef = dataSnapshot.getValue(Chef.class);
-                OldNumber=chef.getMobile();
+                UserModel chef = dataSnapshot.getValue(UserModel.class);
+                OldNumber=chef.getPhoneNumber();
                 verify.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

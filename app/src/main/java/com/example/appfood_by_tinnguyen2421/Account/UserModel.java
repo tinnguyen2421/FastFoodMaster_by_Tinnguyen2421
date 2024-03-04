@@ -1,23 +1,23 @@
-package com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel;
+package com.example.appfood_by_tinnguyen2421.Account;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
-public class Customer {
+public class UserModel {
 
 
-    private String City,ConfirmPassword,EmailID,FirstName,LastName,Mobileno,Password, District, Ward, Address;
+    private String City,ConfirmPassword,EmailID,FirstName,LastName, PhoneNumber,Password, District, Ward, Address;
 
-    public Customer() {
+    public UserModel() {
 
 
     }
 
-    public Customer(String city, String confirmPassword, String emailID, String firstName, String lastName, String mobileno, String password, String district, String ward, String address) {
-        ConfirmPassword=confirmPassword;
-        EmailID = emailID;
+    public UserModel(String city, String confirmPassword, String emailID, String firstName, String lastName, String phoneNumber, String password, String district, String ward, String address) {
         FirstName=firstName;
         LastName=lastName;
-        Mobileno = mobileno;
+        EmailID = emailID;
         Password = password;
+        ConfirmPassword=confirmPassword;
+        PhoneNumber = phoneNumber;
         City = city;
         District = district;
         Ward = ward;
@@ -64,12 +64,12 @@ public class Customer {
         LastName = lastName;
     }
 
-    public String getMobileno() {
-        return Mobileno;
+    public String getPhoneNumber() {
+        return PhoneNumber;
     }
 
-    public void setMobileno(String mobileno) {
-        Mobileno = mobileno;
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
     }
 
     public String getPassword() {

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 String role = dataSnapshot.getValue(String.class);
                 if (role != null) {
                     switch (role) {
-                        case "Customer":
+                        case "UserModel":
                             startActivity(new Intent(MainActivity.this, CustomerBottomNavigation.class));
                             finish();
                             break;

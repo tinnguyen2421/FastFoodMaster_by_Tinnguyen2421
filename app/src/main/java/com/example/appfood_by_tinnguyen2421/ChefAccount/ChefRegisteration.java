@@ -248,9 +248,9 @@ public class ChefRegisteration extends AppCompatActivity {
                                         hashMappp.put("District", district);
                                         hashMappp.put("ConfirmPassword", confirmpassword);
                                         hashMappp.put("EmailID", emailid);
-                                        hashMappp.put("Fname", fname);
-                                        hashMappp.put("Lname", lname);
-                                        hashMappp.put("Mobile", mobile);
+                                        hashMappp.put("FirstName", fname);
+                                        hashMappp.put("LastName", lname);
+                                        hashMappp.put("PhoneNumber", mobile);
                                         hashMappp.put("Password", password);
                                         hashMappp.put("City", city);
                                         hashMappp.put("Ward", ward);

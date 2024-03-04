@@ -32,10 +32,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPostCate;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefCateAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefStatus;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -99,12 +100,12 @@ public class ChefHomeFragment extends Fragment {
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Chef chefc = dataSnapshot.getValue(Chef.class);
+                UserModel chefc = dataSnapshot.getValue(UserModel.class);
                 if (chefc != null) District = chefc.getDistrict();
                 City = chefc.getCity();
                 Ward = chefc.getWard();
                 Address = chefc.getAddress();
-                ResName.setText(chefc.getFname() + chefc.getLname());
+                ResName.setText(chefc.getFirstName() + chefc.getLastName());
                 ResAddress.setText(Address + "," + Ward + "," + City + "," + District);
                 checkStatus();
                 chefCate();

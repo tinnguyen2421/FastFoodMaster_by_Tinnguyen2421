@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefDishes;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefUpdateCategories;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,7 +83,7 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
                 dataaa.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Chef chefc = dataSnapshot.getValue(Chef.class);
+                        UserModel chefc = dataSnapshot.getValue(UserModel.class);
                         District = chefc.getDistrict();
                         City = chefc.getCity();
                         Ward = chefc.getWard();

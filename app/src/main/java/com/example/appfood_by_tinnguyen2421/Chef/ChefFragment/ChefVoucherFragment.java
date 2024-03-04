@@ -32,9 +32,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefVoucher;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefVoucherAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -210,7 +211,7 @@ public class ChefVoucherFragment extends Fragment {
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Chef chefc = dataSnapshot.getValue(Chef.class);
+                UserModel chefc = dataSnapshot.getValue(UserModel.class);
                 State = chefc.getDistrict();
                 City = chefc.getCity();
                 Sub = chefc.getWard();

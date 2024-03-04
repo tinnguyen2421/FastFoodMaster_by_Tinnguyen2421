@@ -26,7 +26,7 @@ import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerCategoryAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDishesAdapter;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Item;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SlideViewPayer;
@@ -94,11 +94,11 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         swipeRefreshLayout.post(() -> {
             swipeRefreshLayout.setRefreshing(true);
             String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+            dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
             dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Customer cust = dataSnapshot.getValue(Customer.class);
+                    UserModel cust = dataSnapshot.getValue(UserModel.class);
                     State = cust.getDistrict();
                     City = cust.getCity();
                     Sub = cust.getWard();

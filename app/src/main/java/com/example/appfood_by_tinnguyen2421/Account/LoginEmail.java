@@ -84,7 +84,7 @@ public class LoginEmail extends AppCompatActivity {
                                                                 startActivity(new Intent(LoginEmail.this, ChefBottomNavigation.class));
                                                                 finish();
                                                                 break;
-                                                            case "Customer":
+                                                            case "UserModel":
                                                                 startActivity(new Intent(LoginEmail.this, CustomerBottomNavigation.class));
                                                                 finish();
                                                                 break;

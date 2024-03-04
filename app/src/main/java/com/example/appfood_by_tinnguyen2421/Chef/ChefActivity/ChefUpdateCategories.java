@@ -19,8 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
+
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateCateModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,7 +66,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
     DatabaseReference dataaa;
     String District, City, Ward;
     EditText CateID;
-    Button update_Cate;
+    Button btnUpdateCate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +74,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
         CateID =findViewById(R.id.Cate_id);
         CateName=findViewById(R.id.cate_name);
         DesCate=findViewById(R.id.MotaCate);
-        update_Cate=findViewById(R.id.Updatedishh);
+        btnUpdateCate =findViewById(R.id.Updatedishh);
         imageButton=findViewById(R.id.imageupload);
         RandomUId = getIntent().getStringExtra("mtl");
         categoryList=new ArrayList<>();
@@ -83,11 +84,11 @@ public class ChefUpdateCategories extends AppCompatActivity {
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Chef chefc = dataSnapshot.getValue(Chef.class);
+                UserModel chefc = dataSnapshot.getValue(UserModel.class);
                 District = chefc.getDistrict();
                 City = chefc.getCity();
                 Ward = chefc.getWard();
-                update_Cate.setOnClickListener(new View.OnClickListener() {
+                btnUpdateCate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v)
                     {

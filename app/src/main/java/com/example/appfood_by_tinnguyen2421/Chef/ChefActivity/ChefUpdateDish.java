@@ -1,22 +1,16 @@
 package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
 
-import static java.lang.String.*;
-
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,8 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigation;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.FoodSupplyDetails;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -47,135 +41,80 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefUpdateDish extends AppCompatActivity {
     private ArrayList<String> categoryList;
 
-    Spinner spinnerCate;
-    TextInputLayout desc, pri, dish,disc;
-    private SwitchCompat discountSwitch,availableSwitch;
-    ImageButton imageButton;
-    Uri imageuri;
-    String dburi;
-    private Uri mCropimageuri;
-    private boolean Discounting=false;
-    private boolean Available=false;
-    Button Update_dish, Delete_dish;
-    String cateID,description, price, dishes, ChefId,discount,discountPercent,title;
-    TextView dishCountPercent;
-    String RandomUId;
-    StorageReference ref;
-    FirebaseStorage storage;
-    StorageReference storageReference;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    FirebaseAuth FAuth;
-    String ID;
+    private Spinner spinnerCate;
+    private TextInputLayout desc, pri, dish, disc;
+    private ImageButton imageButton;
+    private Uri imageUri;
+    private String dbUri;
+    private boolean isDiscounting = false;
+    private boolean isAvailable = false;
+    private Button btnUpdate, btnDelete;
+    private String cateID, description, price, dishes, chefId, discount, discountPercent, title;
+    private TextView dishCountPercent;
+    private String randomUid;
+    private StorageReference ref;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+    private String ID;
     private ProgressDialog progressDialog;
-    DatabaseReference dataaa;
-    String State, City, Sub;
-    private double giaGocDouble, giaGiamDouble, tiLeDouble;
+    private DatabaseReference dataaa;
+    private SwitchCompat discountSwitch, availableSwitch;
+    private String district, city, ward;
+    private double originalPrice, discountedPrice, discountRate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update__delete__dish);
-        spinnerCate = (Spinner) findViewById(R.id.spinnerID);
-        dish = (TextInputLayout) findViewById(R.id.DishName);
-        pri = (TextInputLayout) findViewById(R.id.DishPrice);
-        desc = (TextInputLayout) findViewById(R.id.DishDetail);
-        imageButton = (ImageButton) findViewById(R.id.imageupload);
-        disc=(TextInputLayout)findViewById(R.id.DishDiscount);
-        dishCountPercent= (TextView)findViewById(R.id.DishCountPercent);
-        discountSwitch=(SwitchCompat)findViewById(R.id.DiscountSwitch);
-        availableSwitch=(SwitchCompat)findViewById(R.id.DishAvailable);
-        Update_dish = (Button) findViewById(R.id.btnUpdateDish);
-        Delete_dish = (Button) findViewById(R.id.btnDeleteDish);
+        initializeViews();
+        setUpListeners();
+        initializeData();
+    }
+
+    private void initializeViews() {
+        spinnerCate = findViewById(R.id.spinnerID);
+        dish = findViewById(R.id.DishName);
+        pri = findViewById(R.id.DishPrice);
+        desc = findViewById(R.id.DishDetail);
+        imageButton = findViewById(R.id.imageupload);
+        disc = findViewById(R.id.DishDiscount);
+        dishCountPercent = findViewById(R.id.DishCountPercent);
+        discountSwitch = findViewById(R.id.DiscountSwitch);
+        availableSwitch = findViewById(R.id.DishAvailable);
+        btnUpdate = findViewById(R.id.btnUpdateDish);
+        btnDelete = findViewById(R.id.btnDeleteDish);
+    }
+
+    private void setUpListeners() {
+        btnUpdate.setOnClickListener(v -> updateDishClicked());
+        btnDelete.setOnClickListener(v -> deleteDishClicked());
+        imageButton.setOnClickListener(this::onSelectImageClick);
+    }
+
+    private void initializeData() {
         ID = getIntent().getStringExtra("updatedeletedish");
-        EditText dishNameEditText = dish.getEditText();
-        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        categoryList=new ArrayList<>();
-        dataaa = firebaseDatabase.getInstance().getReference("Chef").child(userid);
+        categoryList = new ArrayList<>();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        dataaa = FirebaseDatabase.getInstance().getReference("Chef").child(userId);
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getDistrict();
-                City = chefc.getCity();
-                Sub = chefc.getWard();
-                showdataspinner();
+                UserModel chef = dataSnapshot.getValue(UserModel.class);
+                district = chef.getDistrict();
+                city = chef.getCity();
+                ward = chef.getWard();
+                showDataSpinner();
                 loadDishInformation();
-                Update_dish.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        cateID= spinnerCate.getSelectedItem().toString().trim();
-                        dishes= dish.getEditText().getText().toString().trim();
-                        description = desc.getEditText().getText().toString().trim();
-                        price = pri.getEditText().getText().toString().trim();
-                        discount = disc.getEditText().getText().toString().trim();
-                        Discounting=discountSwitch.isChecked();
-                        Available=availableSwitch.isChecked();
-                        if (isValid()) {
-                            if (imageuri != null) {
-                                uploadImage();
-                            }
-                            else {
-                                updatedesc(dburi);
-                            }
-                        }
-                    }
-                });
-                Delete_dish.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ChefUpdateDish.this);
-                        builder.setMessage("Bạn có chắc chắn muốn xóa món ăn này");
-                        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                firebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(ID).removeValue();
-
-                                AlertDialog.Builder food = new AlertDialog.Builder(ChefUpdateDish.this);
-                                food.setMessage("Món ăn của bạn đã được xóa");
-                                food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        startActivity(new Intent(ChefUpdateDish.this, ChefBottomNavigation.class));
-                                    }
-                                });
-                                AlertDialog alertt = food.create();
-                                alertt.show();
-                            }
-                        });
-                        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                });
-                FAuth = FirebaseAuth.getInstance();
-                databaseReference = firebaseDatabase.getInstance().getReference("FoodSupplyDetails");
-                storage = FirebaseStorage.getInstance();
-                storageReference = storage.getReference();
-                imageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onSelectImageClick(v);
-                    }
-                });
             }
 
             @Override
@@ -183,77 +122,131 @@ public class ChefUpdateDish extends AppCompatActivity {
 
             }
         });
-
     }
-    public void showdataspinner()
-    {
-        RandomUId = getIntent().getStringExtra("RandomUID");
-        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dataaa = firebaseDatabase.getInstance().getReference("Chef").child(userid);
+
+    private void showDataSpinner() {
+        randomUid = getIntent().getStringExtra("RandomUID");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        dataaa = FirebaseDatabase.getInstance().getReference("Chef").child(userId);
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Chef chefc = dataSnapshot.getValue(Chef.class);
-                State = chefc.getDistrict();
-                City = chefc.getCity();
-                Sub = chefc.getWard();
-                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub);
-                databaseReference1.child(userid).addValueEventListener(new ValueEventListener() {
+                UserModel chef = dataSnapshot.getValue(UserModel.class);
+                district = chef.getDistrict();
+                city = chef.getCity();
+                ward = chef.getWard();
+                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance()
+                        .getReference("Categories").child(city).child(district).child(ward);
+                databaseReference1.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         categoryList.clear();
-                        for (DataSnapshot item: snapshot.getChildren())
-                        {
+                        for (DataSnapshot item : snapshot.getChildren()) {
                             categoryList.add(item.child("CateID").getValue(String.class));
                         }
-                        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<>(ChefUpdateDish.this, com.hbb20.R.layout.support_simple_spinner_dropdown_item,categoryList);
+                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ChefUpdateDish.this,
+                                com.hbb20.R.layout.support_simple_spinner_dropdown_item, categoryList);
                         spinnerCate.setAdapter(arrayAdapter);
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
-    public void loadDishInformation(){
-        String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+    private void loadDishInformation() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         progressDialog = new ProgressDialog(ChefUpdateDish.this);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub).child(useridd).child(ID);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails")
+                .child(city).child(district).child(ward).child(userId).child(ID);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
-                dish.getEditText().setText( updateDishModel.getDishName());
+                dish.getEditText().setText(updateDishModel.getDishName());
                 pri.getEditText().setText(updateDishModel.getDishPrice());
                 Glide.with(ChefUpdateDish.this).load(updateDishModel.getImageURL()).into(imageButton);
-                dburi = updateDishModel.getImageURL();
+                dbUri = updateDishModel.getImageURL();
                 desc.getEditText().setText(updateDishModel.getDescription());
-                if(updateDishModel.getAvailableDish().equals("true"))
-                {
+                if (updateDishModel.getAvailableDish().equals("true")) {
                     availableSwitch.setChecked(true);
                 }
-                if(updateDishModel.getOnSale().equals("true"))
-                {
+                if (updateDishModel.getOnSale().equals("true")) {
                     discountSwitch.setChecked(true);
                     disc.getEditText().setText(updateDishModel.getReducePrice());
-                    dishCountPercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
-                }
-                else
-                {
+                    dishCountPercent.setText("Giảm " + updateDishModel.getDecreasePercent() + "%");
+                } else {
                     disc.setVisibility(View.GONE);
                     dishCountPercent.setVisibility(View.GONE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
+
+    private void updateDishClicked() {
+        cateID = spinnerCate.getSelectedItem().toString().trim();
+        dishes = dish.getEditText().getText().toString().trim();
+        description = desc.getEditText().getText().toString().trim();
+        price = pri.getEditText().getText().toString().trim();
+        discount = disc.getEditText().getText().toString().trim();
+        isDiscounting = discountSwitch.isChecked();
+        isAvailable = availableSwitch.isChecked();
+        if (isValid()) {
+            if (imageUri != null) {
+                uploadImage();
+            } else {
+                updateDesc(dbUri);
+            }
+        }
+    }
+
+    private void deleteDishClicked() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChefUpdateDish.this);
+        builder.setMessage("Bạn có chắc chắn muốn xóa món ăn này");
+        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseDatabase.getInstance().getReference("FoodSupplyDetails")
+                        .child(district).child(city).child(ward)
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(ID).removeValue();
+
+                AlertDialog.Builder food = new AlertDialog.Builder(ChefUpdateDish.this);
+                food.setMessage("Món ăn của bạn đã được xóa");
+                food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(ChefUpdateDish.this, ChefBottomNavigation.class));
+                    }
+                });
+                AlertDialog alert = food.create();
+                alert.show();
+            }
+        });
+        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private boolean isValid() {
         dish.setError("");
         dish.setErrorEnabled(false);
@@ -263,37 +256,33 @@ public class ChefUpdateDish extends AppCompatActivity {
         pri.setError("");
         disc.setErrorEnabled(false);
         disc.setError("");
-        boolean isValidDis=false, isValidDishname=false, isValiDescription = false, isValidPrice = false, isvalid = false;
+        boolean isValidDis = false, isValidDishName = false, isValidDescription = false, isValidPrice = false, isValidInput = false;
         if (TextUtils.isEmpty(dishes)) {
             dish.setErrorEnabled(true);
             dish.setError("Tên món ăn không được để trống");
-        } else if (dishes.length()>20) {
+        } else if (dishes.length() > 20) {
             dish.setErrorEnabled(true);
             dish.setError("Tên món ăn không quá 20 kí tự");
-        }
-        else if (dishes.length()<3) {
+        } else if (dishes.length() < 3) {
             dish.setErrorEnabled(true);
             dish.setError("Tên món ăn không ít hơn 3 kí tự");
-        }
-        else {
+        } else {
             dish.setError(null);
-            isValidDishname = true;
+            isValidDishName = true;
         }
 
         if (TextUtils.isEmpty(description)) {
             desc.setErrorEnabled(true);
             desc.setError("Chi tiết món ăn không được để trống");
-        } else if (description.length()>20) {
+        } else if (description.length() > 20) {
             desc.setErrorEnabled(true);
             desc.setError("Chi tiết món ăn không được quá 20 kí tự");
-        }
-        else if (description.length()<3) {
+        } else if (description.length() < 3) {
             desc.setErrorEnabled(true);
             desc.setError("Chi tiết món ăn không được ít hơn 3 kí tự");
-        }
-        else {
+        } else {
             desc.setError(null);
-            isValiDescription = true;
+            isValidDescription = true;
         }
 
         if (TextUtils.isEmpty(price)) {
@@ -304,71 +293,64 @@ public class ChefUpdateDish extends AppCompatActivity {
             if (priceValue > 1000000) {
                 pri.setErrorEnabled(true);
                 pri.setError("Giá món ăn không được lớn hơn 1.000.000 vnđ");
-            } else if (priceValue<1000) {
+            } else if (priceValue < 1000) {
                 pri.setErrorEnabled(true);
                 pri.setError("Giá món ăn không được nhỏ hơn 1.000 vnđ");
-
             } else {
                 isValidPrice = true;
                 try {
-                    giaGocDouble = Double.parseDouble(price);
+                    originalPrice = Double.parseDouble(price);
                 } catch (NumberFormatException e) {
                     pri.setErrorEnabled(true);
                     pri.setError("Giá không hợp lệ");
                 }
             }
         }
-        if (Discounting) {
-            if(TextUtils.isEmpty(price))
-            {disc.setErrorEnabled(true);
-                disc.setError("Bắt buộc phải nhập giá món ăn trước khi nhập giá giảm");}
-            else if (!TextUtils.isEmpty(price)&&TextUtils.isEmpty(discount)) {
+        if (isDiscounting) {
+            if (TextUtils.isEmpty(price)) {
+                disc.setErrorEnabled(true);
+                disc.setError("Bắt buộc phải nhập giá món ăn trước khi nhập giá giảm");
+            } else if (!TextUtils.isEmpty(price) && TextUtils.isEmpty(discount)) {
                 disc.setErrorEnabled(true);
                 disc.setError("Giá giảm không được để trống");
-            } else if (!TextUtils.isEmpty(price)&&!TextUtils.isEmpty(discount)&&giaGiamDouble >= giaGocDouble) {
-
+            } else if (!TextUtils.isEmpty(price) && !TextUtils.isEmpty(discount) && discountedPrice >= originalPrice) {
                 new AlertDialog.Builder(this, R.style.CustomAlertDialog)
                         .setTitle("Lỗi")
                         .setMessage("Giá giảm phải nhỏ hơn giá gốc của món ăn")
                         .setPositiveButton("OK", null).show();
             } else {
-                giaGiamDouble = Double.parseDouble(discount);
-                tiLeDouble = (giaGocDouble - giaGiamDouble) / giaGocDouble * 100;
-                int lamTron = (int) Math.round(tiLeDouble);
-                title = String.valueOf(lamTron);
-                dishCountPercent.setText("Giảm " + lamTron+"%");
-                isValidDis=true;
+                discountedPrice = Double.parseDouble(discount);
+                discountRate = (originalPrice - discountedPrice) / originalPrice * 100;
+                int roundedRate = (int) Math.round(discountRate);
+                title = String.valueOf(roundedRate);
+                dishCountPercent.setText("Giảm " + roundedRate + "%");
+                isValidDis = true;
             }
         } else {
-            isValidDis=true;
+            isValidDis = true;
             discount = "0";
-            title="";
+            title = "";
         }
-        isvalid = (isValidDis&&isValiDescription&& isValidDishname  && isValidPrice) ? true : false;
-        return isvalid;
+        isValidInput = (isValidDis && isValidDescription && isValidDishName && isValidPrice);
+        return isValidInput;
     }
 
-
-
     private void uploadImage() {
-
-        if (imageuri != null) {
-
+        if (imageUri != null) {
             progressDialog.setTitle("Đang tải...");
             progressDialog.show();
-            RandomUId = UUID.randomUUID().toString();
-            ref = storageReference.child(RandomUId);
-            ref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            randomUid = UUID.randomUUID().toString();
+            ref = storageReference.child(randomUid);
+            ref.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            updatedesc(valueOf(uri));
+                            updateDesc(String.valueOf(uri));
                         }
                     });
                 }
-
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -378,7 +360,6 @@ public class ChefUpdateDish extends AppCompatActivity {
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                     progressDialog.setMessage("tải lên " + (int) progress + "%");
                     progressDialog.setCanceledOnTouchOutside(false);
@@ -387,71 +368,38 @@ public class ChefUpdateDish extends AppCompatActivity {
         }
     }
 
-    private void updatedesc(String uri) {
-        ChefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FoodSupplyDetails info = new FoodSupplyDetails(cateID,dishes, price, description, uri, ID, ChefId,discount,title,Discounting,Available);
-        firebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub)
+    private void updateDesc(String uri) {
+        chefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FoodSupplyDetails info = new FoodSupplyDetails(cateID, dishes, price, description, uri, ID, chefId, discount, title, isDiscounting, isAvailable);
+        FirebaseDatabase.getInstance().getReference("FoodSupplyDetails")
+                .child(city).child(district).child(ward)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(ID)
                 .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                progressDialog.dismiss();
-                Toast.makeText(ChefUpdateDish.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.dismiss();
+                        Toast.makeText(ChefUpdateDish.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-    private void onSelectImageClick(View v) {
 
-        CropImage.startPickImageActivity(this);
+    private void onSelectImageClick(View v) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Chọn ảnh"), PICK_IMAGE_REQUEST);
     }
+
     @Override
     @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
-        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            imageuri = CropImage.getPickImageResultUri(this, data);
-
-            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageuri)) {
-                mCropimageuri = imageuri;
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-
-            } else {
-
-                startCropImageActivity(imageuri);
-            }
-        }
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                ((ImageButton) findViewById(R.id.imageupload)).setImageURI(result.getUri());
-                Toast.makeText(this, "Cắt ảnh thành công" + result.getSampleSize(), Toast.LENGTH_SHORT).show();
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(this, "Cắt ảnh thất bại" + result.getError(), Toast.LENGTH_SHORT).show();
-            }
-        }
+        // Handle activity result for selecting image from gallery
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mCropimageuri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startCropImageActivity(mCropimageuri);
-        } else {
-            Toast.makeText(this, "Hủy bỏ , yêu cầu không được cấp phép", Toast.LENGTH_SHORT).show();
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            Glide.with(this).load(imageUri).into(imageButton);
         }
     }
 
-    private void startCropImageActivity(Uri imageuri) {
-
-        CropImage.activity(imageuri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMultiTouchEnabled(true)
-                .start(this);
-    }
+    private static final int PICK_IMAGE_REQUEST = 1;
 }

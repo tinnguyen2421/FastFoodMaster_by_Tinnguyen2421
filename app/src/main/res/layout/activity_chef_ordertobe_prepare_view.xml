@@ -93,7 +93,7 @@
                 android:layout_marginRight="15dp"
                 android:gravity="center_vertical"
                 android:maxWidth="300dp"
-                android:text="Note given by customer"
+                android:text="Note given by userModel"
                 android:textColor="#000000"
                 android:textSize="20dp" />
 

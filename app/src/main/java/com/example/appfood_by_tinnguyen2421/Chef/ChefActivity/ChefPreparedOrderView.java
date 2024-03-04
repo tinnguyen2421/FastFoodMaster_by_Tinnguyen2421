@@ -16,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefPreparedOrderViewAdapter;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -113,8 +113,8 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                             data.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    final Chef chef = dataSnapshot.getValue(Chef.class);
-                                    final String ChefName = chef.getFname() + " " + chef.getLname();
+                                    final UserModel chef = dataSnapshot.getValue(UserModel.class);
+                                    final String ChefName = chef.getFirstName() + " " + chef.getLastName();
                                     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("ChefFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes");
                                     databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override

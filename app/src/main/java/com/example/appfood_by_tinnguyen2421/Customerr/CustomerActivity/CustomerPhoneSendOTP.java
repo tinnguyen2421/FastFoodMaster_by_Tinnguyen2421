@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -55,13 +55,13 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
         txt.setVisibility(View.INVISIBLE);
         verify = (Button) findViewById(R.id.Verify);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Customer customer = dataSnapshot.getValue(Customer.class);
-                OldNumber=customer.getMobileno();
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                OldNumber= userModel.getPhoneNumber();
                 verify.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

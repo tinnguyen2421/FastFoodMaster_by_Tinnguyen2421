@@ -16,8 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.Chef;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Customer;
+import com.example.appfood_by_tinnguyen2421.Account.ChangePassword;
+import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,9 +45,9 @@ public class ChefEditProfile extends AppCompatActivity {
 
     EditText firstname, lastname, address;
     Spinner citySpinner, districtSpinner, wardSpinner;
-    TextView mobileno, Email;
+    TextView btnChangePhoneNumber, Email;
     Button Update;
-    LinearLayout password;
+    LinearLayout btnChangePassWord;
     DatabaseReference databaseReference, data;
     FirebaseDatabase firebaseDatabase;
     String city, district, Ward, email, passwordd, confirmpass;
@@ -63,19 +63,19 @@ public class ChefEditProfile extends AppCompatActivity {
         citySpinner = findViewById(R.id.statee);
         districtSpinner = findViewById(R.id.cityy);
         wardSpinner = findViewById(R.id.sub);
-        mobileno = findViewById(R.id.mobilenumber);
+        btnChangePhoneNumber = findViewById(R.id.mobilenumber);
         Update = findViewById(R.id.update);
-        password = findViewById(R.id.passwordlayout);
+        btnChangePassWord = findViewById(R.id.passwordlayout);
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Chef").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final Chef chef = dataSnapshot.getValue(Chef.class);
-                firstname.setText(chef.getFname());
-                lastname.setText(chef.getLname());
+                final  UserModel chef = dataSnapshot.getValue(UserModel.class);
+                firstname.setText(chef.getFirstName());
+                lastname.setText(chef.getLastName());
                 address.setText(chef.getAddress());
-                mobileno.setText(chef.getMobile());
+                btnChangePhoneNumber.setText(chef.getPhoneNumber());
                 Email.setText(chef.getEmailID());
                 citySpinner.setSelection(getIndexByString(citySpinner, chef.getDistrict()));
                 citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -194,13 +194,13 @@ public class ChefEditProfile extends AppCompatActivity {
                 data.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Customer customer = dataSnapshot.getValue(Customer.class);
+                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
 
 
-                        confirmpass = customer.getConfirmPassword();
-                        email = customer.getEmailID();
-                        passwordd = customer.getPassword();
-                        long mobilenoo = Long.parseLong(customer.getMobileno());
+                        confirmpass = userModel.getConfirmPassword();
+                        email = userModel.getEmailID();
+                        passwordd = userModel.getPassword();
+                        long mobilenoo = Long.parseLong(userModel.getPhoneNumber());
 
                         String Fname = firstname.getText().toString().trim();
                         String Lname = lastname.getText().toString().trim();
@@ -213,7 +213,7 @@ public class ChefEditProfile extends AppCompatActivity {
                         hashMappp.put("FirstName", Fname);
                         hashMappp.put("EmailID", email);
                         hashMappp.put("LastName", Lname);
-                        hashMappp.put("Mobileno", String.valueOf(mobilenoo));
+                        hashMappp.put("PhoneNumber", String.valueOf(mobilenoo));
                         hashMappp.put("Password", passwordd);
                         hashMappp.put("City", city);
                         hashMappp.put("Ward", Ward);
@@ -235,16 +235,16 @@ public class ChefEditProfile extends AppCompatActivity {
 
             }
         });
-        password.setOnClickListener(new View.OnClickListener() {
+        btnChangePassWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ChefEditProfile.this, ChefChangePassword.class);
+                Intent intent = new Intent(ChefEditProfile.this, ChangePassword.class);
                 startActivity(intent);
             }
         });
 
-        mobileno.setOnClickListener(new View.OnClickListener() {
+        btnChangePhoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

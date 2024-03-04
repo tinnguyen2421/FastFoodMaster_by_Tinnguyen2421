@@ -140,7 +140,7 @@ public class SendOTP extends AppCompatActivity {
                                             startActivity(new Intent(SendOTP.this, ChefBottomNavigation.class));
                                             finish();
                                             break;
-                                        case "Customer":
+                                        case "UserModel":
                                             startActivity(new Intent(SendOTP.this, CustomerBottomNavigation.class));
                                             finish();
                                             break;
