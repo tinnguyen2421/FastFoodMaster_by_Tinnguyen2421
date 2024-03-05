@@ -8,21 +8,17 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 
-import androidx.activity.result.ActivityResult;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
-
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -30,7 +26,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import androidx.activity.result.ActivityResult;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 
@@ -41,52 +47,30 @@ import static org.hamcrest.Matchers.is;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ImageView;
 
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.matcher.IntentMatchers;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPostCate;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPostDish;
-import com.google.android.apps.common.testing.accessibility.framework.replacements.Point;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class ChefPostDishTest {
 
     @Rule
-    public ActivityScenarioRule<LoginEmail> mActivityScenarioRule =
-            new ActivityScenarioRule<>(LoginEmail.class);
-    @Rule
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.READ_EXTERNAL_STORAGE");
-    @Before
-    public void setUp() throws Exception {
-        Intents.init();
-    }
-    @After
-    public void tearDown() throws Exception {
-        Intents.release();
-    }
+
+
+
+    @Rule
+    public IntentsTestRule<LoginEmail> intentsTestRule = new IntentsTestRule<>(LoginEmail.class);
     @Test
     public void mainActivityTest2() throws InterruptedException {
         ViewInteraction textInputEditText = onView(
@@ -238,42 +222,22 @@ public class ChefPostDishTest {
 //                },
 //                Press.FINGER
 //        )));
-        // GIVEN
-
-
-// Tạo Intent dự kiến
+        Uri imageUri = Uri.parse("content://com.android.providers.media.documents/document/image%3A192");
         Intent expectedIntent = new Intent(Intent.ACTION_PICK);
-        expectedIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        expectedIntent.setData(imageUri);
 
-// Tạo androidx.activity.result.ActivityResult từ androidx.core.app.ActivityOptionsCompat
-        androidx.activity.result.ActivityResult activityResult =
-                new androidx.activity.result.ActivityResult(
-                        Activity.RESULT_OK,
-                        expectedIntent
-                );
+// Kích hoạt hành động click và kiểm tra xem Intent có được gửi đi hay không
+        onView(withId(R.id.imageupload)).perform(click());
+        intended(hasAction(Intent.ACTION_PICK));
 
-// Chuyển đổi từ androidx.activity.result.ActivityResult sang android.app.Instrumentation.ActivityResult
+// Tiếp tục với việc kịch bản phản hồi cho Intent dự kiến và kiểm tra
+        ActivityResult activityResult = createGalleryPickActivityResultStub();
         android.app.Instrumentation.ActivityResult instrumentationActivityResult =
                 new android.app.Instrumentation.ActivityResult(
                         activityResult.getResultCode(),
                         activityResult.getData()
                 );
-
-// Sử dụng intending() để kịch bản phản hồi cho Intent dự kiến
-        Intents.intending(IntentMatchers.hasAction(Intent.ACTION_PICK))
-                .respondWith(instrumentationActivityResult);
-
-// Xác nhận rằng Intent dự kiến đã được gửi đi
-        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_PICK));
-
-// Thực hiện hành động click trên view có id là R.id.imageupload
-        onView(withId(R.id.imageupload)).perform(click());
-
-// Xác nhận rằng Intent dự kiến đã được gửi đi
-        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_PICK));
-
-// Kết thúc Intents sau khi test hoàn thành
-
+        Intents.intending(hasAction(Intent.ACTION_PICK)).respondWith(instrumentationActivityResult);
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.PostDish), withText("Đăng món"),
                         childAtPosition(
@@ -289,15 +253,17 @@ public class ChefPostDishTest {
 
     }
     private ActivityResult createGalleryPickActivityResultStub() {
-        Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
-        Uri imageUri = Uri.parse(
-                ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                        resources.getResourcePackageName(R.drawable.ic_launcher_background) + '/' +
-                        resources.getResourceTypeName(R.drawable.ic_launcher_background) + '/' +
-                        resources.getResourceEntryName(R.drawable.ic_launcher_background)
-        );
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+
+        // Tạo Uri cho tài nguyên hình ảnh mẫu
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + context.getPackageName() + "/" + R.drawable.ic_launcher_background);
+
+        // Tạo Intent với Uri này
         Intent resultIntent = new Intent();
         resultIntent.setData(imageUri);
+
+        // Trả về kết quả với ActivityResult
         return new ActivityResult(RESULT_OK, resultIntent);
     }
 

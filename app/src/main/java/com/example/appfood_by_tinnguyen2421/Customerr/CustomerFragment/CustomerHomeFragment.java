@@ -54,7 +54,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
     private ArrayList<Categories> categoryList;
     private CustomerDishesAdapter adapter;
     private CustomerCategoryAdapter adapterCate;
-    String State, City, Sub,LocalAdd;
+    String district, City, ward,LocalAdd;
     DatabaseReference dataaa, databaseReference,databaseReference1;
     SwipeRefreshLayout swipeRefreshLayout;
     EditText search;
@@ -94,16 +94,16 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         swipeRefreshLayout.post(() -> {
             swipeRefreshLayout.setRefreshing(true);
             String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+            dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
             dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     UserModel cust = dataSnapshot.getValue(UserModel.class);
-                    State = cust.getDistrict();
+                    district = cust.getDistrict();
                     City = cust.getCity();
-                    Sub = cust.getWard();
+                    ward = cust.getWard();
                     LocalAdd= cust.getAddress();
-                    diachii.setText(LocalAdd+","+Sub+","+City+","+State);
+                    diachii.setText(LocalAdd+","+ ward +","+district+","+ City);
                     customerCate();
                     customerDishes();
 
@@ -163,7 +163,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         customerDishes();
     }
     private void customerCate() {
-        databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(State).child(City).child(Sub);
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(City).child(district).child(ward);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -190,7 +190,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
     private void customerDishes() {
 
         swipeRefreshLayout.setRefreshing(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(district).child(ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
