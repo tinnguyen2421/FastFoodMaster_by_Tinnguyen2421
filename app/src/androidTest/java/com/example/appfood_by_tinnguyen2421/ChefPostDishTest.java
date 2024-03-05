@@ -1,59 +1,52 @@
 package com.example.appfood_by_tinnguyen2421;
 
 
+import static android.app.Activity.RESULT_OK;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.action.GeneralLocation;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
+import androidx.activity.result.ActivityResult;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.action.GeneralLocation;
-import androidx.test.espresso.matcher.ViewMatchers;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.os.SystemClock;
-import android.view.MotionEvent;
+import android.content.res.Resources;
+import android.net.Uri;
+import android.provider.MediaStore;
+
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
 
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.CoordinatesProvider;
-import androidx.test.espresso.action.GeneralClickAction;
-import androidx.test.espresso.action.PrecisionDescriber;
-import androidx.test.espresso.action.Press;
-import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
-import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -229,22 +222,57 @@ public class ChefPostDishTest {
 
 //
 
+//        onView(withId(R.id.imageupload)).perform(click());
+//        Thread.sleep(2000);
+//        onView(isRoot()).perform(actionWithAssertions(new GeneralClickAction(
+//                Tap.SINGLE,
+//                new CoordinatesProvider() {
+//                    @Override
+//                    public float[] calculateCoordinates(View view) {
+//                        int[] locationOnScreen = new int[2];
+//                        view.getLocationOnScreen(locationOnScreen);
+//                        float x = locationOnScreen[0] + 500; // Xác định tọa độ X trên màn hình
+//                        float y = locationOnScreen[1] + 500; // Xác định tọa độ Y trên màn hình
+//                        return new float[]{x, y};
+//                    }
+//                },
+//                Press.FINGER
+//        )));
+        // GIVEN
+
+
+// Tạo Intent dự kiến
+        Intent expectedIntent = new Intent(Intent.ACTION_PICK);
+        expectedIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+// Tạo androidx.activity.result.ActivityResult từ androidx.core.app.ActivityOptionsCompat
+        androidx.activity.result.ActivityResult activityResult =
+                new androidx.activity.result.ActivityResult(
+                        Activity.RESULT_OK,
+                        expectedIntent
+                );
+
+// Chuyển đổi từ androidx.activity.result.ActivityResult sang android.app.Instrumentation.ActivityResult
+        android.app.Instrumentation.ActivityResult instrumentationActivityResult =
+                new android.app.Instrumentation.ActivityResult(
+                        activityResult.getResultCode(),
+                        activityResult.getData()
+                );
+
+// Sử dụng intending() để kịch bản phản hồi cho Intent dự kiến
+        Intents.intending(IntentMatchers.hasAction(Intent.ACTION_PICK))
+                .respondWith(instrumentationActivityResult);
+
+// Xác nhận rằng Intent dự kiến đã được gửi đi
+        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_PICK));
+
+// Thực hiện hành động click trên view có id là R.id.imageupload
         onView(withId(R.id.imageupload)).perform(click());
-        Thread.sleep(2000);
-        onView(isRoot()).perform(actionWithAssertions(new GeneralClickAction(
-                Tap.SINGLE,
-                new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-                        int[] locationOnScreen = new int[2];
-                        view.getLocationOnScreen(locationOnScreen);
-                        float x = locationOnScreen[0] + 500; // Xác định tọa độ X trên màn hình
-                        float y = locationOnScreen[1] + 500; // Xác định tọa độ Y trên màn hình
-                        return new float[]{x, y};
-                    }
-                },
-                Press.FINGER
-        )));
+
+// Xác nhận rằng Intent dự kiến đã được gửi đi
+        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_PICK));
+
+// Kết thúc Intents sau khi test hoàn thành
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.PostDish), withText("Đăng món"),
@@ -259,6 +287,18 @@ public class ChefPostDishTest {
                 .inRoot(isPlatformPopup())
                 .check(matches(isDisplayed()));
 
+    }
+    private ActivityResult createGalleryPickActivityResultStub() {
+        Resources resources = InstrumentationRegistry.getInstrumentation().getContext().getResources();
+        Uri imageUri = Uri.parse(
+                ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        resources.getResourcePackageName(R.drawable.ic_launcher_background) + '/' +
+                        resources.getResourceTypeName(R.drawable.ic_launcher_background) + '/' +
+                        resources.getResourceEntryName(R.drawable.ic_launcher_background)
+        );
+        Intent resultIntent = new Intent();
+        resultIntent.setData(imageUri);
+        return new ActivityResult(RESULT_OK, resultIntent);
     }
 
     private static Matcher<View> childAtPosition(
