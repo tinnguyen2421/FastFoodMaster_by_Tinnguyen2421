@@ -67,7 +67,7 @@ public class LoginEmail extends AppCompatActivity {
         password = passInput.getEditText().getText().toString().trim();
         if (isValid()) {
             ProgressDialog progressDialog = createProgressDialog();
-            progressDialog.show();
+            //progressDialog.show();
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

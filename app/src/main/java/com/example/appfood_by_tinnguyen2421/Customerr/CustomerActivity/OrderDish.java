@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -96,7 +97,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
                 String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+                dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
                 dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -118,12 +119,13 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
 
     {
         final String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+        dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserModel cust = dataSnapshot.getValue(UserModel.class);
                 District = cust.getDistrict();
+                Log.d("ggggggggggg", "onDataChange: "+District);
                 City = cust.getCity();
                 Ward = cust.getWard();
                 RandomId = getIntent().getStringExtra("FoodMenu");

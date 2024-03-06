@@ -1,46 +1,17 @@
 package com.example.appfood_by_tinnguyen2421;
 
 
-import static android.app.Activity.RESULT_OK;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.provider.MediaStore;
-
-import androidx.test.espresso.intent.Intents;
-import androidx.test.espresso.intent.matcher.IntentMatchers;
-import androidx.test.espresso.intent.rule.IntentsTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static android.app.Activity.RESULT_OK;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.Intents.intending;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import androidx.activity.result.ActivityResult;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -50,6 +21,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -58,22 +31,25 @@ import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ChefPostDishTest {
+public class MainActivityTest {
+
+    @Rule
+    public ActivityScenarioRule<LoginEmail> mActivityScenarioRule =
+            new ActivityScenarioRule<>(LoginEmail.class);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant(
                     "android.permission.READ_EXTERNAL_STORAGE");
 
-
-
-    @Rule
-    public IntentsTestRule<LoginEmail> intentsTestRule = new IntentsTestRule<>(LoginEmail.class);
     @Test
-    public void mainActivityTest2() throws InterruptedException {
+    public void mainActivityTest() throws InterruptedException {
         ViewInteraction textInputEditText = onView(
                 allOf(withId(R.id.Lemaill),
                         childAtPosition(
@@ -127,13 +103,33 @@ public class ChefPostDishTest {
                         isDisplayed()));
         floatingActionButton.perform(click());
 
+        ViewInteraction appCompatImageButton = onView(
+                allOf(withId(R.id.imageupload), withContentDescription("Mô tả về hình ảnh"),
+                        childAtPosition(
+                                allOf(withId(R.id.Linear4),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                5)),
+                                1)));
+        appCompatImageButton.perform(scrollTo(), click());
+
+//        ViewInteraction view = onView(
+//                allOf(withParent(withParent(withContentDescription("IMG_20240305_102956.jpg, 145 kB, 10:29 AM"))),
+//                        isDisplayed()));
+//        view.check(matches(isDisplayed()));
+
+        ViewInteraction view1 = onView(
+                allOf(withParent(withParent(withContentDescription("IMG_20240305_102956.jpg, 145 kB, 10:29 AM"))),
+                        isDisplayed()));
+        view1.perform(click());
+
         ViewInteraction textInputEditText3 = onView(
                 childAtPosition(
                         childAtPosition(
                                 withId(R.id.DishName),
                                 0),
                         0));
-        textInputEditText3.perform(scrollTo(), replaceText("Ga Ran Cay"), closeSoftKeyboard());
+        textInputEditText3.perform(scrollTo(), replaceText("Demo"), closeSoftKeyboard());
 
         ViewInteraction textInputEditText4 = onView(
                 childAtPosition(
@@ -149,35 +145,7 @@ public class ChefPostDishTest {
                                 withId(R.id.DishDetail),
                                 0),
                         0));
-        textInputEditText5.perform(scrollTo(), replaceText("Rat Ngon"), closeSoftKeyboard());
-
-        ViewInteraction textInputEditText6 = onView(
-                allOf(withText("Rat Ngon"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.DishDetail),
-                                        0),
-                                0)));
-        textInputEditText6.perform(scrollTo(), click());
-
-        ViewInteraction textInputEditText7 = onView(
-                allOf(withText("Rat Ngon"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.DishDetail),
-                                        0),
-                                0)));
-        textInputEditText7.perform(scrollTo(), replaceText("Rat Ngon"));
-
-        ViewInteraction textInputEditText8 = onView(
-                allOf(withText("Rat Ngon"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.DishDetail),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textInputEditText8.perform(closeSoftKeyboard());
+        textInputEditText5.perform(scrollTo(), replaceText("Rat ngon"), closeSoftKeyboard());
 
         ViewInteraction switchCompat = onView(
                 allOf(withId(R.id.DishAvailable), withText("Còn món"),
@@ -196,56 +164,24 @@ public class ChefPostDishTest {
                                         0),
                                 7)));
         switchCompat2.perform(scrollTo(), click());
-        ViewInteraction textInputEditText9 = onView(
+
+        ViewInteraction textInputEditText6 = onView(
                 allOf(childAtPosition(
                                 childAtPosition(
                                         withId(R.id.DishDiscount),
                                         0),
                                 0),
                         isDisplayed()));
-        textInputEditText9.perform(replaceText("20000"), closeSoftKeyboard());
+        textInputEditText6.perform(replaceText("10000"), closeSoftKeyboard());
 
-//
-
-//        onView(withId(R.id.imageupload)).perform(click());
-//        Thread.sleep(2000);
-//        onView(isRoot()).perform(actionWithAssertions(new GeneralClickAction(
-//                Tap.SINGLE,
-//                new CoordinatesProvider() {
-//                    @Override
-//                    public float[] calculateCoordinates(View view) {
-//                        int[] locationOnScreen = new int[2];
-//                        view.getLocationOnScreen(locationOnScreen);
-//                        float x = locationOnScreen[0] + 500; // Xác định tọa độ X trên màn hình
-//                        float y = locationOnScreen[1] + 500; // Xác định tọa độ Y trên màn hình
-//                        return new float[]{x, y};
-//                    }
-//                },
-//                Press.FINGER
-//        )));
-        Uri expectedUri = Uri.parse("content://com.android.providers.media.documents/document/image%3A192");
-        Intent expectedIntent = new Intent(Intent.ACTION_PICK);
-        expectedIntent.setData(expectedUri);
-
-// Kích hoạt hành động click và kiểm tra xem Intent có được gửi đi hay không
-        onView(withId(R.id.imageupload)).perform(click());
-        intended(allOf(hasAction(Intent.ACTION_PICK), hasData(expectedUri), isInternal()));
-
-// Tiếp tục với việc kịch bản phản hồi cho Intent dự kiến và kiểm tra
-        ActivityResult activityResult = createGalleryPickActivityResultStub();
-        android.app.Instrumentation.ActivityResult instrumentationActivityResult =
-                new android.app.Instrumentation.ActivityResult(
-                        activityResult.getResultCode(),
-                        activityResult.getData()
-                );
-        Intents.intending(hasAction(Intent.ACTION_PICK)).respondWith(instrumentationActivityResult);
-
-    }
-    private ActivityResult createGalleryPickActivityResultStub() {
-        // Kết quả trả về từ Intent, có thể là Uri của hình ảnh bạn mong đợi
-        Intent resultData = new Intent();
-        resultData.setData(Uri.parse("content://com.android.providers.media.documents/document/image%3A192")); // Đặt dữ liệu kết quả là Uri mong đợi
-        return new ActivityResult(Activity.RESULT_OK, resultData);
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.PostDish), withText("Đăng món"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.ScrollView")),
+                                        0),
+                                9)));
+        appCompatButton2.perform(scrollTo(), click());
     }
 
     private static Matcher<View> childAtPosition(
@@ -266,6 +202,4 @@ public class ChefPostDishTest {
             }
         };
     }
-
-
 }

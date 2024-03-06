@@ -35,8 +35,10 @@ public class ChefOrderDishes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_order_dishes);
         recyclerViewdish = findViewById(R.id.Recycle_orders_dish);
+
         recyclerViewdish.setHasFixedSize(true);
         recyclerViewdish.setLayoutManager(new LinearLayoutManager(this));
+
         chefPendingOrdersList = new ArrayList<>();
         Cheforderdishes();
 

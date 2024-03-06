@@ -3,6 +3,7 @@ package com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,7 +51,7 @@ public class CustomerEditProfile extends AppCompatActivity {
     LinearLayout password;
     DatabaseReference databaseReference, data;
     FirebaseDatabase firebaseDatabase;
-    String statee, cityy, suburban, email, passwordd, confirmpass;
+    String city, district, ward, email, passwordd, confirmpass;
 
 
     @Override
@@ -68,7 +69,7 @@ public class CustomerEditProfile extends AppCompatActivity {
         Update = findViewById(R.id.update);
         password = findViewById(R.id.passwordlayout);
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,13 +79,13 @@ public class CustomerEditProfile extends AppCompatActivity {
                 address.setText(userModel.getAddress());
                 mobileno.setText(userModel.getPhoneNumber());
                 Email.setText(userModel.getEmailID());
-                State.setSelection(getIndexByString(State, userModel.getDistrict()));
+                State.setSelection(getIndexByString(State, userModel.getCity()));
                 State.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        statee = value.toString().trim();
-                        if (statee.equals("Thành Phố Hồ Chí Minh")) {
+                        city = value.toString().trim();
+                        if (city.equals("Thành Phố Hồ Chí Minh")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TP_HCM) {
                                 list.add(text);
@@ -92,7 +93,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(CustomerEditProfile.this, android.R.layout.simple_spinner_item, list);
                             City.setAdapter(arrayAdapter);
                         }
-                        if (statee.equals("Thành Phố Hà Nội")) {
+                        if (city.equals("Thành Phố Hà Nội")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TP_HàNội) {
                                 list.add(text);
@@ -102,7 +103,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             City.setAdapter(arrayAdapter);
                         }
                         City.setSelection(getIndexByString(City, userModel.getCity()));
-                        if (statee.equals("Tỉnh Tiền Giang")) {
+                        if (city.equals("Tỉnh Tiền Giang")) {
                             ArrayList<String> list = new ArrayList<>();
                             for (String text : TiềnGiang) {
                                 list.add(text);
@@ -124,8 +125,8 @@ public class CustomerEditProfile extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        cityy = value.toString().trim();
-                        if (cityy.equals("Q1")) {
+                        district = value.toString().trim();
+                        if (district.equals("Q1")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q1) {
                                 listt.add(text);
@@ -134,7 +135,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             Suburban.setAdapter(arrayAdapter);
                         }
 
-                        if (cityy.equals("Q2")) {
+                        if (district.equals("Q2")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q2) {
                                 listt.add(text);
@@ -143,7 +144,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                             Suburban.setAdapter(arrayAdapter);
                         }
 
-                        if (cityy.equals("Q3")) {
+                        if (district.equals("Q3")) {
                             ArrayList<String> listt = new ArrayList<>();
                             for (String text : Q3) {
                                 listt.add(text);
@@ -163,7 +164,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Object value = parent.getItemAtPosition(position);
-                        suburban = value.toString().trim();
+                        ward = value.toString().trim();
                     }
 
                     @Override
@@ -189,7 +190,7 @@ public class CustomerEditProfile extends AppCompatActivity {
             public void onClick(View v) {
 
                 String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                data = FirebaseDatabase.getInstance().getReference("UserModel").child(useridd);
+                data = FirebaseDatabase.getInstance().getReference("Customer").child(useridd);
                 data.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -197,23 +198,26 @@ public class CustomerEditProfile extends AppCompatActivity {
                         confirmpass = userModel.getConfirmPassword();
                         email = userModel.getEmailID();
                         passwordd = userModel.getPassword();
-                        long mobilenoo = Long.parseLong(userModel.getPhoneNumber());String Fname = firstname.getText().toString().trim();
+                        long mobilenoo = Long.parseLong(userModel.getPhoneNumber());
+                        String Fname = firstname.getText().toString().trim();
                         String Lname = lastname.getText().toString().trim();
                         String Address = address.getText().toString().trim();
                         HashMap<String, String> hashMappp = new HashMap<>();
-                        hashMappp.put("City", cityy);
+                        hashMappp.put("District", district);
                         hashMappp.put("ConfirmPassword", confirmpass);
                         hashMappp.put("EmailID", email);
                         hashMappp.put("FirstName", Fname);
                         hashMappp.put("LastName",Lname);
-                        hashMappp.put("Mobileno", String.valueOf(mobilenoo));
+                        hashMappp.put("PhoneNumber", String.valueOf(mobilenoo));
                         hashMappp.put("Password", passwordd);
-                        hashMappp.put("LocalAddress", Address);
-                        hashMappp.put("State", statee);
-                        hashMappp.put("Suburban", suburban);
-                        firebaseDatabase.getInstance().getReference("UserModel").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
+                        hashMappp.put("Address", Address);
+                        hashMappp.put("City", city);
+                        hashMappp.put("Ward", ward);
+                        firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
                         AlertDialog.Builder builder = new AlertDialog.Builder(CustomerEditProfile.this);
-                        Toast.makeText(CustomerEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(CustomerEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
 
 
                     }

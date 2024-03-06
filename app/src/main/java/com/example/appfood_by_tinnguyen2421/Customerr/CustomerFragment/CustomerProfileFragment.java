@@ -52,7 +52,7 @@ public class CustomerProfileFragment extends Fragment {
         CusTotall=v.findViewById(R.id.CusTotal);
         //CustomerHistoryOrders();
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

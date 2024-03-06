@@ -54,7 +54,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth FAuth;
     String role = "DeliveryPerson";
-    String statee, cityy, suburban, fname, lname, mobile, confirmpassword, password, Area, Postcode, house, emailid;
+    String city, district, ward, fname, lname, mobile, confirmpassword, password, Area, Postcode, address, emailid;
 
 
     @Override
@@ -87,8 +87,8 @@ public class DeliveryRegisteration extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Object value = parent.getItemAtPosition(position);
-                statee = value.toString().trim();
-                if (statee.equals("Thành Phố Hồ Chí Minh")) {
+                city = value.toString().trim();
+                if (city.equals("Thành Phố Hồ Chí Minh")) {
                     ArrayList<String> list = new ArrayList<>();
                     for (String text : TP_HCM) {
                         list.add(text);
@@ -97,7 +97,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
 
                     Cityspin.setAdapter(arrayAdapter);
                 }
-                if (statee.equals("Thành Phố Hà Nội")) {
+                if (city.equals("Thành Phố Hà Nội")) {
                     ArrayList<String> list = new ArrayList<>();
                     for (String text : TP_HàNội) {
                         list.add(text);
@@ -106,7 +106,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
 
                     Cityspin.setAdapter(arrayAdapter);
                 }
-                if (statee.equals("Tỉnh Tiền Giang")) {
+                if (city.equals("Tỉnh Tiền Giang")) {
                     ArrayList<String> list = new ArrayList<>();
                     for (String text : TiềnGiang) {
                         list.add(text);
@@ -128,8 +128,8 @@ public class DeliveryRegisteration extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Object value = parent.getItemAtPosition(position);
-                cityy = value.toString().trim();
-                if (cityy.equals("Q1")) {
+                district = value.toString().trim();
+                if (district.equals("Q1")) {
                     ArrayList<String> listt = new ArrayList<>();
                     for (String text : Q1) {
                         listt.add(text);
@@ -138,7 +138,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
                     Suburban.setAdapter(arrayAdapter);
                 }
 
-                if (cityy.equals("Q2")) {
+                if (district.equals("Q2")) {
                     ArrayList<String> listt = new ArrayList<>();
                     for (String text : Q2) {
                         listt.add(text);
@@ -147,7 +147,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
                     Suburban.setAdapter(arrayAdapter);
                 }
 
-                if (cityy.equals("Q3")) {
+                if (district.equals("Q3")) {
                     ArrayList<String> listt = new ArrayList<>();
                     for (String text : Q3) {
                         listt.add(text);
@@ -167,8 +167,8 @@ public class DeliveryRegisteration extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Object value = parent.getItemAtPosition(position);
-                suburban = value.toString().trim();
-                if (suburban.equals("Phường Bến Nghé")) {
+                ward = value.toString().trim();
+                if (ward.equals("Phường Bến Nghé")) {
                     ArrayList<String> listt = new ArrayList<>();
                     for (String text : Q1) {
                         listt.add(text);
@@ -214,9 +214,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
                 emailid = Email.getEditText().getText().toString().trim();
                 password = Pass.getEditText().getText().toString().trim();
                 confirmpassword = cfpass.getEditText().getText().toString().trim();
-                Area = area.getEditText().getText().toString().trim();
-                house = houseno.getEditText().getText().toString().trim();
-                Postcode = postcode.getEditText().getText().toString().trim();
+                address = houseno.getEditText().getText().toString().trim();
 
                 if (isValid()) {
                     mDialog.setMessage("Đang đăng kí! Vui lòng đợi...");
@@ -235,16 +233,16 @@ public class DeliveryRegisteration extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         HashMap<String, String> hashMappp = new HashMap<>();
-                                        hashMappp.put("City", cityy);
+                                        hashMappp.put("District", district);
                                         hashMappp.put("ConfirmPassword", confirmpassword);
                                         hashMappp.put("EmailID", emailid);
-                                        hashMappp.put("Fname", fname);
-                                        hashMappp.put("House", house);
-                                        hashMappp.put("Lname", lname);
-                                        hashMappp.put("Mobile", mobile);
+                                        hashMappp.put("FirstName", fname);
+                                        hashMappp.put("Address", address);
+                                        hashMappp.put("LastName", lname);
+                                        hashMappp.put("PhoneNumber", mobile);
                                         hashMappp.put("Password", password);
-                                        hashMappp.put("State", statee);
-                                        hashMappp.put("Suburban", suburban);
+                                        hashMappp.put("City", city);
+                                        hashMappp.put("Ward", ward);
                                         firebaseDatabase.getInstance().getReference("DeliveryPerson").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp).addOnCompleteListener(new OnCompleteListener<Void>() {
 
                                             @Override
@@ -335,14 +333,10 @@ public class DeliveryRegisteration extends AppCompatActivity {
         mobileno.setError("");
         cfpass.setErrorEnabled(false);
         cfpass.setError("");
-        area.setErrorEnabled(false);
-        area.setError("");
         houseno.setErrorEnabled(false);
         houseno.setError("");
-        postcode.setErrorEnabled(false);
-        postcode.setError("");
 
-        boolean isValidname = false, isvalidpassword = false, isValidemail = false, isvalidconfirmpassword = false, isvalid = false, isvalidmobileno = false, isvalidlname = false, isvalidhousestreetno = false, isvalidarea = false, isvalidpostcode = false;
+        boolean isValidname = false, isvalidpassword = false, isValidemail = false, isvalidconfirmpassword = false, isvalid = false, isvalidmobileno = false, isvalidlname = false, isvalidhousestreetno = false;
         if (TextUtils.isEmpty(fname)) {
             Fname.setErrorEnabled(true);
             Fname.setError("Họ và tên lót không được để trống");
@@ -423,38 +417,22 @@ public class DeliveryRegisteration extends AppCompatActivity {
             else {isvalidmobileno = true;}
         }
 
-        if (TextUtils.isEmpty(house)) {
+        if (TextUtils.isEmpty(address)) {
             houseno.setErrorEnabled(true);
             houseno.setError("Trường này không được để trống");
-        }else if (house.length()>30) {
+        }else if (address.length()>30) {
             houseno.setErrorEnabled(true);
             houseno.setError("Địa chỉ không được quá 30 kí tự");
-        } else if (house.length()<6) {
+        } else if (address.length()<6) {
             houseno.setErrorEnabled(true);
             houseno.setError("Địa chỉ không được ít hơn 6 kí tự");
         } else {
             isvalidhousestreetno = true;
         }
-        if (TextUtils.isEmpty(Area)) {
-            area.setErrorEnabled(true);
-            area.setError("Trường này không được để trống");
-        }else if (Area.length()>30) {
-            area.setErrorEnabled(true);
-            area.setError("Khu vực không được quá 30 kí tự");
-        } else if (Area.length()<6) {
-            area.setErrorEnabled(true);
-            area.setError("Khu vực không được ít hơn 6 kí tự");
-        } else {
-            isvalidarea = true;
-        }
-        if (TextUtils.isEmpty(Postcode)) {
-            postcode.setErrorEnabled(true);
-            postcode.setError("Trường này không được để trống");
-        } else {
-            isvalidpostcode = true;
-        }
 
-        isvalid = (isValidname && isvalidpostcode && isValidemail && isvalidlname && isvalidconfirmpassword && isvalidpassword && isvalidmobileno && isvalidarea && isvalidhousestreetno) ? true : false;
+
+
+        isvalid = (isValidname && isValidemail && isvalidlname && isvalidconfirmpassword && isvalidpassword && isvalidmobileno && isvalidhousestreetno) ? true : false;
         return isvalid;
     }
 }
