@@ -13,15 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.OrderDish;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Favorite;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,74 +27,71 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAdapter.ViewHolder> {
 
+    private Context mContext;
+    private List<UpdateDishModel> mUpdateDishModelList;
+    private DatabaseReference mFvrtRef;
+    private DatabaseReference mFvrtListRef;
+    private boolean mProcessLike = false;
 
-    private Context mcontext;
-    private List<UpdateDishModel>updateDishModellist;
-    DatabaseReference fvrtref,fvrt_listRef;
-    Boolean mProcessLike =false;
-
-    public CustomerDishesAdapter(Context context, List<UpdateDishModel> updateDishModellist)
-    {
-        this.updateDishModellist=updateDishModellist;
-        this.mcontext=context;
+    public CustomerDishesAdapter(Context context, List<UpdateDishModel> updateDishModelList) {
+        this.mUpdateDishModelList = updateDishModelList;
+        this.mContext = context;
+        this.mFvrtRef = FirebaseDatabase.getInstance().getReference("favourites");
+        this.mFvrtListRef = FirebaseDatabase.getInstance().getReference("favoriteList").child(FirebaseAuth.getInstance().getUid());
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(mcontext).inflate(R.layout.monan,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.monan, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
-        final UpdateDishModel updateDishModel=updateDishModellist.get(position);
-        Glide.with(mcontext).load(updateDishModel.getImageURL()).into(holder.imageView);
-        holder.Dishname.setText(updateDishModel.getDishName());
-        updateDishModel.getRandomUID();
-        updateDishModel.getChefID();
-        double price=Double.parseDouble(updateDishModel.getDishPrice());
-        double priceReduce=Double.parseDouble(updateDishModel.getReducePrice());
-        DecimalFormat decimalFormat=new DecimalFormat("#,###,###,###");
-        String FormatPrice=decimalFormat.format(price);
-        String FormatPriceReduce=decimalFormat.format(priceReduce   );
-        holder.price.setText(FormatPrice+"đ");
-        holder.priceReduce.setText(FormatPriceReduce+"đ");
+        final UpdateDishModel updateDishModel = mUpdateDishModelList.get(position);
+        Glide.with(mContext).load(updateDishModel.getImageURL()).into(holder.imageView);
+        holder.dishName.setText(updateDishModel.getDishName());
+        double price = Double.parseDouble(updateDishModel.getDishPrice());
+        double priceReduce = Double.parseDouble(updateDishModel.getReducePrice());
+        DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
+        String formatPrice = decimalFormat.format(price);
+        String formatPriceReduce = decimalFormat.format(priceReduce);
+        holder.price.setText(formatPrice + "đ");
+        holder.priceReduce.setText(formatPriceReduce + "đ");
         holder.priceReduce.setTextColor(Color.RED);
-        holder.tittle.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
-        if(updateDishModel.getAvailableDish().equals("true")) {
+        holder.title.setText("Giảm " + updateDishModel.getDecreasePercent() + "%");
+
+        if (updateDishModel.getAvailableDish().equals("true")) {
             if (updateDishModel.getOnSale().equals("true")) {
-                holder.tittle.setVisibility(View.VISIBLE);
+                holder.title.setVisibility(View.VISIBLE);
                 holder.priceReduce.setVisibility(View.VISIBLE);
                 holder.price.setPaintFlags(holder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                holder.tittle.setVisibility(View.GONE);
+                holder.title.setVisibility(View.GONE);
                 holder.priceReduce.setVisibility(View.GONE);
                 holder.price.setPaintFlags(0);
             }
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    Intent intent = new Intent(mcontext, OrderDish.class);
+                    Intent intent = new Intent(mContext, OrderDish.class);
                     intent.putExtra("FoodMenu", updateDishModel.getRandomUID());
                     intent.putExtra("ChefId", updateDishModel.getChefID());
-
                     intent.putExtra("CateID", updateDishModel.getCateID());
                     intent.putExtra("TenMon", updateDishModel.getDishName());
-                    mcontext.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
+
             holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -108,38 +103,35 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
                     String combinedText = shareSub + "\n" + shareSub1;
                     intent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
                     intent.putExtra(Intent.EXTRA_TEXT, combinedText);
-
-                    mcontext.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
-            fvrtref = FirebaseDatabase.getInstance().getReference("favourites");
-            fvrt_listRef = FirebaseDatabase.getInstance().getReference("favoriteList").child(FirebaseAuth.getInstance().getUid());
+
             String key = updateDishModel.getDishName();
             favouriteChecker(key, holder);
-            holder.likebtn.setOnClickListener(new View.OnClickListener() {
+
+            holder.likeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mProcessLike = true;
-                    fvrtref.addValueEventListener(new ValueEventListener() {
+                    mFvrtRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (mProcessLike.equals(true)) {
-                                if (snapshot.child(FirebaseAuth.getInstance().getUid()).hasChild(key)) {
-                                    fvrtref.child(FirebaseAuth.getInstance().getUid()).child(key).removeValue();
-                                    fvrt_listRef.child(key).removeValue();
-                                    Toast.makeText(v.getContext(), "Xóa khỏi yêu thích!", Toast.LENGTH_SHORT).show();
-                                    mProcessLike = false;
-                                    DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes");
-                                    likedDishesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
-                                } else {
-                                    fvrtref.child(FirebaseAuth.getInstance().getUid()).child(key).setValue(true);
-                                    Favorite favorite = new Favorite(fvrt_listRef.push().getKey(), FirebaseAuth.getInstance().getUid(), updateDishModel, true);
-                                    fvrt_listRef.child(key).setValue(favorite);
-                                    mProcessLike = false;
-                                    Toast.makeText(v.getContext(), "Thêm vào yêu thích!", Toast.LENGTH_SHORT).show();
-                                    DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes");
-                                    likedDishesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(updateDishModel);
-                                }
+                            if (mProcessLike && snapshot.child(FirebaseAuth.getInstance().getUid()).hasChild(key)) {
+                                mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key).removeValue();
+                                mFvrtListRef.child(key).removeValue();
+                                Toast.makeText(mContext, "Xóa khỏi yêu thích!", Toast.LENGTH_SHORT).show();
+                                mProcessLike = false;
+                                DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes");
+                                likedDishesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
+                            } else {
+                                mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key).setValue(true);
+                                Favorite favorite = new Favorite(mFvrtListRef.push().getKey(), FirebaseAuth.getInstance().getUid(), updateDishModel, true);
+                                mFvrtListRef.child(key).setValue(favorite);
+                                mProcessLike = false;
+                                Toast.makeText(mContext, "Thêm vào yêu thích!", Toast.LENGTH_SHORT).show();
+                                DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes");
+                                likedDishesRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(updateDishModel);
                             }
                         }
 
@@ -149,59 +141,56 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
                     });
                 }
             });
-        }
-        else
-        {
+        } else {
             holder.availableDish.setVisibility(View.VISIBLE);
             holder.linearDishes.setAlpha(0.3F);
         }
-
     }
 
-    public void favouriteChecker(final String postkey, ViewHolder holder) {
+    public void favouriteChecker(final String postKey, final ViewHolder holder) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String uid = user.getUid();
-        fvrtref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).hasChild(postkey)){
-                    holder.likebtn.setImageResource(R.drawable.baseline_favorited);
-                }else {
-                    holder.likebtn.setImageResource(R.drawable.baseline_favorite_border_24);
+        if (user != null) {
+            final String uid = user.getUid();
+            mFvrtRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.child(uid).hasChild(postKey)) {
+                        holder.likeButton.setImageResource(R.drawable.baseline_favorited);
+                    } else {
+                        holder.likeButton.setImageResource(R.drawable.baseline_favorite_border_24);
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
     }
+
     @Override
     public int getItemCount() {
-        return updateDishModellist.size();
+        return mUpdateDishModelList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-
-        ImageView imageView,imageViewShare;
-        TextView Dishname,price,tittle,priceReduce,availableDish;
-        ElegantNumberButton additem;
+        ImageView imageView, imageViewShare, likeButton;
+        TextView dishName, price, title, priceReduce, availableDish;
+        ElegantNumberButton addItem;
         LinearLayout linearDishes;
-        ImageView likebtn;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageViewShare=itemView.findViewById(R.id.share_btn);
-            imageView=itemView.findViewById(R.id.menu_image);
-            Dishname=itemView.findViewById(R.id.dishname);
-            price=itemView.findViewById(R.id.dishprice);
-            additem=itemView.findViewById(R.id.number_btn);
-            tittle=itemView.findViewById(R.id.tiLe);
-            priceReduce=itemView.findViewById(R.id.PriceReduce);
-            likebtn=itemView.findViewById(R.id.likeBtn);
-            availableDish=itemView.findViewById(R.id.AvaiableDish);
-            linearDishes=itemView.findViewById(R.id.LinearDishes);
-
-
+            imageViewShare = itemView.findViewById(R.id.share_btn);
+            imageView = itemView.findViewById(R.id.menu_image);
+            dishName = itemView.findViewById(R.id.dishname);
+            price = itemView.findViewById(R.id.dishprice);
+            addItem = itemView.findViewById(R.id.number_btn);
+            title = itemView.findViewById(R.id.tiLe);
+            priceReduce = itemView.findViewById(R.id.PriceReduce);
+            likeButton = itemView.findViewById(R.id.likeBtn);
+            availableDish = itemView.findViewById(R.id.AvaiableDish);
+            linearDishes = itemView.findViewById(R.id.LinearDishes);
         }
     }
 }
