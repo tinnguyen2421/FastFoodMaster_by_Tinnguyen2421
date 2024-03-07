@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ public class CustomerTrackFragment extends Fragment {
     private List<CustomerOrders> customerOrdersList;
     private CustomerTrackAdapter adapter;
     DatabaseReference databaseReference;
-    TextView grandtotal,orderStatus;
+    TextView grandtotal,orderStatus,orderID,orderDate;
     LinearLayout total,orderInfo,otherInfo1;
 
     @Nullable
@@ -51,6 +52,9 @@ public class CustomerTrackFragment extends Fragment {
         orderInfo=v.findViewById(R.id.OrdersInfo);
         otherInfo1=v.findViewById(R.id.OtherInfo1);
         orderStatus=v.findViewById(R.id.OrderStatus);
+        orderID=v.findViewById(R.id.OrdersID);
+        orderDate=v.findViewById(R.id.OrderDate);
+
         customerOrdersList = new ArrayList<>();
         CustomerTrackOrder();
 
@@ -97,6 +101,9 @@ public class CustomerTrackFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             CustomerOrders1 customerOrders1 = dataSnapshot.getValue(CustomerOrders1.class);
                             try{
+                                int a=customerOrders1.getRandomUID().length()-10;
+                                orderID.setText(customerOrders1.getRandomUID().substring(a));
+                                orderDate.setText(customerOrders1.getOrderDate());
                                 orderStatus.setText(customerOrders1.getOrderStatus());
                                 grandtotal.setText(customerOrders1.getGrandTotalPrice()+"đ");
                             }catch (Exception e){

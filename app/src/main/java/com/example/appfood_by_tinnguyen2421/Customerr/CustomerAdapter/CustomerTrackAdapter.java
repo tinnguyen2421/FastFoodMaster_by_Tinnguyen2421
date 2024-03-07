@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.R;
 
@@ -36,8 +38,9 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final CustomerOrders customerFinalOrders = customerOrdersList.get(position);
+        Glide.with(context).load(customerFinalOrders.getImageURL()).into(holder.dishImage);
         holder.dishName.setText(customerFinalOrders.getDishName());
-        holder.dishQuantity.setText(customerFinalOrders.getDishQuantity() + "× ");
+        holder.dishQuantity.setText( "× "+customerFinalOrders.getDishQuantity() );
         holder.totalPrice.setText( customerFinalOrders.getTotalPrice()+"đ");
 
     }
@@ -49,6 +52,7 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView dishName, dishQuantity, dishPrice, totalPrice;
+        ImageView dishImage;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -57,6 +61,7 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
             dishName = itemView.findViewById(R.id.DishName);
             dishPrice =itemView.findViewById(R.id.DishPrice);
             dishQuantity = itemView.findViewById(R.id.DishQuantity);
+            dishImage =itemView.findViewById(R.id.imageView);
             totalPrice = itemView.findViewById(R.id.TotalPrice);
         }
     }

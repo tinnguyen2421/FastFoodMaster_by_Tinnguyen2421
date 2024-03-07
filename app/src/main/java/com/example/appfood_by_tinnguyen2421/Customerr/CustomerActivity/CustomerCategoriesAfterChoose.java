@@ -33,7 +33,7 @@ RecyclerView rcvHome;
     private List<UpdateDishModel> updateDishModelList;
 
 
-    String State, City, Sub, Matl;
+    String district, city, ward, Matl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +53,14 @@ RecyclerView rcvHome;
             public void run() {
                 swipeRefreshLayout.setRefreshing(true);
                 String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                dataaa = FirebaseDatabase.getInstance().getReference("UserModel").child(userid);
+                dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
                 dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserModel cust = dataSnapshot.getValue(UserModel.class);
-                        State = cust.getDistrict();
-                        City = cust.getCity();
-                        Sub = cust.getWard();
+                        district = cust.getDistrict();
+                        city = cust.getCity();
+                        ward = cust.getWard();
 
                         customermenu();
 
@@ -77,7 +77,7 @@ RecyclerView rcvHome;
     private void customermenu() {
 
         swipeRefreshLayout.setRefreshing(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(city).child(district).child(ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

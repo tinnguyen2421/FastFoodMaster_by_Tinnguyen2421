@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -50,17 +51,21 @@ public class ChefDishAdapter extends RecyclerView.Adapter<ChefDishAdapter.ViewHo
         holder.titlePercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
         Glide.with(mcont).load(updateDishModel.getImageURL()).into(holder.imgCate);
         updateDishModel.getRandomUID();
-        if(updateDishModel.getOnSale().equals("true"))
+        if(updateDishModel.getAvailableDish().equals("true"))
         {
-            holder.titlePercent.setVisibility(View.VISIBLE);
-            holder.saleCost.setVisibility(View.VISIBLE);
-            holder.cost.setPaintFlags(holder.cost.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+            if (updateDishModel.getOnSale().equals("true")) {
+                holder.titlePercent.setVisibility(View.VISIBLE);
+                holder.saleCost.setVisibility(View.VISIBLE);
+                holder.cost.setPaintFlags(holder.cost.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                holder.titlePercent.setVisibility(View.GONE);
+                holder.saleCost.setVisibility(View.GONE);
+                holder.cost.setPaintFlags(0);
+            }
         }
-        else
-        {
-           holder.titlePercent.setVisibility(View.GONE);
-           holder.saleCost.setVisibility(View.GONE);
-           holder.cost.setPaintFlags(0);
+        else {
+            holder.availableDish.setVisibility(View.VISIBLE);
+            holder.cardViewDishes.setAlpha(0.5F);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +87,8 @@ public class ChefDishAdapter extends RecyclerView.Adapter<ChefDishAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgCate;
-        TextView dishes,titlePercent,cost,saleCost;
+        TextView dishes,titlePercent,cost,saleCost,availableDish;
+        CardView cardViewDishes;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +97,8 @@ public class ChefDishAdapter extends RecyclerView.Adapter<ChefDishAdapter.ViewHo
             cost=itemView.findViewById(R.id.giaGoc);
             saleCost=itemView.findViewById(R.id.giamCon);
             imgCate=itemView.findViewById(R.id.ImageCategory);
+            availableDish=itemView.findViewById(R.id.AvaiableDish);
+            cardViewDishes=itemView.findViewById(R.id.CardViewDishes);
         }
     }
 }

@@ -7,15 +7,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +23,6 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerCategoryAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDishesAdapter;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
-import com.example.appfood_by_tinnguyen2421.Item;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SlideViewPayer;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,55 +37,70 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 import java.util.List;
-//May not be copied in any form
-//Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+
 public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SlideViewPayer QuangCao;
-    TextView tvSlogan;
-
-    RecyclerView recyclerView,rcvhome;
+    private TextView tvSlogan;
+    private RecyclerView recyclerView, rcvhome;
     private List<UpdateDishModel> updateDishModelList;
     private ArrayList<Categories> categoryList;
     private CustomerDishesAdapter adapter;
     private CustomerCategoryAdapter adapterCate;
-    String district, City, ward,LocalAdd;
-    DatabaseReference dataaa, databaseReference,databaseReference1;
-    SwipeRefreshLayout swipeRefreshLayout;
-    EditText search;
-    TextView diachii;
+    private String district, city, ward, address;
+    private DatabaseReference dataaa, databaseReference, databaseReference1;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText search;
+    private TextView addresss;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragmenthome, null);
+        View v = inflater.inflate(R.layout.fragmenthome, container, false);
         setHasOptionsMenu(true);
-        SliderView sliderView = v.findViewById(R.id.imageSlider);
-        rcvhome = v.findViewById(R.id.rcvhome);
+        initializeViews(v);
+        setupRecyclerViews();
+        initializeSlider(v);
+        loadData();
+        setListeners();
+        return v;
+    }
+
+    private void initializeViews(View v) {
+        tvSlogan = v.findViewById(R.id.txtslogan);
         recyclerView = v.findViewById(R.id.recycle_menu);
-        tvSlogan=v.findViewById(R.id.txtslogan);
-        recyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.move);
-        recyclerView.startAnimation(animation);
-        rcvhome.setLayoutManager(linearLayoutManager);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        updateDishModelList = new ArrayList<>();
-        categoryList=new ArrayList<>();
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipelayout);
+        rcvhome = v.findViewById(R.id.rcvhome);
+        addresss = v.findViewById(R.id.diaChi);
+        search = v.findViewById(R.id.timKiem);
+        swipeRefreshLayout = v.findViewById(R.id.swipelayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        search=v.findViewById(R.id.timKiem);
-        diachii=v.findViewById(R.id.diaChi);
+    }
+
+    private void setupRecyclerViews() {
+        recyclerView.setHasFixedSize(true);
         rcvhome.setHasFixedSize(true);
-        //extra
-         if (getActivity() != null) {
-          ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-          if (actionBar != null) {
-              actionBar.hide();
-          }
-         }
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        rcvhome.setLayoutManager(linearLayoutManager);
+    }
+
+    private void initializeSlider(View v) {
+        SliderView sliderView = v.findViewById(R.id.imageSlider);
+        QuangCao = new SlideViewPayer(getContext());
+        sliderView.setSliderAdapter(QuangCao);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
+        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        sliderView.setIndicatorSelectedColor(Color.WHITE);
+        sliderView.setIndicatorUnselectedColor(Color.GRAY);
+        sliderView.setScrollTimeInSec(3);
+        sliderView.setAutoCycle(true);
+        sliderView.startAutoCycle();
+    }
+
+    private void loadData() {
         swipeRefreshLayout.post(() -> {
             swipeRefreshLayout.setRefreshing(true);
             String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -100,101 +110,71 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     UserModel cust = dataSnapshot.getValue(UserModel.class);
                     district = cust.getDistrict();
-                    City = cust.getCity();
+                    city = cust.getCity();
                     ward = cust.getWard();
-                    LocalAdd= cust.getAddress();
-                    diachii.setText(LocalAdd+","+ ward +","+district+","+ City);
+                    address = cust.getAddress();
+                    addresss.setText(address + "," + ward + "," + district + "," + city);
                     customerCate();
                     customerDishes();
-
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         });
-
-        //extra
-        QuangCao = new SlideViewPayer(getContext());
-        sliderView.setSliderAdapter(QuangCao);
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(Color.WHITE);
-        sliderView.setIndicatorUnselectedColor(Color.GRAY);
-        sliderView.setScrollTimeInSec(3);
-        sliderView.setAutoCycle(true);
-        sliderView.startAutoCycle();
-        renewItems(v);
-        removeLastItem(v);
-        addNewItem(v);
-
-        return v;
     }
 
-    public void renewItems(View view) {
-        List<Item> sliderItemList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            Item sliderItem = new Item();
-            if (i % 2 == 0) {
-                sliderItem.setImageurl("https://images.squarespace-cdn.com/content/v1/53883795e4b016c956b8d243/1597821998048-538UNQI253SYL3KE9NGD/chup-anh-mon-an-breakfast-10.jpg");
-            } else {
-                sliderItem.setImageurl("https://toplist.vn/images/800px/-790915.jpg");
+    private void setListeners() {
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String searchText = editable.toString();
+                search(searchText);
             }
-            sliderItemList.add(sliderItem);
-        }
-        QuangCao.ViewPagerAdapter(sliderItemList);
-    }
-    public void removeLastItem(View view) {
-        if (QuangCao.getCount() - 1 >= 0)
-            QuangCao.deleteitem(QuangCao.getCount() - 1);
-    }
-    public void addNewItem(View view) {
-        Item sliderItem = new Item();
-//        sliderItem.setDescription("Re");
-        sliderItem.setImageurl("https://eventusproduction.com/wp-content/uploads/2017/02/fresh-box.jpg");
-        QuangCao.addItem(sliderItem);
+        });
     }
 
     @Override
     public void onRefresh() {
-
         customerDishes();
     }
+
     private void customerCate() {
-        databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(City).child(district).child(ward);
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(city).child(district).child(ward);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                categoryList.clear();
+                categoryList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                         Categories categories = snapshot1.getValue(Categories.class);
                         categoryList.add(categories);
                     }
                 }
-                adapterCate = new CustomerCategoryAdapter(categoryList,getContext());
+                adapterCate = new CustomerCategoryAdapter(categoryList, getContext());
                 rcvhome.setAdapter(adapterCate);
                 swipeRefreshLayout.setRefreshing(false);
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
-    private void customerDishes() {
 
+    private void customerDishes() {
         swipeRefreshLayout.setRefreshing(true);
-        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(district).child(ward);
+        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(city).child(district).child(ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                updateDishModelList.clear();
+                updateDishModelList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                         UpdateDishModel updateDishModel = snapshot1.getValue(UpdateDishModel.class);
@@ -204,7 +184,6 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 adapter = new CustomerDishesAdapter(getContext(), updateDishModelList);
                 recyclerView.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
-
             }
 
             @Override
@@ -212,27 +191,9 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Không cần xử lý trước sự thay đổi văn bản
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // Không cần xử lý mỗi lần có sự thay đổi văn bản
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // Xử lý sau mỗi lần có sự thay đổi văn bản
-                String searchText = editable.toString();
-                search(searchText);
-            }
-        });
-
     }
 
     private void search(final String searchtext) {
-
         ArrayList<UpdateDishModel> mylist = new ArrayList<>();
         for (UpdateDishModel object : updateDishModelList) {
             if (object.getDishName().toLowerCase().contains(searchtext.toLowerCase())) {
@@ -241,7 +202,5 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         }
         adapter = new CustomerDishesAdapter(getContext(), mylist);
         recyclerView.setAdapter(adapter);
-
     }
 }
-
