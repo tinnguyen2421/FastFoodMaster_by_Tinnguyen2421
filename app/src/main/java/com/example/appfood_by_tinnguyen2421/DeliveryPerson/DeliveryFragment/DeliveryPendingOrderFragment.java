@@ -38,7 +38,7 @@ public class DeliveryPendingOrderFragment extends Fragment {
     private DeliveryPendingOrderFragmentAdapter adapter;
     private DatabaseReference databaseReference;
     private SwipeRefreshLayout swipeRefreshLayout;
-    String deliveryId = "XwBpEfjTGRTIHqqEJQJrEcbKj512";
+    String deliveryId = "D6LUbCHJcleucejygviiM2H82vC3";
 
     @Nullable
     @Override
@@ -54,12 +54,6 @@ public class DeliveryPendingOrderFragment extends Fragment {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
         adapter = new DeliveryPendingOrderFragmentAdapter(getContext(), deliveryShipOrders1List);
         recyclerView.setAdapter(adapter);
-        //if (getActivity() != null) {
-            //ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            //if (actionBar != null) {
-              // actionBar.hide();
-          //  }
-        //}
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

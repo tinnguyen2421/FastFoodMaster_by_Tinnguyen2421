@@ -35,7 +35,7 @@ public class ChefOrderTobePreparedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v= inflater.inflate(R.layout.activity_chef_order_tobe_prepared, container, false);
+        View v = inflater.inflate(R.layout.activity_chef_order_tobe_prepared, container, false);
         recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -48,24 +48,14 @@ public class ChefOrderTobePreparedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 chefFinalOrders1List.clear();
-                recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                chefFinalOrders1List = new ArrayList<>();
                 cheforderstobePrepare();
             }
         });
-        if(chefFinalOrders1List.size()==0)
-        {
-            recyclerView.setBackgroundResource(R.drawable.empty_cart);
-        }
-        else {
-            cheforderstobePrepare();
-        }
+        cheforderstobePrepare(); // Gọi phương thức để tải dữ liệu lúc fragment được tạo
         return v;
     }
-    private void cheforderstobePrepare() {
 
+    private void cheforderstobePrepare() {
         databaseReference = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -79,8 +69,7 @@ public class ChefOrderTobePreparedFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
                                 chefFinalOrders1List.add(chefFinalOrders1);
-                                adapter = new ChefOrderTobePreparedAdapter(getContext(), chefFinalOrders1List);
-                                recyclerView.setAdapter(adapter);
+                                adapter.notifyDataSetChanged(); // Cập nhật adapter sau khi thêm dữ liệu vào danh sách
                                 swipeRefreshLayout.setRefreshing(false);
                             }
 
@@ -93,6 +82,7 @@ public class ChefOrderTobePreparedFragment extends Fragment {
                     }
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
+                    recyclerView.setBackgroundResource(chefFinalOrders1List.isEmpty() ? R.drawable.empty_cart : 0); // Hiển thị layout trống nếu danh sách rỗng
                 }
             }
 

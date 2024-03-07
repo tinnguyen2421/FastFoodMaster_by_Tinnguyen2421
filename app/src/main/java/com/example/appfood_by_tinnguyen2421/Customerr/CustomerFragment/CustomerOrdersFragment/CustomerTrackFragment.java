@@ -36,7 +36,7 @@ public class CustomerTrackFragment extends Fragment {
     private CustomerTrackAdapter adapter;
     DatabaseReference databaseReference;
     TextView grandtotal,orderStatus;
-    LinearLayout total,orderInfo,otherInfo;
+    LinearLayout total,orderInfo,otherInfo1;
 
     @Nullable
     @Override
@@ -49,7 +49,7 @@ public class CustomerTrackFragment extends Fragment {
         grandtotal = v.findViewById(R.id.GrandTotal);
         total = v.findViewById(R.id.btnn);
         orderInfo=v.findViewById(R.id.OrdersInfo);
-        otherInfo=v.findViewById(R.id.OtherInfo);
+        otherInfo1=v.findViewById(R.id.OtherInfo1);
         orderStatus=v.findViewById(R.id.OrderStatus);
         customerOrdersList = new ArrayList<>();
         CustomerTrackOrder();
@@ -76,11 +76,11 @@ public class CustomerTrackFragment extends Fragment {
                             if (customerOrdersList.size() == 0) {
                                 total.setVisibility(View.INVISIBLE);
                                 orderInfo.setVisibility(View.INVISIBLE);
-                                otherInfo.setVisibility(View.INVISIBLE);
+                                otherInfo1.setVisibility(View.INVISIBLE);
                             } else {
                                 total.setVisibility(View.VISIBLE);
                                 orderInfo.setVisibility(View.VISIBLE);
-                                otherInfo.setVisibility(View.VISIBLE);
+                                otherInfo1.setVisibility(View.VISIBLE);
                             }
                             adapter = new CustomerTrackAdapter(getContext(), customerOrdersList);
                             recyclerView.setAdapter(adapter);

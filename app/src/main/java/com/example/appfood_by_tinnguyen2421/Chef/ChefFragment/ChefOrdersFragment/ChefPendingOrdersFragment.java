@@ -46,27 +46,16 @@ public class ChefPendingOrdersFragment extends Fragment {
         chefPendingOrders1List = new ArrayList<>();
         swipeRefreshLayout = v.findViewById(R.id.Swipe_layoutt);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        adapter = new ChefPendingOrdersAdapter(getContext(),chefPendingOrders1List);
+        adapter = new ChefPendingOrdersAdapter(getContext(), chefPendingOrders1List);
         recyclerView.setAdapter(adapter);
-        if(chefPendingOrders1List.size()!=0)
-        {
-            cheforders();
-
-        }
-        else {
-            recyclerView.setBackgroundResource(R.drawable.empty);
-        }
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 chefPendingOrders1List.clear();
-                recyclerView = v.findViewById(R.id.Recycle_orders);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                chefPendingOrders1List = new ArrayList<>();
                 cheforders();
             }
         });
+        cheforders(); // Gọi phương thức để tải dữ liệu lúc fragment được tạo
         return v;
     }
 
@@ -75,28 +64,28 @@ public class ChefPendingOrdersFragment extends Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                chefPendingOrders1List.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("OtherInformation");
-                    data.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ChefFinalOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
-                            chefPendingOrders1List.add(chefPendingOrders1);
-                            adapter = new ChefPendingOrdersAdapter(getContext(),chefPendingOrders1List);
-                            recyclerView.setAdapter(adapter);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                if (dataSnapshot.exists()) {
+                    chefPendingOrders1List.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("OtherInformation");
+                        data.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ChefFinalOrders1 chefPendingOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
+                                chefPendingOrders1List.add(chefPendingOrders1);
+                                adapter.notifyDataSetChanged(); // Cập nhật adapter sau khi thêm dữ liệu vào danh sách
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-                }else{
+                            }
+                        });
+                    }
+                } else {
                     swipeRefreshLayout.setRefreshing(false);
+                    recyclerView.setBackgroundResource(R.drawable.empty); // Nếu danh sách rỗng, hiển thị layout trống
                 }
             }
 
