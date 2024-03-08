@@ -55,7 +55,7 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
         txt.setVisibility(View.INVISIBLE);
         verify = (Button) findViewById(R.id.Verify);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("UserModel").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

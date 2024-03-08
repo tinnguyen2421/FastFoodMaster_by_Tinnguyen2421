@@ -38,7 +38,7 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPostCate;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefAdapter.ChefCateAdapter;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefStatus;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefStatus;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;

@@ -23,6 +23,7 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerCategoryAdapter;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDishesAdapter;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
+import com.example.appfood_by_tinnguyen2421.Item;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.SlideViewPayer;
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,8 +99,32 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         sliderView.setScrollTimeInSec(3);
         sliderView.setAutoCycle(true);
         sliderView.startAutoCycle();
+        renewItems(v);
+        removeLastItem(v);
+        addNewItem(v);
     }
-
+    public void renewItems(View view) {
+        List<Item> sliderItemList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Item sliderItem = new Item();
+            if (i % 2 == 0) {
+                sliderItem.setImageurl("https://images.squarespace-cdn.com/content/v1/53883795e4b016c956b8d243/1597821998048-538UNQI253SYL3KE9NGD/chup-anh-mon-an-breakfast-10.jpg");
+            } else {
+                sliderItem.setImageurl("https://toplist.vn/images/800px/-790915.jpg");
+            }
+            sliderItemList.add(sliderItem);
+        }
+        QuangCao.ViewPagerAdapter(sliderItemList);
+    }
+    public void removeLastItem(View view) {
+        if (QuangCao.getCount() - 1 >= 0)
+            QuangCao.deleteitem(QuangCao.getCount() - 1);
+    }
+    public void addNewItem(View view) {
+        Item sliderItem = new Item();
+        sliderItem.setImageurl("https://eventusproduction.com/wp-content/uploads/2017/02/fresh-box.jpg");
+        QuangCao.addItem(sliderItem);
+    }
     private void loadData() {
         swipeRefreshLayout.post(() -> {
             swipeRefreshLayout.setRefreshing(true);

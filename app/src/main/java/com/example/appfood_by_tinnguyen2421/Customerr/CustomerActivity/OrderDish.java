@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,17 +41,18 @@ import java.util.List;
 public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private String RandomId, ChefID;
-    private ImageView imageView;
-    private TextView titlePercent, Foodname, ChefName, ChefLocation, FoodQuantity, FoodPrice, FoodDescription;
+    private ImageView imageView,imageViewCard;
+    private TextView titlePercent, Foodname, ChefName, ChefLocation, FoodQuantity, FoodPrice, FoodDescription,outOfDishes, shopStatus,availableDish,shopStatuss;
     private ElegantNumberButton additem;
     private RecyclerView rvReviews;
-    private DatabaseReference databaseReference, dataaa, chefData, reference, data, dataRef;
+    private DatabaseReference databaseReference,dbReference, dataaa, chefData, reference, data, dataRef;
     private String District, City, Ward, dishName;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomerDishesAdapter adapter;
     private List<UpdateDishModel> updateDishModelList;
     private int dishPrice;
-    private String custID, Matl, TenMon;
+    private String custID, cateID, dishes;
+    private LinearLayout layoutNumberButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +78,22 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         FoodPrice = findViewById(R.id.food_price);
         FoodDescription = findViewById(R.id.food_description);
         imageView = findViewById(R.id.image);
-        titlePercent = findViewById(R.id.Title);
+        titlePercent = findViewById(R.id.DecreasePercent);
         additem = findViewById(R.id.number_btn);
+        layoutNumberButton=findViewById(R.id.LayoutNumberButton);
+        outOfDishes=findViewById(R.id.OutOfDishes);
+        shopStatus =findViewById(R.id.ShopClosed);
+        availableDish=findViewById(R.id.DishAvailable);
+        shopStatuss=findViewById(R.id.ShopStatuss);
+        imageViewCard=findViewById(R.id.image);
         rvReviews = findViewById(R.id.rv_reviews);
         rvReviews.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvReviews.setLayoutManager(layoutManager);
         updateDishModelList = new ArrayList<>();
         Intent dataget=getIntent();
-        Matl = dataget.getStringExtra("CateID");
-        TenMon = dataget.getStringExtra("TenMon");
+        cateID = dataget.getStringExtra("CateID");
+        dishes = dataget.getStringExtra("TenMon");
     }
 
     private void setUpSwipeRefreshLayout() {
@@ -97,8 +105,6 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private void loadDishInfoAndHandleItem() {
         // Load user's location information
         loadUserLocationInfo();
-
-        // Load dish information and handle item
         loadDishInfoAndHandleItem1();
     }
 
@@ -148,7 +154,6 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
-                // Handle add item button click
                 handleAddItemButtonClick();
             }
 
@@ -162,12 +167,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private void handleDishInfo(DataSnapshot dataSnapshot) {
         UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
         if (updateDishModel != null) {
-            // Set dish name
-            Foodname.setText("Tên món: " + updateDishModel.getDishName());
-            // Set dish description
-            String descriptionHtml = "<b>" + "Chi tiết: " + "</b>" + updateDishModel.getDescription();
-            FoodDescription.setText(Html.fromHtml(descriptionHtml));
-            // Set dish price
+            // load dish information
             setDishPrice(updateDishModel);
             // Load chef information
             loadChefInfo(updateDishModel);
@@ -185,14 +185,50 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         DecimalFormat decimalFormatPriceReduce = new DecimalFormat("#,###,###,###");
         String formattedPriceReduce = decimalFormatPriceReduce.format(reducePrice);
 
-        if (updateDishModel.getOnSale().equals("true")) {
-            String priceHtml = "<b>" + "Giá:" + "</b>" + formattedPriceReduce + "đ";
-            FoodPrice.setText(Html.fromHtml(priceHtml));
-        } else {
-            String priceHtml = "<b>" + "Giá:" + "</b>" + formattedPrice + "đ";
-            FoodPrice.setText(Html.fromHtml(priceHtml));
-        }
+        // Set dish name
+        Foodname.setText("Tên món: " + updateDishModel.getDishName());
+        // Set dish description
+        String descriptionHtml = "<b>" + "Chi tiết: " + "</b>" + updateDishModel.getDescription();
+        FoodDescription.setText(Html.fromHtml(descriptionHtml));
+
         Glide.with(OrderDish.this).load(updateDishModel.getImageURL()).into(imageView);
+
+        databaseReference=FirebaseDatabase.getInstance().getReference("ChefStatus").child(updateDishModel.getChefID()+"/Status");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String status = dataSnapshot.getValue(String.class);
+                if(status.equals("Mở cửa")) {
+                    if (updateDishModel.getOnSale().equals("true")) {
+                        String priceHtml = "<b>" + "Giá:" + "</b>" + formattedPriceReduce + "đ";
+                        FoodPrice.setText(Html.fromHtml(priceHtml));
+                        titlePercent.setText("Giảm "+updateDishModel.getDecreasePercent()+"%");
+                        if (updateDishModel.getAvailableDish().equals("true")) {
+                        } else {
+                            additem.setVisibility(View.GONE);
+                            imageViewCard.setAlpha((float) 0.3);
+                            outOfDishes.setVisibility(View.VISIBLE);
+                            availableDish.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else {
+                        String priceHtml = "<b>" + "Giá:" + "</b>" + formattedPrice + "đ";
+                        FoodPrice.setText(Html.fromHtml(priceHtml));
+                        titlePercent.setVisibility(View.GONE);
+                    }
+                }
+                else
+                {
+                    shopStatuss.setVisibility(View.VISIBLE);
+                    shopStatus.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void loadChefInfo(UpdateDishModel updateDishModel) {
@@ -358,7 +394,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                         UpdateDishModel updateDishModel = snapshot1.getValue(UpdateDishModel.class);
-                        if (updateDishModel != null && Matl.equals(updateDishModel.getCateID()) && !TenMon.equals(updateDishModel.getDishName())) {
+                        if (updateDishModel != null && cateID.equals(updateDishModel.getCateID()) && !dishes.equals(updateDishModel.getDishName())) {
                             updateDishModelList.add(updateDishModel);
                         }
                     }

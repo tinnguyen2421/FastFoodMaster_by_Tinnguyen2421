@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:id="@+id/LayoutNumberButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right">
@@ -24,15 +25,31 @@
 
 
 
-    <Button
-        android:id="@+id/btn_insertcart"
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/OutOfDishes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-
         android:textSize="20dp"
-        android:backgroundTint="@color/Xanhbaemin"
-        android:text="Thêm Vào Giỏ Hàng" />
+        android:fontFamily="@font/utmamerikasans"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:text="Món ăn tạm hết ! Vui lòng đợi đến khi cửa hàng chuẩn bị lại món bạn nhé !!!" />
+    <TextView
+        android:layout_marginTop="15dp"
+        android:id="@+id/ShopClosed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="20dp"
+        android:fontFamily="@font/utmamerikasans"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:text="Quán đang bận, hãy quay lại sau bạn nhé!!!!" />
 
 </LinearLayout>

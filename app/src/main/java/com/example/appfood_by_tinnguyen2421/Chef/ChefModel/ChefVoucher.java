@@ -1,4 +1,4 @@
-package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
+package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 
 public class ChefVoucher {
     private String StartDate,EndDate,VoucherID,VoucherName,VoucherApply,VoucherValue,DishUseVoucher;

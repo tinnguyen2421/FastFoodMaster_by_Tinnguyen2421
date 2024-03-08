@@ -1,4 +1,4 @@
-package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
+package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 
 public class ChefStatus {
     private String Status,Reason,TimeEnd,TimeStart,TimeStop;

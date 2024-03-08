@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefVoucher;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefVoucher;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerVoucherAdapter;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.database.DataSnapshot;

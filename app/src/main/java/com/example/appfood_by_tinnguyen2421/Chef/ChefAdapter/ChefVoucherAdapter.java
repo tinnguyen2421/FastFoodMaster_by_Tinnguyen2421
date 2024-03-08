@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefVoucher;
+import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefVoucher;
 import com.example.appfood_by_tinnguyen2421.R;
 
 import java.util.List;
