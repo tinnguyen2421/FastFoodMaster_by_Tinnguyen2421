@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CustomerTrackFragment extends Fragment {
     private List<CustomerOrders> customerOrdersList;
     private CustomerTrackAdapter adapter;
     DatabaseReference databaseReference;
+    RelativeLayout relativeLayout;
     TextView grandtotal,orderStatus,orderID,orderDate;
     LinearLayout total,orderInfo,otherInfo1;
 
@@ -54,6 +56,7 @@ public class CustomerTrackFragment extends Fragment {
         orderStatus=v.findViewById(R.id.OrderStatus);
         orderID=v.findViewById(R.id.OrdersID);
         orderDate=v.findViewById(R.id.OrderDate);
+        relativeLayout=v.findViewById(R.id.RelaytiveLayout);
 
         customerOrdersList = new ArrayList<>();
         CustomerTrackOrder();
@@ -78,6 +81,7 @@ public class CustomerTrackFragment extends Fragment {
                                 customerOrdersList.add(customerOrders);
                             }
                             if (customerOrdersList.size() == 0) {
+                                relativeLayout.setBackgroundResource(R.drawable.empty_product);
                                 total.setVisibility(View.INVISIBLE);
                                 orderInfo.setVisibility(View.INVISIBLE);
                                 otherInfo1.setVisibility(View.INVISIBLE);
@@ -88,6 +92,7 @@ public class CustomerTrackFragment extends Fragment {
                             }
                             adapter = new CustomerTrackAdapter(getContext(), customerOrdersList);
                             recyclerView.setAdapter(adapter);
+
                         }
 
                         @Override
@@ -110,6 +115,7 @@ public class CustomerTrackFragment extends Fragment {
                                 Log.d("CustomerTrackFragment", "onDataChange: "+e);
                             }
 
+
                         }
 
                         @Override
@@ -118,6 +124,7 @@ public class CustomerTrackFragment extends Fragment {
                         }
                     });
                 }
+
             }
 
             @Override

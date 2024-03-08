@@ -120,6 +120,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 City = cust.getCity();
                 Ward = cust.getWard();
                 customermenu();
+
             }
 
             @Override
@@ -222,6 +223,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                     shopStatuss.setVisibility(View.VISIBLE);
                     shopStatus.setVisibility(View.VISIBLE);
                 }
+
             }
 
             @Override
@@ -243,6 +245,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                     String locHtml = "<b>" + "Địa chỉ: " + "</b>" + chef.getWard();
                     ChefLocation.setText(Html.fromHtml(locHtml));
                 }
+
             }
 
             @Override
@@ -307,6 +310,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                     // Load dish details and calculate total price
                     loadDishDetailsAndCalculateTotalPrice();
                 }
+
             }
 
             @Override
@@ -336,6 +340,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                         removeCartItem();
                     }
                 }
+
             }
 
             @Override
@@ -402,6 +407,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 adapter = new CustomerDishesAdapter(OrderDish.this, updateDishModelList);
                 rvReviews.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

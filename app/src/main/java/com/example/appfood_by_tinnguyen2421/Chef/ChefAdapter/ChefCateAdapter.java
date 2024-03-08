@@ -115,6 +115,7 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
                         });
                         AlertDialog alert = builder.create();
                         alert.show();
+
                     }
 
                     @Override

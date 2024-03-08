@@ -76,6 +76,7 @@ public class ChefOrderTobePrepared extends AppCompatActivity {
                                 adapter = new ChefOrderTobePreparedAdapter(ChefOrderTobePrepared.this, chefFinalOrders1List);
                                 recyclerView.setAdapter(adapter);
                                 swipeRefreshLayout.setRefreshing(false);
+
                             }
 
                             @Override
@@ -88,6 +89,7 @@ public class ChefOrderTobePrepared extends AppCompatActivity {
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
             }
 
             @Override

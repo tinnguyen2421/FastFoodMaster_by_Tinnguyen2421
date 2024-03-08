@@ -171,6 +171,7 @@ public class ChefEditProfile extends AppCompatActivity {
                     }
                 });
 
+
             }
 
             @Override
@@ -220,6 +221,7 @@ public class ChefEditProfile extends AppCompatActivity {
                         firebaseDatabase.getInstance().getReference("Chef").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
                         AlertDialog.Builder builder = new AlertDialog.Builder(ChefEditProfile.this);
                         Toast.makeText(ChefEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+
 
 
                     }

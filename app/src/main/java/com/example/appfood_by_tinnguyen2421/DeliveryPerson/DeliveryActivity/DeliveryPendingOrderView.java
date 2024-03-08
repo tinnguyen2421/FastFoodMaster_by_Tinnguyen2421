@@ -73,6 +73,7 @@ public class DeliveryPendingOrderView extends AppCompatActivity {
                 }
                 adapter = new DeliveryPendingOrderViewAdapter(DeliveryPendingOrderView.this, deliveryShipOrdersList);
                 recyclerViewdish.setAdapter(adapter);
+
             }
 
             @Override
@@ -91,6 +92,7 @@ public class DeliveryPendingOrderView extends AppCompatActivity {
                 name.setText("Tên khách hàng:"+deliveryShipOrders1.getName());
                 number.setText("Số điện thoại:" + deliveryShipOrders1.getMobileNumber());
                 ChefName.setText("Tên cửa hàng"+ deliveryShipOrders1.getChefName());
+
 
             }
 

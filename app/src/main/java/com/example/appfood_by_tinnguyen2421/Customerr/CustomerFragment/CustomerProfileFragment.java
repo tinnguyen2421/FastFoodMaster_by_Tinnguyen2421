@@ -58,6 +58,7 @@ public class CustomerProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final UserModel userModel = snapshot.getValue(UserModel.class);
                 CusNamee.setText(userModel.getFirstName()+ userModel.getLastName());
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -132,12 +133,14 @@ public class CustomerProfileFragment extends Fragment {
                                 }
                                 CusTotall.setText("Total Amount: " + totalAmount[0]);
                             }
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
                 }
+
             }
 
             @Override

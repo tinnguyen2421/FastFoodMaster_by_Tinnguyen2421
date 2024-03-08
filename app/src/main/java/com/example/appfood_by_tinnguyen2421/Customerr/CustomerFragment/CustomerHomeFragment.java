@@ -141,6 +141,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                     addresss.setText(address + "," + ward + "," + district + "," + city);
                     customerCate();
                     customerDishes();
+
                 }
 
                 @Override
@@ -186,6 +187,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 adapterCate = new CustomerCategoryAdapter(categoryList, getContext());
                 rcvhome.setAdapter(adapterCate);
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override
@@ -209,6 +211,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                 adapter = new CustomerDishesAdapter(getContext(), updateDishModelList);
                 recyclerView.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

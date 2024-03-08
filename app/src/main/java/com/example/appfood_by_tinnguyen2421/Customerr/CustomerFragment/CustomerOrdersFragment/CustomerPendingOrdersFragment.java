@@ -61,12 +61,14 @@ public class CustomerPendingOrdersFragment extends Fragment {
                             }
                             adapter = new PendingOrdersAdapter(getContext(), customerOrdersList);
                             recyclerView.setAdapter(adapter);
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
                 }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -60,9 +60,14 @@ public class CustomerVoucherFragment extends Fragment {
                         ChefVoucher chefVoucher = snapshot1.getValue(ChefVoucher.class);
                         chefVoucherList.add(chefVoucher);
                     }
+                    if(chefVoucherList.size()==0)
+                    {
+                        rcvNotifyy.setBackgroundResource(R.drawable.empty_wallet);
+                    }
                 }
                 adapter = new CustomerVoucherAdapter(getContext(), chefVoucherList);
                 rcvNotifyy.setAdapter(adapter);
+
 
             }
 

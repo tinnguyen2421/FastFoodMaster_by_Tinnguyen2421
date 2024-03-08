@@ -193,6 +193,7 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
 
                                         }
                                     });
+
                                 }
 
                                 @Override
@@ -207,6 +208,7 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                 }
                 adapter = new ChefOrdertobePrepareViewAdapter(ChefOrdertobePrepareView.this, chefWaitingOrdersList);
                 recyclerViewdish.setAdapter(adapter);
+
             }
 
             @Override

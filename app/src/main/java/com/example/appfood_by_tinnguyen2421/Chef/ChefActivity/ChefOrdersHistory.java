@@ -54,6 +54,7 @@ public class ChefOrdersHistory extends AppCompatActivity {
                             chefFinalOrders1List.add(chefFinalOrders1);
                             adapter = new ChefOrdersHistoryAdapter(ChefOrdersHistory.this, chefFinalOrders1List);
                             recyclerView.setAdapter(adapter);
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -61,6 +62,7 @@ public class ChefOrdersHistory extends AppCompatActivity {
                     });
 
                 }
+
             }
 
             @Override

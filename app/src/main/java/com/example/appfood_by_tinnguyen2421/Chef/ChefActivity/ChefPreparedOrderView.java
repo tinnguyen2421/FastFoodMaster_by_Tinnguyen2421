@@ -267,6 +267,7 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                 name.setText(chefFinalOrders1.getName());
                 number.setText( chefFinalOrders1.getMobileNumber());
 
+
             }
 
             @Override

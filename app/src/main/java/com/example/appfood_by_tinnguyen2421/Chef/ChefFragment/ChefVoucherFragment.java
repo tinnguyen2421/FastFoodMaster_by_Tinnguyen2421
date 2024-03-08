@@ -227,11 +227,13 @@ public class ChefVoucherFragment extends Fragment {
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), com.hbb20.R.layout.support_simple_spinner_dropdown_item, categoryList);
                             dishName.setAdapter(arrayAdapter);
                         }
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

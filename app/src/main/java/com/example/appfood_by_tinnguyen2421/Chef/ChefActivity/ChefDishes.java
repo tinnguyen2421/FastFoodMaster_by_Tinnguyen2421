@@ -72,6 +72,7 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
                         ward = chef.getWard();
                         ChefMenu();
                     }
+
                 }
 
                 @Override
@@ -100,6 +101,7 @@ public class ChefDishes extends AppCompatActivity implements SwipeRefreshLayout.
                 adapter = new ChefDishAdapter(ChefDishes.this, updateDishModelList);
                 recyclerView.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
+
             }
 
             @Override

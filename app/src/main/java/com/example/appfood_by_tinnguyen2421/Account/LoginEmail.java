@@ -126,6 +126,7 @@ public class LoginEmail extends AppCompatActivity {
                         Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();
                         break;
                 }
+
             }
 
             @Override

@@ -185,6 +185,7 @@ public class SendOTP extends AppCompatActivity {
                         Toast.makeText(SendOTP.this, "Số điện thoại này chưa được đăng kí", Toast.LENGTH_SHORT).show();
                         break;
                 }
+
             }
 
             @Override

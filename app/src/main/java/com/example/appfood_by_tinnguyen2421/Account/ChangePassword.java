@@ -53,6 +53,7 @@ public class ChangePassword extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String role = dataSnapshot.getValue(String.class);
                 changePassword(role);
+
             }
 
             @Override

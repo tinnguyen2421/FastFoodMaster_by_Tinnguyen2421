@@ -188,6 +188,7 @@ public class ChefUpdateDish extends AppCompatActivity {
                     disc.setVisibility(View.GONE);
                     dishCountPercent.setVisibility(View.GONE);
                 }
+
             }
 
             @Override

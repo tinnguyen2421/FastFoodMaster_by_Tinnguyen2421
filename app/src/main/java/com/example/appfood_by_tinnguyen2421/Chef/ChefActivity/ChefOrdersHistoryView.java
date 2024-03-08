@@ -61,6 +61,7 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
                 adapter = new ChefOrdersHistoryViewAdapter(ChefOrdersHistoryView.this, chefFinalOrdersList);
                 recyclerView.setAdapter(adapter);
 
+
             }
 
             @Override
@@ -83,6 +84,7 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
                 idOrders.setText(chefFinalOrders1.getRandomUID().substring(a));
                 cusName.setText(chefFinalOrders1.getName());
                 ShippingTime.setText(chefFinalOrders1.getDeliveryDate());
+
 
             }
             @Override

@@ -125,7 +125,7 @@ public class ChefRevenue extends AppCompatActivity {
                     Revenuee.setText(formattedNumber + "đ");
                     TotalBillss.setText(count + " đơn");
                 }
-                }
+            }
 
 
 

@@ -29,6 +29,7 @@ public class CustomerFavoriteFragment extends Fragment {
 
     RecyclerView rcvcart;
     ArrayList<UpdateDishModel> updateDishModelArrayList;
+    CustomerFavoriteAdapter customerFavoriteAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,9 +45,14 @@ public class CustomerFavoriteFragment extends Fragment {
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
                    UpdateDishModel food = dataSnapshot.getValue(UpdateDishModel.class);
                     updateDishModelArrayList.add(food);
-                    CustomerFavoriteAdapter foodAdapter = new CustomerFavoriteAdapter(updateDishModelArrayList,getActivity());
-                    rcvcart.setAdapter(foodAdapter);
+                    customerFavoriteAdapter = new CustomerFavoriteAdapter(updateDishModelArrayList,getActivity());
+                    rcvcart.setAdapter(customerFavoriteAdapter);
                 }
+                if(updateDishModelArrayList.size()==0)
+                {
+                    rcvcart.setBackgroundResource(R.drawable.empty_bill);
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
