@@ -123,6 +123,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                             hashMap.put("ImageURL",chefPendingOrders.getImageURL());
                             FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(chefid).child(random).child("Dishes").child(dishid).setValue(hashMap);
                             FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(random).child("Dishes").child(dishid).setValue(hashMap);
+                            FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(random).child("Dishes").child(dishid).setValue(hashMap);
                         }
                         DatabaseReference data = FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(random).child("OtherInformation");
                         data.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -142,7 +143,7 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                                 hashMap1.put("RandomUID", random);
                                 hashMap1.put("AceptDate", formattedDateTime);
                                 hashMap1.put("PaymentMethod", chefPendingOrders1.getPaymentMethod());
-
+                                hashMap1.put("OrderStatus","Đang chuẩn bị...");
                                 FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(random).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -150,23 +151,38 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
-                                                FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(random).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(random).child("OtherInformation").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(random).child("OtherInformation").child("OrderStatus").setValue("Đang chuẩn bị...");
-                                                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                String usertoken = dataSnapshot.getValue(String.class);
-                                                                sendNotifications(usertoken, "Đơn hàng được chấp nhận", "Đầu bếp đang chuẩn bị cho bạn nè !!!", "Payment");
-                                                                ReusableCodeForAll.ShowAlert(context,"","Hãy chuẩn bị cho khách bạn nhé");
-                                                            }
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                            }
-                                                        });
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                           FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(random).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                               @Override
+                                                               public void onComplete(@NonNull Task<Void> task) {
+                                                                     FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(random).child("OtherInformation").child("OrderStatus").setValue("Đang chuẩn bị...").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                         @Override
+                                                                         public void onSuccess(Void unused) {
+                                                                             FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                 @Override
+                                                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                     String usertoken = dataSnapshot.getValue(String.class);
+                                                                                     sendNotifications(usertoken, "Đơn hàng được chấp nhận", "Đầu bếp đang chuẩn bị cho bạn nè !!!", "Payment");
+                                                                                     ReusableCodeForAll.ShowAlert(context,"","Hãy chuẩn bị cho khách bạn nhé");
+                                                                                 }
+                                                                                 @Override
+                                                                                 public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                 }
+                                                                             });
+                                                                         }
+                                                                     });
+
+
+                                                               }
+                                                           });
+
                                                     }
                                                 });
+
+
+
                                             }
                                         });
                                     }
