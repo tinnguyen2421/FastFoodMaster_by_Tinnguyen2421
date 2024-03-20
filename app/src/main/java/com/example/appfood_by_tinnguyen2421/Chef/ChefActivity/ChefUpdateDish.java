@@ -177,6 +177,15 @@ public class ChefUpdateDish extends AppCompatActivity {
                 Glide.with(ChefUpdateDish.this).load(updateDishModel.getImageURL()).into(imageButton);
                 dbUri = updateDishModel.getImageURL();
                 desc.getEditText().setText(updateDishModel.getDescription());
+                discountSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+                    if (b) {
+                        disc.setVisibility(View.VISIBLE);
+                        dishCountPercent.setVisibility(View.VISIBLE);
+                    } else {
+                        disc.setVisibility(View.GONE);
+                        dishCountPercent.setVisibility(View.GONE);
+                    }
+                });
                 if (updateDishModel.getAvailableDish().equals("true")) {
                     availableSwitch.setChecked(true);
                 }

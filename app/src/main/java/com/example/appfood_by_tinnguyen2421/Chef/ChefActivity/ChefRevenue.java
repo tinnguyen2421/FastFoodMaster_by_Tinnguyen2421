@@ -2,6 +2,7 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefActivity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,11 +24,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChefRevenue extends AppCompatActivity {
     private double total, parseDouble;
     private int month, year, count;
-    TextView TimePickerr,Revenuee,TotalBillss;
+    TextView TimePickerr,Revenuee,TotalBillss,BestSellerDish,amountSold;
     private double totalAmount = 0;
     Button Refresh;
     @Override
@@ -38,6 +41,8 @@ public class ChefRevenue extends AppCompatActivity {
         TimePickerr=findViewById(R.id.timePicker);
         Revenuee=findViewById(R.id.Revenue);
         TotalBillss=findViewById(R.id.TotalBills);
+        BestSellerDish=findViewById(R.id.BestSeller);
+        amountSold=findViewById(R.id.AmountSold);
         TimePickerr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +55,9 @@ public class ChefRevenue extends AppCompatActivity {
                 TimePickerr.setText("");
                 Revenuee.setText("");
                 TotalBillss.setText("");
+                BestSellerDish.setText("");
+                amountSold.setText("");
+
             }
         });
     }
@@ -58,18 +66,22 @@ public class ChefRevenue extends AppCompatActivity {
         total = 0;
         parseDouble = 0;
 
-        // Lấy ngày hiện tại
         Calendar calendar = Calendar.getInstance();
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
-        // Tạo DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 ChefRevenue.this,
                 (view, year, monthOfYear, dayOfMonth) -> {
-                    String thoiGian = (monthOfYear + 1) + "/" + year;
+                    String monthString = String.valueOf(monthOfYear + 1);
+                    if (monthOfYear + 1 < 10) {
+                        monthString = "0" + monthString;
+                    }
+                    String thoiGian = monthString + "/" + year;
                     TimePickerr.setText(thoiGian);
                     QueryTime(thoiGian);
+
+
                 },
                 year, month, 1 // 1 là ngày mặc định khi hiển thị DatePickerDialog
         );
@@ -92,7 +104,6 @@ public class ChefRevenue extends AppCompatActivity {
                         DataSnapshot otherInformationSnapshot = orderSnapshot.child("OtherInformation");
                         String aceptDate = otherInformationSnapshot.child("AceptDate").getValue(String.class);
                         String grandTotalPrice = otherInformationSnapshot.child("GrandTotalPrice").getValue(String.class);
-                        // Sử dụng thông tin đã lấy
                         String inputPattern = "HH:mm, dd/MM/yyyy";
                         String outputPattern = "MM/yyyy";
                         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
@@ -105,7 +116,6 @@ public class ChefRevenue extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
                         if (thoiGian.equals(monthYear)) {
 
                             parseDouble = Double.parseDouble(grandTotalPrice);
@@ -125,6 +135,7 @@ public class ChefRevenue extends AppCompatActivity {
                     Revenuee.setText(formattedNumber + "đ");
                     TotalBillss.setText(count + " đơn");
                 }
+                QueryTimee(thoiGian);
             }
 
 
@@ -135,4 +146,49 @@ public class ChefRevenue extends AppCompatActivity {
             }
         });
     }
+    private void QueryTimee(String thoiGian) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ChefOrdersHistory");
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Integer> productQuantities = new HashMap<>();
+
+                for (DataSnapshot chefSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot orderSnapshot : chefSnapshot.getChildren()) {
+                        DataSnapshot otherInformationSnapshot = orderSnapshot.child("OtherInformation");
+                        String chefID = otherInformationSnapshot.child("ChefID").getValue(String.class);
+                        if (chefID != null && chefID.equals(FirebaseAuth.getInstance().getUid())) {
+                            for (DataSnapshot dishSnapshot : orderSnapshot.child("Dishes").getChildren()) {
+                                String dishName = dishSnapshot.child("DishName").getValue(String.class);
+                                int quantity = Integer.parseInt(dishSnapshot.child("DishQuantity").getValue(String.class));
+                                productQuantities.put(dishName, productQuantities.getOrDefault(dishName, 0) + quantity);
+                            }
+                        }
+                    }
+                }
+                String mostSoldProduct = null;
+                int maxQuantity = 0;
+                for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
+                    if (entry.getValue() > maxQuantity) {
+                        mostSoldProduct = entry.getKey();
+                        maxQuantity = entry.getValue();
+                    }
+                }
+                if (mostSoldProduct != null) {
+                    BestSellerDish.setText( mostSoldProduct);
+                    amountSold.setText( String.valueOf(maxQuantity));
+                } else {
+                    BestSellerDish.setText("Không có dữ liệu");
+                    amountSold.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
+    }
+
 }

@@ -77,7 +77,44 @@
                 android:background="@drawable/shape_rect02"
                 android:hint="..." />
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:padding="10dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Best Seller:"/>
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_width="200dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/BestSeller"
+                android:background="@drawable/shape_rect02"
+                android:hint="..." />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:padding="10dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Số lượng bán:"/>
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_width="200dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/AmountSold"
+                android:background="@drawable/shape_rect02"
+                android:hint="..." />
+        </LinearLayout>
         <Button
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"

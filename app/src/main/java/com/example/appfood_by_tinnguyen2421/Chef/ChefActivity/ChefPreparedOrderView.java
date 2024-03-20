@@ -165,48 +165,53 @@ public class ChefPreparedOrderView extends AppCompatActivity {
                                                             FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(deliveryId).child(RandomUID).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đã được chuẩn bị...").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đã chuyển giao...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đang chuyển giao...").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                 @Override
-                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                    String usertoken = dataSnapshot.getValue(String.class);
-                                                                                    sendNotifications(usertoken, "Chuẩn bị đơn hàng", "Đơn hàng của bạn đã được chuẩn bị", "Prepared");
-                                                                                }
-
-                                                                                @Override
-                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            FirebaseDatabase.getInstance().getReference().child("Tokens").child(deliveryId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                @Override
-                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                    String usertoken = dataSnapshot.getValue(String.class);
-                                                                                    sendNotifications(usertoken, "Đơn mới", "Bạn có 1 đơn hàng mới", "DeliveryOrder");
-                                                                                    progressDialog.dismiss();
-                                                                                    AlertDialog.Builder builder = new AlertDialog.Builder(ChefPreparedOrderView.this);
-                                                                                    builder.setMessage("Đơn hàng đã được gửi tới Người giao hàng");
-                                                                                    builder.setCancelable(false);
-                                                                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                                         @Override
-                                                                                        public void onClick(DialogInterface dialog, int which) {
-                                                                                            dialog.dismiss();
-                                                                                            finish();
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            String usertoken = dataSnapshot.getValue(String.class);
+                                                                                            sendNotifications(usertoken, "Chuẩn bị đơn hàng", "Đơn hàng của bạn đã được chuẩn bị", "Prepared");
+                                                                                        }
+
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                                                         }
                                                                                     });
-                                                                                    AlertDialog alert = builder.create();
-                                                                                    alert.show();
                                                                                 }
-
+                                                                            }).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                 @Override
-                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    FirebaseDatabase.getInstance().getReference().child("Tokens").child(deliveryId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            String usertoken = dataSnapshot.getValue(String.class);
+                                                                                            sendNotifications(usertoken, "Đơn mới", "Bạn có 1 đơn hàng mới", "DeliveryOrder");
+                                                                                            progressDialog.dismiss();
+                                                                                            AlertDialog.Builder builder = new AlertDialog.Builder(ChefPreparedOrderView.this);
+                                                                                            builder.setMessage("Đơn hàng đã được gửi tới Người giao hàng");
+                                                                                            builder.setCancelable(false);
+                                                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                                @Override
+                                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                                    dialog.dismiss();
+                                                                                                    finish();
+                                                                                                }
+                                                                                            });
+                                                                                            AlertDialog alert = builder.create();
+                                                                                            alert.show();
+                                                                                        }
 
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
                                                                                 }
                                                                             });
                                                                         }

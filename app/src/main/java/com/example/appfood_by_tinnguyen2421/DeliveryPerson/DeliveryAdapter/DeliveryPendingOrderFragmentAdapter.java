@@ -137,26 +137,33 @@ public class DeliveryPendingOrderFragmentAdapter extends RecyclerView.Adapter<De
                                                 FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomuid).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(deliveryShipOrders1.getUserID()).child(randomuid).child("OtherInformation").child("OrderStatus").setValue("Đang trên đường giao...").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(deliveryShipOrders1.getUserID()).child(randomuid).child("OtherInformation").child("OrderStatus").setValue("Đang trên đường giao...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
-                                                            public void onSuccess(Void unused) {
-                                                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(chefid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(deliveryShipOrders1.getUserID()).child(randomuid).child("OtherInformation").child("OrderStatus").setValue("Đang trên đường giao...").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                        String usertoken = dataSnapshot.getValue(String.class);
-                                                                        sendNotifications(usertoken, "Đơn hàng được chấp nhận", "Đơn hàng của bạn đã được người giao hàng chấp nhận", "AcceptOrder");
-                                                                        ReusableCodeForAll.ShowAlert(context, "", "\n" +
-                                                                                "Nhận đơn thành công ! Bây giờ bạn có thể kiểm tra các đơn hàng cần được giao");
+                                                                    public void onSuccess(Void unused) {
+                                                                        FirebaseDatabase.getInstance().getReference().child("Tokens").child(chefid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                            @Override
+                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                String usertoken = dataSnapshot.getValue(String.class);
+                                                                                sendNotifications(usertoken, "Đơn hàng được chấp nhận", "Đơn hàng của bạn đã được người giao hàng chấp nhận", "AcceptOrder");
+                                                                                ReusableCodeForAll.ShowAlert(context, "", "\n" +
+                                                                                        "Nhận đơn thành công ! Bây giờ bạn có thể kiểm tra các đơn hàng cần được giao");
 
-                                                                    }
+                                                                            }
 
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                            @Override
+                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                                                                            }
+                                                                        });
                                                                     }
                                                                 });
                                                             }
                                                         });
+
+
                                                     }
                                                 }).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

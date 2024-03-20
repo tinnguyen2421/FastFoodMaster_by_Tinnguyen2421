@@ -1,94 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_container123"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#FDFDFD">
-    <androidx.recyclerview.widget.RecyclerView
 
-        android:id="@+id/recyclecart"
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_above="@+id/Payment"
-        android:orientation="vertical" />
     <LinearLayout
-        android:visibility="invisible"
-        android:id="@+id/Payment"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-        <RadioGroup
-            android:id="@+id/radioGroupPayment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
-            <RadioButton
-                android:text="Thẻ tín dụng"
-                android:id="@+id/OnlinePayment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                />
-            <RadioButton
-                android:id="@+id/CashPayment"
-                android:text="Tiền mặt"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                />
-        </RadioGroup>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/Payment"
-        android:id="@+id/TotalBtns"
-        android:layout_width="match_parent"
-        android:layout_height="105dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:visibility="invisible">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/GT"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclecart"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:text="Grand Total:"
-
-            android:textColor="#000000"
-            android:textSize="20dp"></TextView>
+            android:layout_height="450dp"
+            android:orientation="vertical" />
 
         <LinearLayout
+            android:id="@+id/Payment"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:visibility="invisible">
 
-            <Button
-                android:id="@+id/RM"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/btnred"
-                android:gravity="center"
-                android:text="Xóa hết"
-                android:textColor="@color/white"></Button>
+            <RadioGroup
+                android:id="@+id/radioGroupPayment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/PO"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_shape"
-                android:gravity="center"
-                android:text="Đặt hàng"
-                android:textColor="@color/white"></Button>
+                <RadioButton
+                    android:id="@+id/OnlinePayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="Thẻ tín dụng" />
+
+                <RadioButton
+                    android:id="@+id/CashPayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="Tiền mặt" />
+            </RadioGroup>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/TotalBtns"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:orientation="vertical"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/GT"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:text="Grand Total:"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/RM"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/btnred"
+                    android:gravity="center"
+                    android:text="Xóa hết"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/PO"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_shape"
+                    android:gravity="center"
+
+                    android:text="Đặt hàng"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

@@ -139,44 +139,49 @@ public class ChefOrdertobePrepareView extends AppCompatActivity {
                                                             FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đã chuẩn bị...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(RandomUID).child("OtherInformation").child("OrderStatus").setValue("Đã chuẩn bị...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                                            FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                 @Override
-                                                                                public void onSuccess(Void aVoid) {
-
-                                                                                    FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                         @Override
-                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                            String usertoken = dataSnapshot.getValue(String.class);
-                                                                                            sendNotifications(usertoken, "Estimated Time", "Cửa hàng đang chuẩn bị đơn hàng của bạn", "Preparing");
-                                                                                            progressDialog.dismiss();
-                                                                                            AlertDialog.Builder builder = new AlertDialog.Builder(ChefOrdertobePrepareView.this);
-                                                                                            builder.setMessage("Xong ! Xem tiếp những đơn hàng cần chuẩn bị");
-                                                                                            builder.setCancelable(false);
-                                                                                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                        public void onSuccess(Void aVoid) {
+
+                                                                                            FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                                                 @Override
-                                                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                                                    dialog.dismiss();
-                                                                                                    //Intent b = new Intent(ChefOrdertobePrepareView.this, ChefOrderTobePreparedFragment.class);
-                                                                                                    //startActivity(b);
-                                                                                                    finish();
+                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                    String usertoken = dataSnapshot.getValue(String.class);
+                                                                                                    sendNotifications(usertoken, "Estimated Time", "Cửa hàng đang chuẩn bị đơn hàng của bạn", "Preparing");
+                                                                                                    progressDialog.dismiss();
+                                                                                                    AlertDialog.Builder builder = new AlertDialog.Builder(ChefOrdertobePrepareView.this);
+                                                                                                    builder.setMessage("Xong ! Xem tiếp những đơn hàng cần chuẩn bị");
+                                                                                                    builder.setCancelable(false);
+                                                                                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                                        @Override
+                                                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                                                            dialog.dismiss();
+                                                                                                            //Intent b = new Intent(ChefOrdertobePrepareView.this, ChefOrderTobePreparedFragment.class);
+                                                                                                            //startActivity(b);
+                                                                                                            finish();
+
+                                                                                                        }
+                                                                                                    });
+                                                                                                    AlertDialog alert = builder.create();
+                                                                                                    alert.show();
+                                                                                                }
+
+                                                                                                @Override
+                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+
 
                                                                                                 }
                                                                                             });
-                                                                                            AlertDialog alert = builder.create();
-                                                                                            alert.show();
                                                                                         }
-
-                                                                                        @Override
-                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-
-
-
-                                                                                }
-                                                                            });
+                                                                                    });
                                                                         }
                                                                     });
                                                                 }

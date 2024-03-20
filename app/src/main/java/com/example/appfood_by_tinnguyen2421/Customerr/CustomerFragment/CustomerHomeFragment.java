@@ -37,6 +37,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -62,6 +63,15 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         initializeViews(v);
         setupRecyclerViews();
         initializeSlider(v);
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY); // Lấy giờ trong 24 giờ
+        if (hour < 10) {
+            tvSlogan.setText("Khởi động ngày mới với món ngon nào !");
+        } else if (hour >= 10 && hour <= 15) {
+            tvSlogan.setText("Nạp năng lượng cho buổi trưa nhé !");
+        } else if (hour > 15) {
+            tvSlogan.setText("Buổi chiều cùng những món ngon nè !");
+        }
         loadData();
         setListeners();
         return v;

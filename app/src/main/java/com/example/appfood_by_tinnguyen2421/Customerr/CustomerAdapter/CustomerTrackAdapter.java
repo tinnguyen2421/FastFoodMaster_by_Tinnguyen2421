@@ -40,6 +40,7 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
         final CustomerOrders customerFinalOrders = customerOrdersList.get(position);
         Glide.with(context).load(customerFinalOrders.getImageURL()).into(holder.dishImage);
         holder.dishName.setText(customerFinalOrders.getDishName());
+        holder.dishPrice.setText(customerFinalOrders.getDishPrice());
         holder.dishQuantity.setText( "× "+customerFinalOrders.getDishQuantity() );
         holder.totalPrice.setText( customerFinalOrders.getTotalPrice()+"đ");
 

@@ -77,6 +77,8 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
                 String status = dataSnapshot.getValue(String.class);
                 if (status != null && status.equals("Mở cửa")) {
                     if (updateDishModel.getAvailableDish() != null && updateDishModel.getAvailableDish().equals("true")) {
+                        holder.dishesStatus.setVisibility(View.GONE);
+                        holder.linearDishes.setAlpha(1.0F);
                         if (updateDishModel.getOnSale() != null && updateDishModel.getOnSale().equals("true")) {
                             holder.title.setVisibility(View.VISIBLE);
                             holder.priceReduce.setVisibility(View.VISIBLE);
