@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.FoodSupplyDetails;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -98,6 +99,7 @@ public class ChefPostDish extends AppCompatActivity {
         categoryList = new ArrayList<>();
         disc.setVisibility(View.GONE);
         dishCountPercent.setVisibility(View.GONE);
+
         discountSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 disc.setVisibility(View.VISIBLE);
@@ -215,7 +217,7 @@ public class ChefPostDish extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             progressDialog.dismiss();
-                                            Toast.makeText(ChefPostDish.this, "Đăng món thành công", Toast.LENGTH_SHORT).show();
+                                            ReusableCodeForAll.ShowAlert(ChefPostDish.this,"Thành Công","Đăng món thành công");
                                             Intent intent = new Intent(ChefPostDish.this, ChefDishes.class);
                                             startActivity(intent);
                                         }
@@ -350,7 +352,6 @@ public class ChefPostDish extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageuri = data.getData();
-            Log.d("Checkkkkk", "onActivityResult: "+imageuri);
             imageButton.setImageURI(imageuri);
         }
     }

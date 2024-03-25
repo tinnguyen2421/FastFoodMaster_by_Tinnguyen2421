@@ -26,6 +26,7 @@ import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigatio
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.FoodSupplyDetails;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateDishModel;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -388,7 +389,7 @@ public class ChefUpdateDish extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         progressDialog.dismiss();
-                        Toast.makeText(ChefUpdateDish.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        ReusableCodeForAll.ShowAlert(ChefUpdateDish.this,"Thành Công","Cập nhật thành công");
                     }
                 });
     }

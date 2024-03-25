@@ -45,12 +45,13 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private TextView titlePercent, Foodname, ChefName, ChefLocation, FoodQuantity, FoodPrice, FoodDescription,outOfDishes, shopStatus,availableDish,shopStatuss;
     private ElegantNumberButton additem;
     private RecyclerView rvReviews;
-    private DatabaseReference databaseReference,dbReference, dataaa, chefData, reference, data, dataRef;
+    private DatabaseReference databaseReference, dataaa, chefData, reference, data, dataRef;
     private String District, City, Ward, dishName;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CustomerDishesAdapter adapter;
     private List<UpdateDishModel> updateDishModelList;
     private int dishPrice;
+    private ImageView Iv_backdrop;
     private String custID, cateID, dishes;
     private LinearLayout layoutNumberButton;
 
@@ -86,6 +87,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         availableDish=findViewById(R.id.DishAvailable);
         shopStatuss=findViewById(R.id.ShopStatuss);
         imageViewCard=findViewById(R.id.image);
+        Iv_backdrop=findViewById(R.id.iv_backdrop);
         rvReviews = findViewById(R.id.rv_reviews);
         rvReviews.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -186,6 +188,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         DecimalFormat decimalFormatPriceReduce = new DecimalFormat("#,###,###,###");
         String formattedPriceReduce = decimalFormatPriceReduce.format(reducePrice);
 
+
         // Set dish name
         Foodname.setText("Tên món: " + updateDishModel.getDishName());
         // Set dish description
@@ -193,7 +196,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         FoodDescription.setText(Html.fromHtml(descriptionHtml));
 
         Glide.with(OrderDish.this).load(updateDishModel.getImageURL()).into(imageView);
-
+        Glide.with(OrderDish.this).load(updateDishModel.getImageURL()).into(Iv_backdrop);
         databaseReference=FirebaseDatabase.getInstance().getReference("ChefStatus").child(updateDishModel.getChefID()+"/Status");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.example.appfood_by_tinnguyen2421.BottomNavigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerP
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment.CustomerOrdersFragment.CustomerTrackFragment;
 
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,6 +44,13 @@ public class CustomerBottomNavigation extends AppCompatActivity implements Botto
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
         UpdateToken();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("login_success")) {
+            String loginStatus = intent.getStringExtra("login_success");
+            if (loginStatus.equals("successed")) {
+                ReusableCodeForAll.ShowAlert(CustomerBottomNavigation.this,"","Đăng nhập thành công");
+            }
+            }
         String name = getIntent().getStringExtra("PAGE");
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

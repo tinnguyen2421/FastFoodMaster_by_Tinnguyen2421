@@ -24,6 +24,7 @@ import com.example.appfood_by_tinnguyen2421.Categories;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.UpdateCateModel;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -238,7 +239,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         progressDialog.dismiss();
-                        Toast.makeText(ChefUpdateCategories.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        ReusableCodeForAll.ShowAlert(ChefUpdateCategories.this,"Thành Công","Cập nhât thành công");
                     }
                 });
     }

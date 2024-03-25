@@ -1,6 +1,7 @@
 package com.example.appfood_by_tinnguyen2421.BottomNavigation;
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -16,6 +17,7 @@ import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefProfileFragmen
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefOrderTablayoutFragment;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefFragment.ChefVoucherFragment;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,6 +36,13 @@ public class ChefBottomNavigation extends AppCompatActivity implements BottomNav
         BottomNavigationView navigationView = findViewById(R.id.chef_bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
         UpdateToken();
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("login_success")) {
+            String loginStatus = intent.getStringExtra("login_success");
+            if (loginStatus.equals("successed")) {
+                ReusableCodeForAll.ShowAlert(ChefBottomNavigation.this,"","Đăng nhập thành công");
+            }
+            }
         String name = getIntent().getStringExtra("PAGE");
         if (name != null) {
             if (name.equalsIgnoreCase("Orderpage")) {

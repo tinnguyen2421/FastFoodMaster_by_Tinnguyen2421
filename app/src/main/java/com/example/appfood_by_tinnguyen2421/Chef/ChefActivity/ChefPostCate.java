@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -184,7 +185,8 @@ public class ChefPostCate extends AppCompatActivity {
                                             progressDialog.dismiss();
                                             if(isValid())
                                             {
-                                                Toast.makeText(ChefPostCate.this, "Đăng thể loại thành công", Toast.LENGTH_SHORT).show();}
+                                                ReusableCodeForAll.ShowAlert(ChefPostCate.this,"Thành Công","Đăng thể loại thành công");
+                                            }
                                         }
                                     });
                         }

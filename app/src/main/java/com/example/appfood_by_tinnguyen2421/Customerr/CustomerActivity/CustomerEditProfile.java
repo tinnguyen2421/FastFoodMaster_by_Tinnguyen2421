@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.appfood_by_tinnguyen2421.Account.ChangePassword;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -214,10 +215,7 @@ public class CustomerEditProfile extends AppCompatActivity {
                         hashMappp.put("City", city);
                         hashMappp.put("Ward", ward);
                         firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerEditProfile.this);
-                        Toast toast = Toast.makeText(CustomerEditProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        ReusableCodeForAll.ShowAlert(CustomerEditProfile.this,"Thành Công","Cập nhật thành công");
 
 
                     }

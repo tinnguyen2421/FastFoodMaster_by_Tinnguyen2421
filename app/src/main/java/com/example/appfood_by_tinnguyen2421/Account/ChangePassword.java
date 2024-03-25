@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.R;
+import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -95,7 +96,7 @@ public class ChangePassword extends AppCompatActivity {
                                                             .child("Password").setValue(newPwd);
                                                     FirebaseDatabase.getInstance().getReference(role).child(userId)
                                                             .child("ConfirmPassword").setValue(confirmPwd);
-                                                    Toast.makeText(ChangePassword.this, "Cập nhật mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                                                    ReusableCodeForAll.ShowAlert(ChangePassword.this,"Thành Công","Đổi mật khẩu thành công !");
                                                 } else {
                                                     Toast.makeText(ChangePassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }

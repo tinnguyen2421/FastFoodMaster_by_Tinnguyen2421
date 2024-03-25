@@ -157,10 +157,13 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                                                            FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(userid).child(random).child("OtherInformation").setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                @Override
                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                     FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(random).child("OtherInformation").child("OrderStatus").setValue("Đang chuẩn bị...").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                     FirebaseDatabase.getInstance().getReference("CustomerFinalOrders").child(userid).child(random).child("OtherInformation").child("OrderStatus").setValue("Đang chuẩn bị...").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                          @Override
-                                                                         public void onSuccess(Void unused) {
-                                                                             FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                         public void onComplete(@NonNull Task<Void> task) {
+                                                                             FirebaseDatabase.getInstance().getReference("AlreadyOrdered").child(userid).child("isOrdered").setValue("false").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                 @Override
+                                                                                 public void onSuccess(Void unused) {
+                                                                                     FirebaseDatabase.getInstance().getReference().child("Tokens").child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                                  @Override
                                                                                  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                                      String usertoken = dataSnapshot.getValue(String.class);
@@ -171,8 +174,13 @@ public class ChefPendingOrdersAdapter extends RecyclerView.Adapter<ChefPendingOr
                                                                                  public void onCancelled(@NonNull DatabaseError databaseError) {
                                                                                  }
                                                                              });
+                                                                                 }
+                                                                             });
+
                                                                          }
                                                                      });
+
+
 
 
                                                                }

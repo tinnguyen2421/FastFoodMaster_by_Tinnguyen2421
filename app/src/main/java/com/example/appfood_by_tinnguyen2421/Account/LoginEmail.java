@@ -1,6 +1,7 @@
 package com.example.appfood_by_tinnguyen2421.Account;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigation;
@@ -110,15 +112,21 @@ public class LoginEmail extends AppCompatActivity {
                 String role = dataSnapshot.getValue(String.class);
                 switch (role) {
                     case "Chef":
-                        startActivity(new Intent(LoginEmail.this, ChefBottomNavigation.class));
+                        Intent chefIntent = new Intent(LoginEmail.this, ChefBottomNavigation.class);
+                        chefIntent.putExtra("login_success", "successed");
+                        startActivity(chefIntent);
                         finish();
                         break;
                     case "Customer":
-                        startActivity(new Intent(LoginEmail.this, CustomerBottomNavigation.class));
+                        Intent customerIntent = new Intent(LoginEmail.this, CustomerBottomNavigation.class);
+                        customerIntent.putExtra("login_success", "successed");
+                        startActivity(customerIntent);
                         finish();
                         break;
                     case "DeliveryPerson":
-                        startActivity(new Intent(LoginEmail.this, DeliveryBottomNavigation.class));
+                        Intent deliveryIntent = new Intent(LoginEmail.this, DeliveryBottomNavigation.class);
+                        deliveryIntent.putExtra("login_success", "successed");
+                        startActivity(deliveryIntent);
                         finish();
                         break;
                     default:
