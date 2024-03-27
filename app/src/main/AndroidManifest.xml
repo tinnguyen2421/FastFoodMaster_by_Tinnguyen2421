@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -28,19 +29,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".Account.LoginEmail"/>
-        <activity android:name=".Customerr.CustomerActivity.CustomerOrdersHistoryView"
-            android:exported="false"/>
-        <activity android:name=".Customerr.CustomerActivity.CustomerOrdersHistory"
-            android:exported="false"/>
-        <activity android:name=".Customerr.CustomerActivity.CustomerEditProfile"
-            android:exported="false"/>
+        <activity
+            android:name=".MomoPayment"
+            android:exported="false" />
+        <activity android:name=".Account.LoginEmail" />
+        <activity
+            android:name=".Customerr.CustomerActivity.CustomerOrdersHistoryView"
+            android:exported="false" />
+        <activity
+            android:name=".Customerr.CustomerActivity.CustomerOrdersHistory"
+            android:exported="false" />
+        <activity
+            android:name=".Customerr.CustomerActivity.CustomerEditProfile"
+            android:exported="false" />
         <activity
             android:name=".Chef.ChefActivity.ChefPhoneSendOTP"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Chef.ChefActivity.ChefPhonenumberAuth"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".Chef.ChefActivity.ChefEditProfile"
             android:exported="false" />
@@ -75,7 +82,6 @@
             android:name=".DeliveryPerson.DeliveryActivity.DeliveryPendingOrderView"
             android:label="Đơn hàng đang chờ" />
         <activity android:name=".BottomNavigation.DeliveryBottomNavigation" />
-
         <activity
             android:name=".DeliveryAccount.DeliveryVerifyPhone"
             android:theme="@style/AppThemeNoActionbar" />
@@ -100,7 +106,6 @@
         <activity
             android:name=".Customerr.CustomerActivity.CustomerOnlinePayment"
             android:label="Thanh toán online" />
-
         <activity
             android:name=".Chef.ChefActivity.ChefOrderDishes"
             android:label="Đơn hàng" />
@@ -112,7 +117,7 @@
             android:label="Số điện thoại" />
         <activity
             android:name=".Account.ChangePassword"
-            android:theme="@style/AppTheme1"/>
+            android:theme="@style/AppTheme1" />
         <activity android:name=".Customerr.CustomerActivity.OrderDish" />
         <activity
             android:name=".Chef.ChefActivity.ChefUpdateDish"
@@ -145,7 +150,6 @@
         <activity
             android:name=".Account.ForgotPassword"
             android:theme="@style/AppThemeNoActionbar" />
-
         <activity
             android:name=".ChooseOne"
             android:theme="@style/AppThemeNoActionbar" />

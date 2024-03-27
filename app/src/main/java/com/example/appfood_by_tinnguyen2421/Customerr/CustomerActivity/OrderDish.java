@@ -26,6 +26,7 @@ import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.CustomerDi
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.Cart;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +46,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private TextView titlePercent, Foodname, ChefName, ChefLocation, FoodQuantity, FoodPrice, FoodDescription,outOfDishes, shopStatus,availableDish,shopStatuss;
     private ElegantNumberButton additem;
     private RecyclerView rvReviews;
+    CollapsingToolbarLayout collapsingg;
     private DatabaseReference databaseReference, dataaa, chefData, reference, data, dataRef;
     private String District, City, Ward, dishName;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -89,6 +91,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         imageViewCard=findViewById(R.id.image);
         Iv_backdrop=findViewById(R.id.iv_backdrop);
         rvReviews = findViewById(R.id.rv_reviews);
+        collapsingg=findViewById(R.id.collapsing);
         rvReviews.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvReviews.setLayoutManager(layoutManager);
@@ -188,7 +191,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         DecimalFormat decimalFormatPriceReduce = new DecimalFormat("#,###,###,###");
         String formattedPriceReduce = decimalFormatPriceReduce.format(reducePrice);
 
-
+        collapsingg.setTitle(updateDishModel.getDishName());
         // Set dish name
         Foodname.setText("Tên món: " + updateDishModel.getDishName());
         // Set dish description

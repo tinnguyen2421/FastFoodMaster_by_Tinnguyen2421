@@ -75,7 +75,7 @@ public class ChefVoucherFragment extends Fragment {
     DatabaseReference dataaa;
     FirebaseAuth FAuth;
     StorageReference ref;
-    String State,City,Sub;
+    String district, city, ward;
     private String timeStartt,timeEndd,voucherAuthh,nameVoucherr,voucherIDD,voucherValuee,dishNamee;
     public ChefVoucherFragment() {
         // Required empty public constructor
@@ -212,17 +212,17 @@ public class ChefVoucherFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserModel chefc = dataSnapshot.getValue(UserModel.class);
-                State = chefc.getDistrict();
-                City = chefc.getCity();
-                Sub = chefc.getWard();
-                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(State).child(City).child(Sub);
+                district = chefc.getDistrict();
+                city = chefc.getCity();
+                ward = chefc.getWard();
+                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(city).child(district).child(ward);
                 databaseReference1.child(userid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (categoryList != null) {
                             categoryList.clear();
                             for (DataSnapshot item : snapshot.getChildren()) {
-                                categoryList.add(item.child("Dishes").getValue(String.class));
+                                categoryList.add(item.child("DishName").getValue(String.class));
                             }
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), com.hbb20.R.layout.support_simple_spinner_dropdown_item, categoryList);
                             dishName.setAdapter(arrayAdapter);

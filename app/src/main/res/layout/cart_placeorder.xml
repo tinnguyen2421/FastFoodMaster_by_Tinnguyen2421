@@ -37,7 +37,7 @@
                 android:padding="10dp"
                 android:id="@+id/ImageView"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:src="@drawable/logo"
                 android:contentDescription="description"/>
 
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:gravity="left"
             android:text="Tổng tiền: 150.000 đ"
             android:textSize="18sp"></TextView>

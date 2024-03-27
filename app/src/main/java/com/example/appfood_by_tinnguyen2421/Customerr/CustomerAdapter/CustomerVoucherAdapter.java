@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,11 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefVoucher;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 
 public class CustomerVoucherAdapter extends RecyclerView.Adapter<CustomerVoucherAdapter.ViewHolder> {
@@ -47,16 +52,30 @@ public class CustomerVoucherAdapter extends RecyclerView.Adapter<CustomerVoucher
 
             if (currentDate.compareTo(date1) < 0) {
                 holder.voucherName.setText(chefVoucher.getVoucherName());
-                holder.voucherValue.setText("Giảm"+chefVoucher.getVoucherValue());
-                holder.voucherDate.setText(chefVoucher.getStartDate()+"-"+chefVoucher.getEndDate());
-                holder.dishApply.setText(chefVoucher.getDishUseVoucher());
+                holder.voucherValue.setText("Giảm:"+chefVoucher.getVoucherValue()+"đ");
+                holder.voucherDate.setText("HSD:"+chefVoucher.getEndDate());
+                holder.dishApply.setText("Món áp dụng:"+chefVoucher.getDishUseVoucher());
             } else {
                 holder.VoucherLayoutt.setVisibility(View.GONE);
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        holder.collectVoucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String RandomUID = UUID.randomUUID().toString();
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("DishUseVoucher", chefVoucher.getDishUseVoucher());
+                hashMap.put("EndDate", chefVoucher.getEndDate());
+                hashMap.put("StartDate", chefVoucher.getStartDate());
+                hashMap.put("VoucherApply", chefVoucher.getVoucherApply());
+                hashMap.put("VoucherID", chefVoucher.getVoucherID());
+                hashMap.put("VoucherName", chefVoucher.getVoucherName());
+                hashMap.put("VoucherValue", chefVoucher.getVoucherValue());
+                FirebaseDatabase.getInstance().getReference("CustomerVoucher").child(FirebaseAuth.getInstance().getUid()).child(RandomUID).setValue(hashMap);
+            }
+        });
 
     }
 
@@ -68,12 +87,14 @@ public class CustomerVoucherAdapter extends RecyclerView.Adapter<CustomerVoucher
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        Button collectVoucher;
         ImageView imgCate;
         LinearLayout VoucherLayoutt;
         TextView voucherName,voucherValue,voucherDate,dishApply;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            collectVoucher=itemView.findViewById(R.id.CollectVoucher);
             VoucherLayoutt=itemView.findViewById(R.id.VoucherLayout);
             dishApply=itemView.findViewById(R.id.DishApply);
             voucherName=itemView.findViewById(R.id.VoucherName);

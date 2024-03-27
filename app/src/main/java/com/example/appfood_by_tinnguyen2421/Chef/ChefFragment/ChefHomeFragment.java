@@ -89,12 +89,7 @@ public class ChefHomeFragment extends Fragment {
         updateDishModelList = new ArrayList<>();
         categoriesList = new ArrayList<>();
         add = v.findViewById(R.id.themMoi);
-        if (getActivity() != null) {
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.hide();
-            }
-        }
+
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         dataaa = FirebaseDatabase.getInstance().getReference("Chef").child(userid);
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {

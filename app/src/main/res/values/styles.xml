@@ -4,14 +4,25 @@
     <style name="AppTheme1" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
 
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/ShopeeFoodColor</item>
+        <item name="colorPrimaryDark">@color/ShopeeFoodColor</item>
+        <item name="colorAccent">@color/ShopeeFoodColor</item>
 
     </style>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/ShopeeFoodColor</item>
         <item name="colorPrimaryDark">@color/ShopeeFoodColor</item>
+        <item name="colorAccent">#8BC34A</item>
+    </style>
+    <style name="CusTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/ShopeeFoodColor</item>
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">#8BC34A</item>
+    </style>
+
+    <style name="Fragment2Theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/ShopeeFoodColor</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">#8BC34A</item>
     </style>
     <style name="AppThemeNoActionbar" parent="AppTheme1">
