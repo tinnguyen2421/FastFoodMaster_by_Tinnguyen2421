@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefVoucher;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,6 +47,35 @@ public class CustomerVoucherAdapter extends RecyclerView.Adapter<CustomerVoucher
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ChefVoucher chefVoucher = chefVoucherList.get(position);
+        setUpData(holder,chefVoucher);
+        setUpListeners(holder,chefVoucher);
+
+
+    }
+
+    private void getVoucher(ChefVoucher chefVoucher)
+    {
+        String RandomUID = UUID.randomUUID().toString();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("DishUseVoucher", chefVoucher.getDishUseVoucher());
+        hashMap.put("EndDate", chefVoucher.getEndDate());
+        hashMap.put("StartDate", chefVoucher.getStartDate());
+        hashMap.put("VoucherApply", chefVoucher.getVoucherApply());
+        hashMap.put("VoucherID", chefVoucher.getVoucherID());
+        hashMap.put("VoucherName", chefVoucher.getVoucherName());
+        hashMap.put("VoucherValue", chefVoucher.getVoucherValue());
+        FirebaseDatabase.getInstance().getReference("CustomerVoucher")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child(RandomUID)
+                .setValue(hashMap).addOnCompleteListener(task -> {
+
+                });
+    }
+    private void setUpListeners(ViewHolder holder, ChefVoucher chefVoucher) {
+        holder.collectVoucher.setOnClickListener(view -> getVoucher(chefVoucher));
+    }
+
+    private void setUpData(ViewHolder holder, ChefVoucher chefVoucher) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         try {
             Date date1 = sdf.parse(chefVoucher.getEndDate());
@@ -61,22 +92,6 @@ public class CustomerVoucherAdapter extends RecyclerView.Adapter<CustomerVoucher
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.collectVoucher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String RandomUID = UUID.randomUUID().toString();
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("DishUseVoucher", chefVoucher.getDishUseVoucher());
-                hashMap.put("EndDate", chefVoucher.getEndDate());
-                hashMap.put("StartDate", chefVoucher.getStartDate());
-                hashMap.put("VoucherApply", chefVoucher.getVoucherApply());
-                hashMap.put("VoucherID", chefVoucher.getVoucherID());
-                hashMap.put("VoucherName", chefVoucher.getVoucherName());
-                hashMap.put("VoucherValue", chefVoucher.getVoucherValue());
-                FirebaseDatabase.getInstance().getReference("CustomerVoucher").child(FirebaseAuth.getInstance().getUid()).child(RandomUID).setValue(hashMap);
-            }
-        });
-
     }
 
 

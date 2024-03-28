@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPreparedOrder;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefPreparedOrderView;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefModel.ChefFinalOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -40,21 +39,26 @@ public class ChefPreparedOrderAdapter extends RecyclerView.Adapter<ChefPreparedO
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ChefFinalOrders1 chefFinalOrders1 = chefFinalOrders1list.get(position);
-        holder.STT1.setText("Số thứ tự:"+position+1);
-        holder.Address.setText("Địa chỉ:"+chefFinalOrders1.getAddress());
+        setUpData(holder,chefFinalOrders1,position);
+        setUpListeners(holder,chefFinalOrders1);
+
+
+    }
+
+    private void setUpListeners(ViewHolder holder, ChefFinalOrders1 chefFinalOrders1) {
+        holder.vieworder.setOnClickListener(v -> showPreparedOrders(chefFinalOrders1.getRandomUID()));
+    }
+
+    private void showPreparedOrders(String randomUID) {
+        Intent intent = new Intent(context, ChefPreparedOrderView.class);
+        intent.putExtra("RandomUID", randomUID);
+        context.startActivity(intent);
+    }
+
+    private void setUpData(ViewHolder holder, ChefFinalOrders1 chefFinalOrders1, int position) {
+        holder.position.setText("Số thứ tự:"+position+1);
+        holder.address.setText("Địa chỉ:"+chefFinalOrders1.getAddress());
         holder.grandtotalprice.setText("Tổng số tiền: " + chefFinalOrders1.getGrandTotalPrice()+"đ");
-        final String random = chefFinalOrders1.getRandomUID();
-
-        holder.Vieworder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ChefPreparedOrderView.class);
-                intent.putExtra("RandomUID", random);
-                context.startActivity(intent);
-
-            }
-        });
-
     }
 
     @Override
@@ -64,15 +68,15 @@ public class ChefPreparedOrderAdapter extends RecyclerView.Adapter<ChefPreparedO
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView Address, grandtotalprice,STT1;
-        Button Vieworder;
+        TextView address, grandtotalprice, position;
+        Button vieworder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            STT1=itemView.findViewById(R.id.STT);
-            Address = itemView.findViewById(R.id.customer_address);
+            position =itemView.findViewById(R.id.STT);
+            address = itemView.findViewById(R.id.customer_address);
             grandtotalprice = itemView.findViewById(R.id.customer_totalprice);
-            Vieworder = itemView.findViewById(R.id.View);
+            vieworder = itemView.findViewById(R.id.View);
         }
     }
 }

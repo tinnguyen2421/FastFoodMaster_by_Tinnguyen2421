@@ -36,6 +36,10 @@ public class ChefVoucherAdapter extends RecyclerView.Adapter<ChefVoucherAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ChefVoucher chefVoucher = chefVoucherList.get(position);
+        setUpData(holder,chefVoucher,position);
+    }
+
+    private void setUpData(ViewHolder holder, ChefVoucher chefVoucher, int position) {
         holder.voucherName.setText(chefVoucher.getVoucherName());
         holder.voucherValue.setText("Giảm"+chefVoucher.getVoucherValue());
         holder.voucherDate.setText(chefVoucher.getStartDate()+"-"+chefVoucher.getEndDate());

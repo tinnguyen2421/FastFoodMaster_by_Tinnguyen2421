@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
 import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
+import com.example.appfood_by_tinnguyen2421.Account.VerifyPhone;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -261,7 +262,7 @@ public class DeliveryRegisteration extends AppCompatActivity {
                                                                 public void onClick(DialogInterface dialog, int which) {
                                                                     dialog.dismiss();
                                                                     String phonenumber = Cpp.getSelectedCountryCodeWithPlus() + mobile;
-                                                                    Intent b = new Intent(DeliveryRegisteration.this, DeliveryVerifyPhone.class);
+                                                                    Intent b = new Intent(DeliveryRegisteration.this, VerifyPhone.class);
                                                                     b.putExtra("phonenumber", phonenumber);
                                                                     startActivity(b);
 

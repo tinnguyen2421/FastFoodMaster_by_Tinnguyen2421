@@ -21,23 +21,35 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 public class ChefOrdersHistoryAdapter extends RecyclerView.Adapter<ChefOrdersHistoryAdapter.ViewHolder> {
-    private Context context;
-    private List<ChefFinalOrders1> chefFinalOrders1List;
+    private Context mContext;
+    private List<ChefFinalOrders1> mChefFinalOrders1List;
+
     public ChefOrdersHistoryAdapter(Context context, List<ChefFinalOrders1> chefFinalOrders1List) {
-        this.chefFinalOrders1List = chefFinalOrders1List;
-        this.context = context;
+        this.mChefFinalOrders1List = chefFinalOrders1List;
+        this.mContext = context;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.chef_history_orders_list,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chef_history_orders_list, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChefFinalOrders1 chefFinalOrders1=chefFinalOrders1List.get(position);
-        holder.Numb.setText(String.valueOf(position+1));
+        ChefFinalOrders1 chefFinalOrders1 = mChefFinalOrders1List.get(position);
+        setUpData(holder,chefFinalOrders1,position);
+        setUpListeners(holder,chefFinalOrders1);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mChefFinalOrders1List.size();
+    }
+    private void setUpData(ViewHolder holder,ChefFinalOrders1 chefFinalOrders1,int postion)
+    {
+        holder.Numb.setText(String.valueOf(postion) + 1);
         holder.NameCus.setText(chefFinalOrders1.getName());
         holder.Address.setText(chefFinalOrders1.getAddress());
         holder.PhoneNumb.setText(chefFinalOrders1.getMobileNumber());
@@ -45,67 +57,58 @@ public class ChefOrdersHistoryAdapter extends RecyclerView.Adapter<ChefOrdersHis
         holder.GrandTotal.setText(chefFinalOrders1.getGrandTotalPrice());
         holder.SendDate.setText(chefFinalOrders1.getSendDate());
         holder.AceptDate.setText(chefFinalOrders1.getAceptDate());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context, ChefOrdersHistoryView.class);
-                intent.putExtra("RandomUID",chefFinalOrders1.getRandomUID());
-                context.startActivity(intent);
-            }
+    }
+    private void setUpListeners(ViewHolder holder,ChefFinalOrders1 chefFinalOrders1)
+    {
+        holder.itemView.setOnClickListener(view -> showHistoryView(chefFinalOrders1));
+        holder.btnDelete.setOnClickListener(view -> showDeleteConfirmationDialog(chefFinalOrders1));
+    }
+    private void showHistoryView(ChefFinalOrders1 chefFinalOrders1)
+    {
+        Intent intent = new Intent(mContext, ChefOrdersHistoryView.class);
+        intent.putExtra("RandomUID", chefFinalOrders1.getRandomUID());
+        mContext.startActivity(intent);
+    }
+    private void showDeleteConfirmationDialog(ChefFinalOrders1 chefFinalOrders1) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Xóa đơn hàng này khỏi lịch sử ?");
+        builder.setPositiveButton("Có", (dialogInterface, i) -> {
+            FirebaseDatabase.getInstance().getReference("ChefOrdersHistory")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(chefFinalOrders1.getRandomUID())
+                    .removeValue();
+            showDeletedOrderMessage();
         });
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                builder.setMessage("Xóa đơn hàng này khỏi lịch sử ?");
-                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseDatabase.getInstance().getReference("ChefOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(chefFinalOrders1.getRandomUID()).removeValue();
-                        AlertDialog.Builder food = new AlertDialog.Builder(context);
-                        food.setMessage("Đơn hàng đã được xóa");
-                        food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                                //context.startActivity(new Intent(context, ChefOrdersHistory.class));
-                            }
-                        });
-                        AlertDialog alertt = food.create();
-                        alertt.show();
-                    }
+        builder.setNegativeButton("Không", (dialog, which) -> dialog.cancel());
 
-                });
-                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
-    @Override
-    public int getItemCount() {
-        return chefFinalOrders1List.size();
+    private void showDeletedOrderMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Đơn hàng đã được xóa");
+        builder.setPositiveButton("OK", (dialog, which) -> {});
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView GrandTotal,Status,Address,PhoneNumb,NameCus,Numb,SendDate,AceptDate,btnDelete;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView GrandTotal, Status, Address, PhoneNumb, NameCus, Numb, SendDate, AceptDate, btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            GrandTotal=itemView.findViewById(R.id.txtGrandTotal);
-            Status=itemView.findViewById(R.id.txtStatus);
-            Address=itemView.findViewById(R.id.txtAddress);
-            PhoneNumb=itemView.findViewById(R.id.txtPhonenumb);
-            NameCus=itemView.findViewById(R.id.txtNameCus);
-            Numb=itemView.findViewById(R.id.txtNumb);
-            SendDate=itemView.findViewById(R.id.txttime);
-            AceptDate=itemView.findViewById(R.id.txttime1);
-            btnDelete=itemView.findViewById(R.id.BtnDelete);
+            GrandTotal = itemView.findViewById(R.id.txtGrandTotal);
+            Status = itemView.findViewById(R.id.txtStatus);
+            Address = itemView.findViewById(R.id.txtAddress);
+            PhoneNumb = itemView.findViewById(R.id.txtPhonenumb);
+            NameCus = itemView.findViewById(R.id.txtNameCus);
+            Numb = itemView.findViewById(R.id.txtNumb);
+            SendDate = itemView.findViewById(R.id.txttime);
+            AceptDate = itemView.findViewById(R.id.txttime1);
+            btnDelete = itemView.findViewById(R.id.BtnDelete);
         }
     }
 }

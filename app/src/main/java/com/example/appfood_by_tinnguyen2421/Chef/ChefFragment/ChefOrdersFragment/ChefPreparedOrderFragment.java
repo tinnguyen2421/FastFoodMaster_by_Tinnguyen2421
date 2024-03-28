@@ -37,17 +37,26 @@ public class ChefPreparedOrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.activity_chef_prepared_order, container, false);
-        recyclerView = v.findViewById(R.id.Recycle_preparedOrders);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chefFinalOrders1List = new ArrayList<>();
-        ChefPrepareOrders();
+        initializeViews(v);
+        setUpRecyclerView();
+        showPreparedOrders();
         return v;
 
     }
-    private void ChefPrepareOrders() {
+
+    private void setUpRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void initializeViews(View v) {
+        recyclerView = v.findViewById(R.id.Recycle_preparedOrders);
+
+    }
+
+    private void showPreparedOrders() {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("ChefFinalOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {

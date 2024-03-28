@@ -16,44 +16,48 @@ import java.util.List;
 
 public class ChefOrdersHistoryViewAdapter extends RecyclerView.Adapter<ChefOrdersHistoryViewAdapter.ViewHolder>
 {
-    private Context mcontext;
-    private List<ChefFinalOrders> chefFinalOrderslist;
+    private Context mContext;
+    private List<ChefFinalOrders> mChefFinalOrdersList;
 
-    public ChefOrdersHistoryViewAdapter(Context mcontext, List<ChefFinalOrders> chefFinalOrderslist) {
-        this.mcontext = mcontext;
-        this.chefFinalOrderslist = chefFinalOrderslist;
+    public ChefOrdersHistoryViewAdapter(Context context, List<ChefFinalOrders> chefFinalOrdersList) {
+        this.mContext = context;
+        this.mChefFinalOrdersList = chefFinalOrdersList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext).inflate(R.layout.chef_orders_history_view_adapter, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chef_orders_history_view_adapter, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final ChefFinalOrders chefFinalOrders=chefFinalOrderslist.get(position);
-        holder.dishname.setText(position+1+"."+chefFinalOrders.getDishName());
-        holder.price.setText("Giá tiền: " + chefFinalOrders.getDishPrice()+"đ");
+        ChefFinalOrders chefFinalOrders = mChefFinalOrdersList.get(position);
+        setUpData(holder,chefFinalOrders,position);
+    }
+
+    private void setUpData(ViewHolder holder, ChefFinalOrders chefFinalOrders, int position) {
+        holder.dishName.setText((position + 1) + ". " + chefFinalOrders.getDishName());
+        holder.price.setText("Giá tiền: " + chefFinalOrders.getDishPrice() + "đ");
         holder.quantity.setText("× " + chefFinalOrders.getDishQuantity());
-        holder.totalprice.setText("Tổng cộng:" + chefFinalOrders.getTotalPrice()+"đ");
+        holder.totalPrice.setText("Tổng cộng: " + chefFinalOrders.getTotalPrice() + "đ");
     }
 
     @Override
     public int getItemCount() {
-        return chefFinalOrderslist.size();
+        return mChefFinalOrdersList.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView dishname, price, totalprice, quantity;
+        TextView dishName, price, totalPrice, quantity;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            dishname = itemView.findViewById(R.id.Cdishname);
+            dishName = itemView.findViewById(R.id.Cdishname);
             price = itemView.findViewById(R.id.Cdishprice);
-            totalprice = itemView.findViewById(R.id.Ctotalprice);
+            totalPrice = itemView.findViewById(R.id.Ctotalprice);
             quantity = itemView.findViewById(R.id.Cdishqty);
         }
     }

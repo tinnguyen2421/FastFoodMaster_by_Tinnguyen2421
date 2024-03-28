@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
 import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
+import com.example.appfood_by_tinnguyen2421.Account.VerifyPhone;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -277,7 +278,7 @@ public class CustomerRegisteration extends AppCompatActivity {
 
                                                                                 dialog.dismiss();
                                                                                 String phonenumber = Cpp.getSelectedCountryCodeWithPlus() + mobileno;
-                                                                                Intent b = new Intent(CustomerRegisteration.this, CustomerVerifyPhone.class);
+                                                                                Intent b = new Intent(CustomerRegisteration.this, VerifyPhone.class);
                                                                                 b.putExtra("phonenumber", phonenumber);
                                                                                 startActivity(b);
 

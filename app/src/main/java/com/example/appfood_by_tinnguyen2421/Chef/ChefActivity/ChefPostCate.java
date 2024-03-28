@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Categories;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Observer.AnotherClass;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Observer.PostCateObserver;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +42,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ChefPostCate extends AppCompatActivity {
@@ -60,10 +64,17 @@ public class ChefPostCate extends AppCompatActivity {
     String ChefId;
     String RandomUId;
     String District, City, Ward;
+    private List<PostCateObserver> observers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ChefPostCate chefPostCate = new ChefPostCate();
+        chefPostCate.addObserver(new AnotherClass(this));
+        // Đăng thể loại và thông báo cho Observer
+        chefPostCate.postCategory();
+
+
         setContentView(R.layout.activity_chef_post_cate);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -120,6 +131,32 @@ public class ChefPostCate extends AppCompatActivity {
         }
     }
 
+    public void addObserver(PostCateObserver observer) {
+        observers.add(observer);
+    }
+
+    private void notifyCategoryPosted() {
+        for (PostCateObserver observer : observers) {
+            observer.onCategoryPosted();
+        }
+    }
+
+    private void notifyCategoryPostFailed(String errorMessage) {
+        for (PostCateObserver observer : observers) {
+            observer.onCategoryPostFailed(errorMessage);
+        }
+    }
+    public void postCategory() {
+        // Xử lý logic đăng thể loại ở đây
+
+        // Nếu đăng thành công, thông báo cho các Observer
+        boolean success = true; // Giả sử đăng thành công
+        if (success) {
+            notifyCategoryPosted();
+        } else {
+            notifyCategoryPostFailed("Lỗi khi đăng thể loại");
+        }
+    }
     private boolean isValid() {
         nameCatee.setErrorEnabled(false);
         nameCatee.setError("");
@@ -166,8 +203,6 @@ public class ChefPostCate extends AppCompatActivity {
             RandomUId = UUID.randomUUID().toString();
             ref = storageReference.child(RandomUId);
             ChefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-            // Upload hình ảnh lên Firebase Storage thông qua đối tượng ref
             ref.putFile(imageuri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
 
@@ -214,7 +249,6 @@ public class ChefPostCate extends AppCompatActivity {
 
 
     private void onSelectImageClick(View v) {
-        // Mở activity để chọn ảnh
         CropImage.startPickImageActivity(this);
     }
 
@@ -228,7 +262,7 @@ public class ChefPostCate extends AppCompatActivity {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
 
             } else {
-                uploadImage();
+
             }
         }
 

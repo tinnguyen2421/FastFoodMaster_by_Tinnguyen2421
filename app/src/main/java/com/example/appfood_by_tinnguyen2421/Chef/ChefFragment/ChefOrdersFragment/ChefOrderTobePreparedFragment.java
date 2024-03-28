@@ -34,29 +34,44 @@ public class ChefOrderTobePreparedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.activity_chef_order_tobe_prepared, container, false);
-        recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chefFinalOrders1List = new ArrayList<>();
-        swipeRefreshLayout = v.findViewById(R.id.Swipe1);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        adapter = new ChefOrderTobePreparedAdapter(getContext(), chefFinalOrders1List);
-        recyclerView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                chefFinalOrders1List.clear();
-                cheforderstobePrepare();
-            }
-        });
-        cheforderstobePrepare(); // Gọi phương thức để tải dữ liệu lúc fragment được tạo
+        initializeViews(v);
+        setUpRecyclerView();
+        setUpSwipeRefresh(v);
+        setUpListeners();
+        showOrdersToBePrepared();
         return v;
     }
 
-    private void cheforderstobePrepare() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    private void setUpListeners() {
+        swipeRefreshLayout.setOnRefreshListener(() -> refreshLayout());
+    }
+    private void refreshLayout()
+    {
+        chefFinalOrders1List.clear();
+        showOrdersToBePrepared();
+    }
+    private void setUpSwipeRefresh(View v) {
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
+    }
+
+    private void initializeViews(View v) {
+        recyclerView = v.findViewById(R.id.Recycle_orderstobeprepared);
+        swipeRefreshLayout = v.findViewById(R.id.Swipe1);
+
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ChefOrderTobePreparedAdapter(getContext(), chefFinalOrders1List);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void showOrdersToBePrepared() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("ChefWaitingOrders")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -69,7 +84,7 @@ public class ChefOrderTobePreparedFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
                                 chefFinalOrders1List.add(chefFinalOrders1);
-                                adapter.notifyDataSetChanged(); // Cập nhật adapter sau khi thêm dữ liệu vào danh sách
+                                adapter.notifyDataSetChanged();
                                 swipeRefreshLayout.setRefreshing(false);
                             }
 

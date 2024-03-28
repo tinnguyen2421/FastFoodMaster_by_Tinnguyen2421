@@ -24,6 +24,7 @@ import java.util.Random;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ShowNotification {
 
+    //Builder
     public static void ShowNotif(Context context, String title, String message, String page) {
         String CHANNEL_ID = "NOTICE";
         String CHANNEL_NAME = "NOTICE";

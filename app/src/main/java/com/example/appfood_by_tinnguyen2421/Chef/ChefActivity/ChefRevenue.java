@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.appfood_by_tinnguyen2421.DesignPattern.FactoryMethod.ChefRevenueFactory;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.FactoryMethod.ChefRevenueFactoryImpl;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,37 +32,43 @@ import java.util.Map;
 public class ChefRevenue extends AppCompatActivity {
     private double total, parseDouble;
     private int month, year, count;
-    TextView TimePickerr,Revenuee,TotalBillss,BestSellerDish,amountSold;
+    TextView TimePickerr, Revenuee, TotalBillss, BestSellerDish, amountSold;
     private double totalAmount = 0;
     Button Refresh;
+    private ChefRevenueFactory factory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_revenue);
-        Refresh=findViewById(R.id.btnRefresh);
-        TimePickerr=findViewById(R.id.timePicker);
-        Revenuee=findViewById(R.id.Revenue);
-        TotalBillss=findViewById(R.id.TotalBills);
-        BestSellerDish=findViewById(R.id.BestSeller);
-        amountSold=findViewById(R.id.AmountSold);
-        TimePickerr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               TimePicker();
-            }
-        });
-        Refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TimePickerr.setText("");
-                Revenuee.setText("");
-                TotalBillss.setText("");
-                BestSellerDish.setText("");
-                amountSold.setText("");
-
-            }
-        });
+        factory = new ChefRevenueFactoryImpl(); // Khởi tạo Factory
+        ChefRevenue chefRevenue = factory.createChefRevenue(); // Tạo đối tượng ChefRevenue bằng Factory
+        initializeViews();
+        setUpListeners();
     }
+
+    private void setUpListeners() {
+        TimePickerr.setOnClickListener(view -> TimePicker());
+        Refresh.setOnClickListener(view -> refresh());
+    }
+
+    private void initializeViews() {
+        Refresh = findViewById(R.id.btnRefresh);
+        TimePickerr = findViewById(R.id.timePicker);
+        Revenuee = findViewById(R.id.Revenue);
+        TotalBillss = findViewById(R.id.TotalBills);
+        BestSellerDish = findViewById(R.id.BestSeller);
+        amountSold = findViewById(R.id.AmountSold);
+    }
+
+    private void refresh() {
+        TimePickerr.setText("");
+        Revenuee.setText("");
+        TotalBillss.setText("");
+        BestSellerDish.setText("");
+        amountSold.setText("");
+    }
+
     private void TimePicker() {
         count = 0;
         total = 0;
@@ -79,17 +87,14 @@ public class ChefRevenue extends AppCompatActivity {
                     }
                     String thoiGian = monthString + "/" + year;
                     TimePickerr.setText(thoiGian);
-                    QueryTime(thoiGian);
-
-
+                    calculateRevenue(thoiGian);
                 },
                 year, month, 1 // 1 là ngày mặc định khi hiển thị DatePickerDialog
         );
-
-        // Hiển thị DatePickerDialog
         datePickerDialog.show();
     }
-    private void QueryTime(String thoiGian) {
+
+    private void calculateRevenue(String time) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ChefOrdersHistory");
         Query query = reference.orderByChild(FirebaseAuth.getInstance().getUid());
 
@@ -97,10 +102,8 @@ public class ChefRevenue extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot chefSnapshot : dataSnapshot.getChildren()) {
-                    // Duyệt qua các đơn hàng của đầu bếp có ChefId tương ứng
                     String formattedNumber = null;
                     for (DataSnapshot orderSnapshot : chefSnapshot.getChildren()) {
-                        // Lấy thông tin từ OtherInformation
                         DataSnapshot otherInformationSnapshot = orderSnapshot.child("OtherInformation");
                         String aceptDate = otherInformationSnapshot.child("AceptDate").getValue(String.class);
                         String grandTotalPrice = otherInformationSnapshot.child("GrandTotalPrice").getValue(String.class);
@@ -116,8 +119,7 @@ public class ChefRevenue extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if (thoiGian.equals(monthYear)) {
-
+                        if (time.equals(monthYear)) {
                             parseDouble = Double.parseDouble(grandTotalPrice);
                             total = total + parseDouble;
                             DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
@@ -130,15 +132,12 @@ public class ChefRevenue extends AppCompatActivity {
                             Revenuee.setText(total + "đ");
                             TotalBillss.setText(count + " đơn");
                         }
-
                     }
                     Revenuee.setText(formattedNumber + "đ");
                     TotalBillss.setText(count + " đơn");
                 }
-                QueryTimee(thoiGian);
+                calculateSalesQuantity(time);
             }
-
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -146,7 +145,8 @@ public class ChefRevenue extends AppCompatActivity {
             }
         });
     }
-    private void QueryTimee(String thoiGian) {
+
+    private void calculateSalesQuantity(String time) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ChefOrdersHistory");
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -176,8 +176,8 @@ public class ChefRevenue extends AppCompatActivity {
                     }
                 }
                 if (mostSoldProduct != null) {
-                    BestSellerDish.setText( mostSoldProduct);
-                    amountSold.setText( String.valueOf(maxQuantity));
+                    BestSellerDish.setText(mostSoldProduct);
+                    amountSold.setText(String.valueOf(maxQuantity));
                 } else {
                     BestSellerDish.setText("Không có dữ liệu");
                     amountSold.setText("");

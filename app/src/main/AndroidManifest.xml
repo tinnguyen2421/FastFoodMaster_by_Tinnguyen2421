@@ -142,7 +142,7 @@
             android:name=".Account.LoginPhone"
             android:theme="@style/AppThemeNoActionbar" />
         <activity
-            android:name=".ChefAccount.ChefVerifyPhone"
+            android:name=".Account.VerifyPhone"
             android:theme="@style/AppThemeNoActionbar" />
         <activity
             android:name=".CustomerAccount.CustomerVerifyPhone"

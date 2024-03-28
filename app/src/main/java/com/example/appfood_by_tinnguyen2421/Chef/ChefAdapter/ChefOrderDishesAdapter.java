@@ -20,87 +20,62 @@ import java.util.List;
 public class ChefOrderDishesAdapter extends RecyclerView.Adapter<ChefOrderDishesAdapter.ViewHolder> {
 
 
-    private Context mcontext;
-    private List<ChefFinalOrders> chefPendingOrderslist;
+    private Context mContext;
+    private List<ChefFinalOrders> mChefPendingOrdersList;
 
-    public ChefOrderDishesAdapter(Context context, List<ChefFinalOrders> chefPendingOrderslist) {
-        this.chefPendingOrderslist = chefPendingOrderslist;
-        this.mcontext = context;
+    public ChefOrderDishesAdapter(Context context, List<ChefFinalOrders> chefPendingOrdersList) {
+        this.mChefPendingOrdersList = chefPendingOrdersList;
+        this.mContext = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext).inflate(R.layout.chef_order_dishes, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chef_order_dishes, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final ChefFinalOrders chefPendingOrders = mChefPendingOrdersList.get(position);
+        setUpData(holder, chefPendingOrders,position);
 
-        final ChefFinalOrders chefPendingOrders = chefPendingOrderslist.get(position);
-        holder.dishname.setText(position+1+"."+chefPendingOrders.getDishName());
-        //holder.price.setText("Giá: " + chefPendingOrders.getPrice()+"đ");
-        if (chefPendingOrders != null && chefPendingOrders.getDishPrice() != null) {
-            String priceString = chefPendingOrders.getDishPrice();
+    }
 
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
-            String priceWithoutComma = priceString.replace(",", "").trim();
-
-            try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
-                double parsedNumber = Double.parseDouble(priceWithoutComma);
-
-                // Sử dụng parsedNumber trong giao diện người dùng với định dạng số
-                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-                String formattedPrice = decimalFormat.format(parsedNumber);
-
-                holder.price.setText("Giá: " + formattedPrice + "đ");
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
-                e.printStackTrace();
-            }
-        }
+    private void setUpData(ViewHolder holder, ChefFinalOrders chefPendingOrders,int position) {
+        holder.dishName.setText((position + 1) + ". " + chefPendingOrders.getDishName());
+        setUpTextView(holder.price, chefPendingOrders.getDishPrice());
         holder.quantity.setText("× " + chefPendingOrders.getDishQuantity());
-        //holder.totalprice.setText("Tổng tiền: " + chefPendingOrders.getTotalPrice()+"đ");
-        if (chefPendingOrders != null && chefPendingOrders.getTotalPrice() != null) {
-            String priceString = chefPendingOrders.getTotalPrice();
+        setUpTextView(holder.totalPrice, chefPendingOrders.getTotalPrice());
+    }
 
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
+    private void setUpTextView(TextView textView, String priceString) {
+        if (priceString != null) {
             String priceWithoutComma = priceString.replace(",", "").trim();
-
             try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
                 double parsedNumber = Double.parseDouble(priceWithoutComma);
-
-                // Sử dụng parsedNumber trong giao diện người dùng với định dạng số
                 DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
                 String formattedPrice = decimalFormat.format(parsedNumber);
-
-                holder.totalprice.setText("Tổng tiền : " + formattedPrice + "đ");
+                textView.setText(formattedPrice + "đ");
             } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return chefPendingOrderslist.size();
+        return mChefPendingOrdersList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView dishname, price, totalprice, quantity;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView dishName, price, totalPrice, quantity;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            dishname = itemView.findViewById(R.id.DN);
+            dishName = itemView.findViewById(R.id.DN);
             price = itemView.findViewById(R.id.PR);
-            totalprice = itemView.findViewById(R.id.TR);
+            totalPrice = itemView.findViewById(R.id.TR);
             quantity = itemView.findViewById(R.id.QY);
         }
     }

@@ -21,7 +21,6 @@ public class ChefOrderTablayoutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chef_order_view_pager_adapter, container, false);
         tabLayout=v.findViewById(R.id.Tablayout);
         viewPager2=v.findViewById(R.id.ViewPager);

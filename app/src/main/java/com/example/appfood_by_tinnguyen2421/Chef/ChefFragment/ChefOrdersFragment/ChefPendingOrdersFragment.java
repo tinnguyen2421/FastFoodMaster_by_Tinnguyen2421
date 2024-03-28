@@ -40,26 +40,42 @@ public class ChefPendingOrdersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_chef_pendingorders, null);
-        recyclerView = v.findViewById(R.id.Recycle_orders);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chefPendingOrders1List = new ArrayList<>();
-        swipeRefreshLayout = v.findViewById(R.id.Swipe_layoutt);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
-        adapter = new ChefPendingOrdersAdapter(getContext(), chefPendingOrders1List);
-        recyclerView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                chefPendingOrders1List.clear();
-                cheforders();
-            }
-        });
-        cheforders(); // Gọi phương thức để tải dữ liệu lúc fragment được tạo
+        initializeViews(v);
+        setUpRecyclerView();
+        setUpSwipeRefresh();
+        setUpListeners();
+        showPendingOrders();
         return v;
     }
 
-    private void cheforders() {
+    private void setUpListeners() {
+        swipeRefreshLayout.setOnRefreshListener(() -> refresh());
+    }
+
+    private void refresh() {
+        chefPendingOrders1List.clear();
+        showPendingOrders();
+    }
+
+    private void setUpSwipeRefresh() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.green);
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ChefPendingOrdersAdapter(getContext(), chefPendingOrders1List);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void initializeViews(View v) {
+        recyclerView = v.findViewById(R.id.Recycle_orders);
+        swipeRefreshLayout = v.findViewById(R.id.Swipe_layoutt);
+
+    }
+
+    private void showPendingOrders() {
         databaseReference = FirebaseDatabase.getInstance().getReference("ChefPendingOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

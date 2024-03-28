@@ -18,6 +18,8 @@ import com.example.appfood_by_tinnguyen2421.BottomNavigation.ChefBottomNavigatio
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.CustomerBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.BottomNavigation.DeliveryBottomNavigation;
 import com.example.appfood_by_tinnguyen2421.CustomerAccount.CustomerRegisteration;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.AbstractFactory.AppFactory;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.AbstractFactory.DefaultAppFactory;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.material.textfield.TextInputLayout;
@@ -37,12 +39,14 @@ public class LoginEmail extends AppCompatActivity {
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
     String email, password;
+    private AppFactory appFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_email);
 
+        appFactory = new DefaultAppFactory();
         initializeViews();
         setupButtonClickListeners();
     }
@@ -59,17 +63,16 @@ public class LoginEmail extends AppCompatActivity {
 
     private void setupButtonClickListeners() {
         signInButton.setOnClickListener(v -> signIn());
-        registerText.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, CustomerRegisteration.class)));
-        forgotPasswordText.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, ForgotPassword.class)));
-        signInPhoneButton.setOnClickListener(v -> startActivity(new Intent(LoginEmail.this, LoginPhone.class)));
+        registerText.setOnClickListener(v -> startActivity(appFactory.createIntent(LoginEmail.this, CustomerRegisteration.class)));
+        forgotPasswordText.setOnClickListener(v -> startActivity(appFactory.createIntent(LoginEmail.this, ForgotPassword.class)));
+        signInPhoneButton.setOnClickListener(v -> startActivity(appFactory.createIntent(LoginEmail.this, LoginPhone.class)));
     }
 
     private void signIn() {
         email = emailInput.getEditText().getText().toString().trim();
         password = passInput.getEditText().getText().toString().trim();
         if (isValid()) {
-            ProgressDialog progressDialog = createProgressDialog();
-            //progressDialog.show();
+            ProgressDialog progressDialog = appFactory.createProgressDialog(LoginEmail.this);
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -81,27 +84,19 @@ public class LoginEmail extends AppCompatActivity {
         }
     }
 
-    private ProgressDialog createProgressDialog() {
-        ProgressDialog progressDialog = new ProgressDialog(LoginEmail.this);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Đang đăng nhập...");
-        return progressDialog;
-    }
-
     private void handleSignInSuccess(ProgressDialog progressDialog) {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null && currentUser.isEmailVerified()) {
             checkUserRole(progressDialog);
         } else {
             progressDialog.dismiss();
-            ReusableCodeForAll.ShowAlert(LoginEmail.this, "Lỗi đăng nhập", "Thông tin tài khoản hoặc mật khẩu không chính xác");
+            appFactory.showToast(LoginEmail.this, "Thông tin tài khoản hoặc mật khẩu không chính xác");
         }
     }
 
     private void handleSignInFailure(ProgressDialog progressDialog) {
         progressDialog.dismiss();
-        ReusableCodeForAll.ShowAlert(LoginEmail.this, "Lỗi đăng nhập", "Thông tin tài khoản hoặc mật khẩu không chính xác");
+        appFactory.showToast(LoginEmail.this, "Thông tin tài khoản hoặc mật khẩu không chính xác");
     }
 
     private void checkUserRole(ProgressDialog progressDialog) {
@@ -112,29 +107,22 @@ public class LoginEmail extends AppCompatActivity {
                 String role = dataSnapshot.getValue(String.class);
                 switch (role) {
                     case "Chef":
-                        Intent chefIntent = new Intent(LoginEmail.this, ChefBottomNavigation.class);
-                        chefIntent.putExtra("login_success", "successed");
-                        startActivity(chefIntent);
+                        startActivity(appFactory.createIntent(LoginEmail.this, ChefBottomNavigation.class));
                         finish();
                         break;
                     case "Customer":
-                        Intent customerIntent = new Intent(LoginEmail.this, CustomerBottomNavigation.class);
-                        customerIntent.putExtra("login_success", "successed");
-                        startActivity(customerIntent);
+                        startActivity(appFactory.createIntent(LoginEmail.this, CustomerBottomNavigation.class));
                         finish();
                         break;
                     case "DeliveryPerson":
-                        Intent deliveryIntent = new Intent(LoginEmail.this, DeliveryBottomNavigation.class);
-                        deliveryIntent.putExtra("login_success", "successed");
-                        startActivity(deliveryIntent);
+                        startActivity(appFactory.createIntent(LoginEmail.this, DeliveryBottomNavigation.class));
                         finish();
                         break;
                     default:
                         progressDialog.dismiss();
-                        Toast.makeText(LoginEmail.this, "Email chưa được đăng kí", Toast.LENGTH_SHORT).show();
+                        appFactory.showToast(LoginEmail.this, "Email chưa được đăng kí");
                         break;
                 }
-
             }
 
             @Override

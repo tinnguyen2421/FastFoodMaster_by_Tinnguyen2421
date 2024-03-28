@@ -23,24 +23,27 @@ public class ChefPhonenumberAuth extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_phonenumber);
+        initializeViews();
+        setUpListeners();
+    }
 
+    private void setUpListeners() {
+        SendOTP.setOnClickListener(v -> sendOtpProcess());
+    }
+    private void sendOtpProcess()
+    {
+        number=num.getText().toString().trim();
+        String phonenumber= cpp.getSelectedCountryCodeWithPlus() + number;
+        Intent intent=new Intent(ChefPhonenumberAuth.this, ChefPhoneSendOTP.class);
+        intent.putExtra("phonenumber",phonenumber);
+        startActivity(intent);
+        finish();
+    }
+    private void initializeViews() {
         num=(EditText)findViewById(R.id.phonenumber);
         cpp=(CountryCodePicker)findViewById(R.id.Countrycode);
         cpp.setDefaultCountryUsingNameCode("VN");
         cpp.resetToDefaultCountry();
         SendOTP=(Button)findViewById(R.id.sendotp);
-
-        SendOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                number=num.getText().toString().trim();
-                String phonenumber= cpp.getSelectedCountryCodeWithPlus() + number;
-                Intent intent=new Intent(ChefPhonenumberAuth.this, ChefPhoneSendOTP.class);
-                intent.putExtra("phonenumber",phonenumber);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 }

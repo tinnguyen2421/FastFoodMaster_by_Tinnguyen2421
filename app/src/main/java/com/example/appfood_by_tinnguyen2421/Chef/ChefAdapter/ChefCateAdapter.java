@@ -20,6 +20,7 @@ import com.example.appfood_by_tinnguyen2421.Categories;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefDishes;
 import com.example.appfood_by_tinnguyen2421.Chef.ChefActivity.ChefUpdateCategories;
 import com.example.appfood_by_tinnguyen2421.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,122 +36,116 @@ public class ChefCateAdapter extends RecyclerView.Adapter<ChefCateAdapter.ViewHo
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference dataaa;
-    private Context mcont;
-    private List<Categories> categoriesList;
-    String District, City, Ward;
-    public ChefCateAdapter(Context context, List<Categories> categoriesList) {
-        this.categoriesList = categoriesList;
-        this.mcont = context;
+    private Context mContext;
+    private List<Categories> mCategoryList;
+
+    public ChefCateAdapter(Context context, List<Categories> categoryList) {
+        this.mContext = context;
+        this.mCategoryList = categoryList;
+        this.firebaseDatabase = FirebaseDatabase.getInstance();
     }
-
-
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcont).inflate(R.layout.chef_cate_update_delete, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chef_cate_update_delete, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final Categories category = mCategoryList.get(position);
+        setUpData( holder,category);
+        setUpListeners(holder,category);
+    }
 
-        final Categories categories = categoriesList.get(position);
-        holder.dishcate.setText(categories.getTentheloai());
-        Glide.with(mcont).load(categories.getImage()).into(holder.imgCate);
-        holder.cateLayout.setOnClickListener(new View.OnClickListener() {
+    private void showDeleteConfirmationDialog(Categories category) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Are you sure you want to delete this category?");
+        builder.setPositiveButton("Có", (dialog, which) -> deleteCategory(category));
+        builder.setNegativeButton("Không", (dialog, which) -> dialog.dismiss());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void setUpData(ViewHolder holder,Categories category)
+    {
+        holder.dishCategory.setText(category.getTentheloai());
+        Glide.with(mContext).load(category.getImage()).into(holder.imgCategory);
+    }
+    private void setUpListeners(ViewHolder holder,Categories category) {
+        holder.categoryLayout.setOnClickListener(view -> showDishes(category));
+        holder.editButton.setOnClickListener(view -> updateCategory(category));
+        holder.deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog(category));
+    }
+    private void deleteCategory(Categories category) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference chefRef = firebaseDatabase.getReference("Chef").child(userId);
+        chefRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(mcont, ChefDishes.class);
-                intent.putExtra("matl",categories.getMatheloai());
-                mcont.startActivity(intent);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserModel chef = dataSnapshot.getValue(UserModel.class);
+                if (chef != null) {
+                    String district = chef.getDistrict();
+                    String city = chef.getCity();
+                    String ward = chef.getWard();
+                    firebaseDatabase.getReference("Categories")
+                            .child(city)
+                            .child(district)
+                            .child(ward)
+                            .child(userId)
+                            .child(category.getRandomUID())
+                            .removeValue().addOnSuccessListener(unused -> {
+                                showDeletionSuccessDialog();
+                            });
+
+                }
             }
-        });
-        holder.edt.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                Intent intent1=new Intent(mcont, ChefUpdateCategories.class);
-                intent1.putExtra("mtl",categories.getRandomUID());
-                mcont.startActivity(intent1);
-            }
-        });
-        holder.dlt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                dataaa = firebaseDatabase.getInstance().getReference("Chef").child(userid);
-                dataaa.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserModel chefc = dataSnapshot.getValue(UserModel.class);
-                        District = chefc.getDistrict();
-                        City = chefc.getCity();
-                        Ward = chefc.getWard();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(mcont);
-                        builder.setMessage("Bạn có chắc chắn muốn xóa món ăn này");
-                        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                firebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(categories.getRandomUID()).removeValue();
-
-                                AlertDialog.Builder food = new AlertDialog.Builder(mcont);
-                                food.setMessage("Thể loại đã được xóa");
-                                food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //mcont.startActivity(new Intent((Context) mcont, ChefBottomNavigation.class));
-                                    }
-                                });
-                                AlertDialog alertt = food.create();
-                                alertt.show();
-                            }
-                        });
-                        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle onCancelled
             }
         });
     }
 
-
-
-
+    private void showDeletionSuccessDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("Thể loại đã được xóa!");
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void showDishes(Categories category)
+    {
+        Intent intent = new Intent(mContext, ChefDishes.class);
+        intent.putExtra("matl", category.getMatheloai());
+        mContext.startActivity(intent);
+    }
+    private void updateCategory(Categories category)
+    {
+        Intent intent1 = new Intent(mContext, ChefUpdateCategories.class);
+        intent1.putExtra("mtl", category.getRandomUID());
+        mContext.startActivity(intent1);
+    }
     @Override
     public int getItemCount() {
-        return categoriesList.size();
+        return mCategoryList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout cateLayout;
-        TextView dishcate;
-        TextView edt,dlt;
-        ImageView imgCate;
+        LinearLayout categoryLayout;
+        TextView dishCategory;
+        TextView editButton, deleteButton;
+        ImageView imgCategory;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            cateLayout=itemView.findViewById(R.id.CateLayout);
-            dishcate = itemView.findViewById(R.id.dish_cate);
-            edt=itemView.findViewById(R.id.editButton);
-            dlt=itemView.findViewById(R.id.deleteButton);
-            imgCate=itemView.findViewById(R.id.ImageCategory);
+            categoryLayout = itemView.findViewById(R.id.CateLayout);
+            dishCategory = itemView.findViewById(R.id.dish_cate);
+            editButton = itemView.findViewById(R.id.editButton);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
+            imgCategory = itemView.findViewById(R.id.ImageCategory);
         }
     }
 }

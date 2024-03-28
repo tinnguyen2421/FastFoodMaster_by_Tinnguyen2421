@@ -25,8 +25,6 @@ import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -79,19 +77,19 @@ public class ChefHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chef_home, null);
-        RecyclerCate = v.findViewById(R.id.Recycle_cate);
-        ResName = v.findViewById(R.id.tenQuan);
-        ResAddress = v.findViewById(R.id.diaChi);
-        ResStatus = v.findViewById(R.id.Status);
-        RecyclerCate.setLayoutManager(new LinearLayoutManager(getContext()));
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setCanceledOnTouchOutside(false);
         updateDishModelList = new ArrayList<>();
         categoriesList = new ArrayList<>();
-        add = v.findViewById(R.id.themMoi);
+        initializeViews(v);
+        setUpRecyclerView();
+        setUpProcessingDialog();
+        loadStoreInformation();
+        loadStoreStatus();
+        return v;
+    }
 
-        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dataaa = FirebaseDatabase.getInstance().getReference("Chef").child(userid);
+    private void loadStoreInformation() {
+        dataaa = FirebaseDatabase.getInstance().getReference("Chef")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -102,34 +100,47 @@ public class ChefHomeFragment extends Fragment {
                 Address = chefc.getAddress();
                 ResName.setText(chefc.getFirstName() + chefc.getLastName());
                 ResAddress.setText(Address + "," + Ward + "," + City + "," + District);
-                checkStatus();
-                chefCate();
-
-                add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getContext(), ChefPostCate.class));
-                    }
-                });
-                ResStatus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        openStatusDialog(Gravity.CENTER);
-                    }
-                });
+                showCategory();
+                setUpListeners();
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-        return v;
     }
 
-    private void chefCate() {
-        String userid = FirebaseAuth.getInstance().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward).child(userid);
+    private void setUpListeners()
+    {
+        add.setOnClickListener(view -> startActivity(new Intent(getContext(), ChefPostCate.class)));
+        ResStatus.setOnClickListener(view -> openStatusDialog(Gravity.CENTER));
+    }
+    private void setUpProcessingDialog() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void setUpRecyclerView() {
+        RecyclerCate.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void initializeViews(View v) {
+        RecyclerCate = v.findViewById(R.id.Recycle_cate);
+        ResName = v.findViewById(R.id.tenQuan);
+        ResAddress = v.findViewById(R.id.diaChi);
+        ResStatus = v.findViewById(R.id.Status);
+        add = v.findViewById(R.id.themMoi);
+    }
+
+    private void showCategory() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Categories")
+                .child(City)
+                .child(District)
+                .child(Ward)
+                .child(FirebaseAuth.getInstance().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -149,7 +160,7 @@ public class ChefHomeFragment extends Fragment {
         });
 
     }
-    private void checkStatus()
+    private void loadStoreStatus()
     {
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ChefStatus").child(userid);
@@ -157,12 +168,9 @@ public class ChefHomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Kiểm tra xem có dữ liệu trong snapshot không
                     ChefStatus chefStatus = dataSnapshot.getValue(ChefStatus.class);
                     if (chefStatus != null) {
-                        // Lấy giá trị của trường Status từ snapshot
                         String status = chefStatus.getStatus();
-                        // Đặt giá trị Status vào TextView (ResStatus)
                         ResStatus.setText(status);
                         if (status.equals("Quán Bận")) {
                             if (isAdded() && getContext() != null) {
@@ -249,25 +257,10 @@ public class ChefHomeFragment extends Fragment {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams windowAttributes = window.getAttributes();
         windowAttributes.gravity = windowAttributes.gravity;
-        //if (Gravity.CENTER == windowAttributes.gravity) {
-          //  dialog.setCancelable(true);
-        //}
-        //dialog.setCancelable(false);
-        //ánh xạ
         txtOpenn=dialog.findViewById(R.id.txtOpen);
         txtClosedd=dialog.findViewById(R.id.txtClosed);
-        txtOpenn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadStatusFree();
-            }
-        });
-        txtClosedd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openchangeStatusDialog(Gravity.CENTER);
-            }
-        });
+        txtOpenn.setOnClickListener(view -> loadStatusFree());
+        txtClosedd.setOnClickListener(view -> openchangeStatusDialog(Gravity.CENTER));
 
 
 

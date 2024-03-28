@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appfood_by_tinnguyen2421.Account.VerifyPhone;
 import com.example.appfood_by_tinnguyen2421.Account.LoginEmail;
 import com.example.appfood_by_tinnguyen2421.Account.LoginPhone;
 import com.example.appfood_by_tinnguyen2421.R;
@@ -272,11 +273,11 @@ public class ChefRegisteration extends AppCompatActivity {
                                                                         public void onClick(DialogInterface dialog, int which) {
 
                                                                             dialog.dismiss();
-
                                                                             String phonenumber = Cpp.getSelectedCountryCodeWithPlus() + mobile;
-                                                                            Intent b = new Intent(ChefRegisteration.this, ChefVerifyPhone.class);
+                                                                            Intent b = new Intent(ChefRegisteration.this, VerifyPhone.class);
                                                                             b.putExtra("phonenumber", phonenumber);
                                                                             startActivity(b);
+                                                                            finish();
 
                                                                         }
                                                                     });

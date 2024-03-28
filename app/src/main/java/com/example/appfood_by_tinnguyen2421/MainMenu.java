@@ -70,7 +70,6 @@ public class MainMenu extends AppCompatActivity {
         signinemail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent signemail = new Intent(MainMenu.this, LoginEmail.class);
                 startActivity(signemail);
                 finish();

@@ -31,7 +31,7 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
     DatabaseReference reference;
     String RandomUID;
 
-    TextView grantotal,idOrders,cusName,ShippingTime;
+    TextView grantotal,idOrders,cusName, shippingTime;
     private APIService apiService;
 
     @Override
@@ -39,6 +39,10 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chef_orders_history_view);
         recyclerView=findViewById(R.id.rcvItem);
+        grantotal=findViewById(R.id.txtGrandTotal);
+        idOrders=findViewById(R.id.txtOrdersID);
+        cusName=findViewById(R.id.txtCusName);
+        shippingTime =findViewById(R.id.txtDatetime);
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(ChefOrdersHistoryView.this));
@@ -75,15 +79,11 @@ public class ChefOrdersHistoryView extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ChefFinalOrders1 chefFinalOrders1 = dataSnapshot.getValue(ChefFinalOrders1.class);
-                grantotal=findViewById(R.id.txtGrandTotal);
-                idOrders=findViewById(R.id.txtOrdersID);
-                cusName=findViewById(R.id.txtCusName);
-                ShippingTime=findViewById(R.id.txtDatetime);
                 grantotal.setText(chefFinalOrders1.getGrandTotalPrice());
                 int a=chefFinalOrders1.getRandomUID().length()-10;
                 idOrders.setText(chefFinalOrders1.getRandomUID().substring(a));
                 cusName.setText(chefFinalOrders1.getName());
-                ShippingTime.setText(chefFinalOrders1.getDeliveryDate());
+                shippingTime.setText(chefFinalOrders1.getDeliveryDate());
 
 
             }

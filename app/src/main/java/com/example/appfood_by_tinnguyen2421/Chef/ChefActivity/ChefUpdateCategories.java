@@ -100,7 +100,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
                             if (imageuri != null) {
                                 uploadImage();
                             } else {
-                                updatedesc(dburi);
+                                updateDesc(dburi);
                             }
                         }
                     }
@@ -207,7 +207,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            updatedesc(String.valueOf(uri));
+                            updateDesc(String.valueOf(uri));
                         }
                     });
                 }
@@ -230,7 +230,7 @@ public class ChefUpdateCategories extends AppCompatActivity {
         }
     }
 
-    private void updatedesc(String uri) {
+    private void updateDesc(String uri) {
         ChefId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Categories info = new Categories( cateIDD,CateNamee, DesCatee, uri,RandomUId);
         firebaseDatabase.getInstance().getReference("Categories").child(City).child(District).child(Ward)

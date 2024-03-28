@@ -17,37 +17,40 @@ import java.util.List;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefOrdertobePrepareViewAdapter extends RecyclerView.Adapter<ChefOrdertobePrepareViewAdapter.ViewHolder> {
 
-    private Context mcontext;
-    private List<ChefFinalOrders> chefWaitingOrderslist;
+    private Context mContext;
+    private List<ChefFinalOrders> mChefWaitingOrdersList;
 
-    public ChefOrdertobePrepareViewAdapter(Context context, List<ChefFinalOrders> chefWaitingOrderslist) {
-        this.chefWaitingOrderslist = chefWaitingOrderslist;
-        this.mcontext = context;
+    public ChefOrdertobePrepareViewAdapter(Context context, List<ChefFinalOrders> chefWaitingOrdersList) {
+        this.mContext = context;
+        this.mChefWaitingOrdersList = chefWaitingOrdersList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mcontext).inflate(R.layout.chef_ordertobeprepared_view, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chef_ordertobeprepared_view, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ChefFinalOrders chefWaitingOrders = mChefWaitingOrdersList.get(position);
+        setUpData(holder,chefWaitingOrders,position);
+    }
 
-        final ChefFinalOrders chefWaitingOrders = chefWaitingOrderslist.get(position);
-        holder.dishname.setText(position+1+"."+chefWaitingOrders.getDishName());
-        holder.price.setText("Giá: " + chefWaitingOrders.getDishPrice()+"đ");
+    private void setUpData(ViewHolder holder, ChefFinalOrders chefWaitingOrders, int position) {
+        holder.dishname.setText((position + 1) + ". " + chefWaitingOrders.getDishName());
+        holder.price.setText("Giá: " + chefWaitingOrders.getDishPrice() + "đ");
         holder.quantity.setText("× " + chefWaitingOrders.getDishQuantity());
-        holder.totalprice.setText("Tổng tiền: " + chefWaitingOrders.getTotalPrice()+"đ");
+        holder.totalprice.setText("Tổng tiền: " + chefWaitingOrders.getTotalPrice() + "đ");
     }
 
     @Override
     public int getItemCount() {
-        return chefWaitingOrderslist.size();
+        return mChefWaitingOrdersList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView dishname, price, totalprice, quantity;
 

@@ -1,9 +1,7 @@
 package com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,13 +10,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appfood_by_tinnguyen2421.Account.ChangePassword;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Command.ChangePasswordCommand;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Command.ChangePhoneNumberCommand;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Command.Command;
+import com.example.appfood_by_tinnguyen2421.DesignPattern.Command.UpdateInformationCommand;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,22 +54,37 @@ public class CustomerEditProfile extends AppCompatActivity {
     DatabaseReference databaseReference, data;
     FirebaseDatabase firebaseDatabase;
     String city, district, ward, email, passwordd, confirmpass;
+    private Command updateInformationCommand;
+    private Command changePasswordCommand;
+    private Command changePhoneNumberCommand;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_edit_profile);
-        firstname = findViewById(R.id.fnamee);
-        lastname = findViewById(R.id.lnamee);
-        address = findViewById(R.id.address);
-        Email = findViewById(R.id.emailID);
-        State = findViewById(R.id.statee);
-        City = findViewById(R.id.cityy);
-        Suburban = findViewById(R.id.sub);
-        mobileno = findViewById(R.id.mobilenumber);
-        Update = findViewById(R.id.update);
-        password = findViewById(R.id.passwordlayout);
+        initializeViews();
+        loadInformation();
+        setUpCommands();
+        setupListeners();
+
+    }
+    private void executeCommand(Command command) {
+        command.execute();
+    }
+    private void setupListeners() {
+        Update.setOnClickListener(v -> executeCommand(updateInformationCommand));
+
+        password.setOnClickListener(v -> executeCommand(changePasswordCommand));
+
+        mobileno.setOnClickListener(v -> executeCommand(changePhoneNumberCommand));
+    }
+    private void setUpCommands() {
+        updateInformationCommand = new UpdateInformationCommand(this);
+        changePasswordCommand = new ChangePasswordCommand(this);
+        changePhoneNumberCommand = new ChangePhoneNumberCommand(this);
+    }
+    private void loadInformation() {
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -181,84 +197,32 @@ public class CustomerEditProfile extends AppCompatActivity {
 
             }
         });
-        updateinformation();
-
     }
 
-    private void updateinformation() {
-        Update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                data = FirebaseDatabase.getInstance().getReference("Customer").child(useridd);
-                data.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                        confirmpass = userModel.getConfirmPassword();
-                        email = userModel.getEmailID();
-                        passwordd = userModel.getPassword();
-                        long mobilenoo = Long.parseLong(userModel.getPhoneNumber());
-                        String Fname = firstname.getText().toString().trim();
-                        String Lname = lastname.getText().toString().trim();
-                        String Address = address.getText().toString().trim();
-                        HashMap<String, String> hashMappp = new HashMap<>();
-                        hashMappp.put("District", district);
-                        hashMappp.put("ConfirmPassword", confirmpass);
-                        hashMappp.put("EmailID", email);
-                        hashMappp.put("FirstName", Fname);
-                        hashMappp.put("LastName",Lname);
-                        hashMappp.put("PhoneNumber", String.valueOf(mobilenoo));
-                        hashMappp.put("Password", passwordd);
-                        hashMappp.put("Address", Address);
-                        hashMappp.put("City", city);
-                        hashMappp.put("Ward", ward);
-                        firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
-                        ReusableCodeForAll.ShowAlert(CustomerEditProfile.this,"Thành Công","Cập nhật thành công");
-
-
-                    }
-
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-
-                });
-
-
-
-            }
-
-
-
-        });
-
-
-
-
-        password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(CustomerEditProfile.this, ChangePassword.class);
-                startActivity(intent);
-            }
-        });
-
-        mobileno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent i = new Intent(CustomerEditProfile.this, CustomerPhonenumber.class);
-                startActivity(i);
-            }
-        });
-
+    private void initializeViews() {
+        firstname = findViewById(R.id.fnamee);
+        lastname = findViewById(R.id.lnamee);
+        address = findViewById(R.id.address);
+        Email = findViewById(R.id.emailID);
+        State = findViewById(R.id.statee);
+        City = findViewById(R.id.cityy);
+        Suburban = findViewById(R.id.sub);
+        mobileno = findViewById(R.id.mobilenumber);
+        Update = findViewById(R.id.update);
+        password = findViewById(R.id.passwordlayout);
     }
 
+
+    public void changePhoneNumber()
+    {
+        Intent intent = new Intent(CustomerEditProfile.this, CustomerPhonenumber.class);
+        startActivity(intent);
+    }
+    public void changePassword()
+    {
+        Intent intent = new Intent(CustomerEditProfile.this, ChangePassword.class);
+        startActivity(intent);
+    }
     private int getIndexByString(Spinner st, String spist) {
         int index = 0;
         for (int i = 0; i < st.getCount(); i++) {
@@ -268,5 +232,45 @@ public class CustomerEditProfile extends AppCompatActivity {
             }
         }
         return index;
+    }
+
+    public void updateInformation() {
+        String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        data = FirebaseDatabase.getInstance().getReference("Customer").child(useridd);
+        data.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                confirmpass = userModel.getConfirmPassword();
+                email = userModel.getEmailID();
+                passwordd = userModel.getPassword();
+                long mobilenoo = Long.parseLong(userModel.getPhoneNumber());
+                String Fname = firstname.getText().toString().trim();
+                String Lname = lastname.getText().toString().trim();
+                String Address = address.getText().toString().trim();
+                HashMap<String, String> hashMappp = new HashMap<>();
+                hashMappp.put("District", district);
+                hashMappp.put("ConfirmPassword", confirmpass);
+                hashMappp.put("EmailID", email);
+                hashMappp.put("FirstName", Fname);
+                hashMappp.put("LastName",Lname);
+                hashMappp.put("PhoneNumber", String.valueOf(mobilenoo));
+                hashMappp.put("Password", passwordd);
+                hashMappp.put("Address", Address);
+                hashMappp.put("City", city);
+                hashMappp.put("Ward", ward);
+                firebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(hashMappp);
+                ReusableCodeForAll.ShowAlert(CustomerEditProfile.this,"Thành Công","Cập nhật thành công");
+
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
     }
 }
