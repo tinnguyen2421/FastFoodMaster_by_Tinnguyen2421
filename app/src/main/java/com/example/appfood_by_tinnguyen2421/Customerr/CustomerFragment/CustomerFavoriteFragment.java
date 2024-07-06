@@ -73,7 +73,6 @@ public class CustomerFavoriteFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle onCancelled event
             }
         });
         return view;

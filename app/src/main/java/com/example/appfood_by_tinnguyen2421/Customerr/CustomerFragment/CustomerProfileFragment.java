@@ -1,10 +1,8 @@
 package com.example.appfood_by_tinnguyen2421.Customerr.CustomerFragment;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.example.appfood_by_tinnguyen2421.Account.UserModel;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerEditProfile;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerActivity.CustomerOrdersHistory;
-import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.MainMenu;
 import com.example.appfood_by_tinnguyen2421.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,11 +28,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 //May not be copied in any form
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
@@ -43,29 +35,62 @@ public class CustomerProfileFragment extends Fragment {
 
     private double total, parseDouble;
 
-    RelativeLayout Account, History;
-    LinearLayout LogOut;
+    RelativeLayout rllAccount, rllHistory;
+    LinearLayout llLogOut;
     private double totalAmount = 0;
-    TextView CusNamee, CusRankk, CusTotall;
+    TextView tvName, tvRanking, tvTotalAmount;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customer_profile, container, false);
-        LogOut = v.findViewById(R.id.logout_layout);
-        Account = v.findViewById(R.id.Account_layout);
-        History = v.findViewById(R.id.OrdersHistory);
-        CusNamee = v.findViewById(R.id.CusName);
-        CusRankk = v.findViewById(R.id.CusRank);
-        CusTotall = v.findViewById(R.id.CusTotal);
-        QueryTime();
+        initializeViews(v);
+        setUpData();
+        showAmoutMoney();
+        setUpListeners();
+        return v;
+    }
+
+    private void setUpListeners() {
+        rllAccount.setOnClickListener(view -> showAccount());
+        rllHistory.setOnClickListener(view -> showHistory());
+        llLogOut.setOnClickListener(v -> showConfirmDialog());
+    }
+
+    private void showConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Bạn có muốn đăng xuất ?");
+        builder.setPositiveButton("Có", (dialog, which) -> logOut());
+        builder.setNegativeButton("Không", (dialog, which) -> dialog.cancel());
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void logOut() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getActivity(), MainMenu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void showHistory() {
+        Intent intent = new Intent(getActivity(), CustomerOrdersHistory.class);
+        startActivity(intent);
+    }
+
+    private void showAccount() {
+        Intent intent = new Intent(getActivity(), CustomerEditProfile.class);
+        startActivity(intent);
+    }
+
+    private void setUpData() {
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final UserModel userModel = snapshot.getValue(UserModel.class);
-                CusNamee.setText(userModel.getFirstName() + userModel.getLastName());
+                tvName.setText(userModel.getFirstName() + userModel.getLastName());
 
             }
 
@@ -73,55 +98,18 @@ public class CustomerProfileFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        Account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CustomerEditProfile.class);
-                startActivity(intent);
-            }
-        });
-        History.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CustomerOrdersHistory.class);
-                startActivity(intent);
-            }
-        });
-        LogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Bạn có muốn đăng xuất ?");
-                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        FirebaseAuth.getInstance().signOut();
-                        Intent intent = new Intent(getActivity(), MainMenu.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-
-
-                    }
-                });
-                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-
-            }
-        });
-
-        return v;
     }
-    private void QueryTime() {
+
+    private void initializeViews(View v) {
+        llLogOut = v.findViewById(R.id.logout_layout);
+        rllAccount = v.findViewById(R.id.Account_layout);
+        rllHistory = v.findViewById(R.id.OrdersHistory);
+        tvName = v.findViewById(R.id.CusName);
+        tvRanking = v.findViewById(R.id.CusRank);
+        tvTotalAmount = v.findViewById(R.id.CusTotal);
+    }
+
+    private void showAmoutMoney() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory");
         Query query = reference.orderByChild(FirebaseAuth.getInstance().getUid());
 
@@ -141,23 +129,23 @@ public class CustomerProfileFragment extends Fragment {
                             formattedNumber = decimalFormat.format(total);
 
                     }
-                    CusTotall.setText(formattedNumber + "đ");
+                    tvTotalAmount.setText(formattedNumber + "đ");
                     if (0<total&&total<100000)
                     {
-                        CusRankk.setText("Thành viên Sắt");
+                        tvRanking.setText("Thành viên Sắt");
                     }
                     else if(100000<total&&total<1000000)
                     {
-                        CusRankk.setText("Thành viên Đồng");
+                        tvRanking.setText("Thành viên Đồng");
                     }
                     else if (1000000<total&&total<5000000) {
-                        CusRankk.setText("Thành viên Bạc");
+                        tvRanking.setText("Thành viên Bạc");
                     }
                     else if (5000000<total&&total<10000000) {
-                        CusRankk.setText("Thành viên Vàng");
+                        tvRanking.setText("Thành viên Vàng");
                     }
                     else if (10000000<total&&total<15000000) {
-                        CusRankk.setText("Thành viên Bạch kim");
+                        tvRanking.setText("Thành viên Bạch kim");
                     }
 
                 }

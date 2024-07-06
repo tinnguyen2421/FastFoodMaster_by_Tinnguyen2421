@@ -34,6 +34,10 @@ public class CustomerOrdersHistoryViewAdapter extends RecyclerView.Adapter<Custo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CustomerOrders customerOrders=customerOrdersList.get(position);
+        setUpData(holder,customerOrders,position);
+    }
+
+    private void setUpData(ViewHolder holder, CustomerOrders customerOrders, int position) {
         holder.dishname.setText(position+1+"."+customerOrders.getDishName());
         holder.price.setText("Giá tiền: " + customerOrders.getDishPrice()+"đ");
         holder.quantity.setText("× " + customerOrders.getDishQuantity());

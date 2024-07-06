@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +23,7 @@ import com.example.appfood_by_tinnguyen2421.Customerr.CustomerAdapter.PendingOrd
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders;
 import com.example.appfood_by_tinnguyen2421.Customerr.CustomerModel.CustomerOrders1;
 import com.example.appfood_by_tinnguyen2421.R;
-import com.example.appfood_by_tinnguyen2421.ReusableCodeForAll;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -46,10 +43,10 @@ public class CustomerOrdersCanceledFragment extends Fragment {
     DatabaseReference databaseReference,databaseReference1,dataaa;
     ScrollView scrollVieww;
     private List<CustomerOrders> customerOrdersList;
-    Button reOrder;
+    Button btnReOrder;
     TextView grandtotal, orderStatus, orderID, orderDate;
     LinearLayout orderInfo, otherInfo1;
-    String chefID, City,District,Ward,Price;
+    String chefID, city, district, ward, price;
     ProgressDialog progressDialog;
     public CustomerOrdersCanceledFragment() {
         // Required empty public constructor
@@ -58,9 +55,29 @@ public class CustomerOrdersCanceledFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_customerorderscanceled, null);
-        recyclerView = v.findViewById(R.id.recyclefinalorders);
+        customerOrdersList = new ArrayList<>();
+        customerOrdersCanceledList = new ArrayList<>();
+        initializeViews(v);
+        setUpRecyclerView();
+        setUpProgressDialog();
+        showOrdersCanceled();
+        setUpListeners();
+        return v;
+    }
+
+    private void setUpProgressDialog() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+    }
+
+    private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void initializeViews(View v) {
+        recyclerView = v.findViewById(R.id.recyclefinalorders);
         grandtotal = v.findViewById(R.id.GrandTotal);
         orderInfo = v.findViewById(R.id.OrdersInfo);
         otherInfo1 = v.findViewById(R.id.OtherInfo1);
@@ -68,111 +85,93 @@ public class CustomerOrdersCanceledFragment extends Fragment {
         orderID = v.findViewById(R.id.OrdersID);
         orderDate = v.findViewById(R.id.OrderDate);
         scrollVieww = v.findViewById(R.id.scrollView);
-        reOrder=v.findViewById(R.id.ReOrder);
-        customerOrdersList = new ArrayList<>();
-        customerOrdersCanceledList = new ArrayList<>();
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        CustomerOrdersCanceled();
-        ReOrder();
-        return v;
-    }
-    private void getDishPrice(String chefID, String randomUID) {
-
+        btnReOrder =v.findViewById(R.id.ReOrder);
     }
 
+    private void setUpListeners() {
+        btnReOrder.setOnClickListener(view -> reOrder());
+    }
 
-    private void ReOrder() {
-        reOrder.setOnClickListener(new View.OnClickListener() {
+    private void reOrder() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        customerOrdersList.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("Dishes");
-                            data.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                        final CustomerOrders customerOrders = snapshot1.getValue(CustomerOrders.class);
-                                        final HashMap<String, String> hashMap = new HashMap<>();
-                                        chefID=customerOrders.getChefID();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                customerOrdersList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DatabaseReference data = FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(snapshot.getKey()).child("Dishes");
+                    data.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                final CustomerOrders customerOrders = snapshot1.getValue(CustomerOrders.class);
+                                final HashMap<String, String> hashMap = new HashMap<>();
+                                chefID=customerOrders.getChefID();
 
-                                        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                        dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
-                                        dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
+                                String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                dataaa = FirebaseDatabase.getInstance().getReference("Customer").child(userid);
+                                dataaa.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        UserModel cust = dataSnapshot.getValue(UserModel.class);
+                                        district = cust.getDistrict();
+                                        city = cust.getCity();
+                                        ward = cust.getWard();
+                                        databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(city).child(district).child(ward).child(chefID).child(customerOrders.getDishID());
+                                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                UserModel cust = dataSnapshot.getValue(UserModel.class);
-                                                District = cust.getDistrict();
-                                                City = cust.getCity();
-                                                Ward = cust.getWard();
-                                                databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(District).child(Ward).child(chefID).child(customerOrders.getDishID());
-                                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
+                                                databaseReference1 = FirebaseDatabase.getInstance().getReference("ChefStatus").child(updateDishModel.getChefID() + "/Status");
+                                                databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
-                                                        databaseReference1 = FirebaseDatabase.getInstance().getReference("ChefStatus").child(updateDishModel.getChefID() + "/Status");
-                                                        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                String status = dataSnapshot.getValue(String.class);
-                                                                if (status.equals("Mở cửa")) {
-                                                                    if (updateDishModel.getOnSale().equals("true")) {
-                                                                        Price = updateDishModel.getReducePrice();
-                                                                        Log.d("Check Price", "getDishPrice: " + Price);
+                                                        String status = dataSnapshot.getValue(String.class);
+                                                        if (status.equals("Mở cửa")) {
+                                                            if (updateDishModel.getOnSale().equals("true")) {
+                                                                price = updateDishModel.getReducePrice();
+                                                                Log.d("Check Price", "getDishPrice: " + price);
 
-                                                                        if (updateDishModel.getAvailableDish().equals("true")) {
-                                                                            // Do something
-                                                                        } else {
-                                                                            // Do something
-                                                                        }
-                                                                    } else {
-                                                                        Price = updateDishModel.getDishPrice();
-                                                                        Log.d("Check Price", "getDishPrice: " + Price);
-                                                                    }
-                                                                    hashMap.put("ChefID", customerOrders.getChefID());
-                                                                    hashMap.put("DishID", customerOrders.getDishID());
-                                                                    hashMap.put("DishName", customerOrders.getDishName());
-                                                                    hashMap.put("DishQuantity", "1");
-                                                                    hashMap.put("DishPrice", String.valueOf(Price));
-                                                                    hashMap.put("RandomUID",customerOrders.getRandomUID());
-                                                                    hashMap.put("TotalPrice", String.valueOf(Price));
-                                                                    hashMap.put("UserID",FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                                                    hashMap.put("ImageURL", customerOrders.getImageURL());
-                                                                    FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getDishID()).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                if (updateDishModel.getAvailableDish().equals("true")) {
+                                                                    // Do something
+                                                                } else {
+                                                                    // Do something
+                                                                }
+                                                            } else {
+                                                                price = updateDishModel.getDishPrice();
+                                                                Log.d("Check Price", "getDishPrice: " + price);
+                                                            }
+                                                            hashMap.put("ChefID", customerOrders.getChefID());
+                                                            hashMap.put("DishID", customerOrders.getDishID());
+                                                            hashMap.put("DishName", customerOrders.getDishName());
+                                                            hashMap.put("DishQuantity", "1");
+                                                            hashMap.put("DishPrice", String.valueOf(price));
+                                                            hashMap.put("RandomUID",customerOrders.getRandomUID());
+                                                            hashMap.put("TotalPrice", String.valueOf(price));
+                                                            hashMap.put("UserID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                                            hashMap.put("ImageURL", customerOrders.getImageURL());
+                                                            FirebaseDatabase.getInstance().getReference("Cart").child("CartItems").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getDishID()).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getRandomUID()).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                                            FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getRandomUID()).child("Dishes").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getRandomUID()).child("OtherInformation").removeValue()   .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                 @Override
                                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                                    FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders.getRandomUID()).child("OtherInformation").removeValue()   .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                                                                        }
-                                                                                    });
                                                                                 }
                                                                             });
                                                                         }
                                                                     });
-                                                                } else {
                                                                 }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                                // Handle onCancelled event
-                                                            }
-                                                        });
+                                                            });
+                                                        } else {
+                                                        }
                                                     }
 
                                                     @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    public void onCancelled(@NonNull DatabaseError error) {
                                                         // Handle onCancelled event
                                                     }
                                                 });
@@ -183,31 +182,36 @@ public class CustomerOrdersCanceledFragment extends Fragment {
                                                 // Handle onCancelled event
                                             }
                                         });
-
-
-
                                     }
 
-                                }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // Handle onCancelled event
+                                    }
+                                });
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                }
-                            });
+
+
+                            }
 
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
 
-                    }
-                });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
 
-    private void CustomerOrdersCanceled() {
+    private void showOrdersCanceled() {
         databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersCanceled").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -229,7 +233,7 @@ public class CustomerOrdersCanceledFragment extends Fragment {
                                 hasData[0] = true;
                                 orderInfo.setVisibility(View.VISIBLE);
                                 otherInfo1.setVisibility(View.VISIBLE);
-                                reOrder.setVisibility(View.VISIBLE);
+                                btnReOrder.setVisibility(View.VISIBLE);
                                 scrollVieww.setBackground(null);
                             }
                         }
@@ -265,7 +269,7 @@ public class CustomerOrdersCanceledFragment extends Fragment {
                     scrollVieww.setBackgroundResource(R.drawable.empty_product);
                     orderInfo.setVisibility(View.GONE);
                     otherInfo1.setVisibility(View.GONE);
-                    reOrder.setVisibility(View.GONE);
+                    btnReOrder.setVisibility(View.GONE);
                 }
             }
 

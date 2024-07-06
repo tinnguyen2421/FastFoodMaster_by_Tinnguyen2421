@@ -35,7 +35,7 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
     EditText entercode;
     String verificationId;
     FirebaseAuth FAuth;
-    Button verify, Resend;
+    Button btnVerify, btnResend;
     TextView txt;
     DatabaseReference databaseReference;
 
@@ -49,11 +49,11 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
 
         entercode = (EditText) findViewById(R.id.phoneno);
         txt = (TextView) findViewById(R.id.text);
-        Resend = (Button) findViewById(R.id.Resendotp);
+        btnResend = (Button) findViewById(R.id.Resendotp);
         FAuth = FirebaseAuth.getInstance();
-        Resend.setVisibility(View.INVISIBLE);
+        btnResend.setVisibility(View.INVISIBLE);
         txt.setVisibility(View.INVISIBLE);
-        verify = (Button) findViewById(R.id.Verify);
+        btnVerify = (Button) findViewById(R.id.Verify);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Customer").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -62,12 +62,12 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
 
                 UserModel userModel = dataSnapshot.getValue(UserModel.class);
                 OldNumber= userModel.getPhoneNumber();
-                verify.setOnClickListener(new View.OnClickListener() {
+                btnVerify.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
-                        Resend.setVisibility(View.INVISIBLE);
+                        btnResend.setVisibility(View.INVISIBLE);
                         String code = entercode.getText().toString().trim();
                         if (code.isEmpty() && code.length() < 6||code.length()>6) {
                             entercode.setError("Vui lòng nhập đúng code");
@@ -88,17 +88,17 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
-                        Resend.setVisibility(View.VISIBLE);
+                        btnResend.setVisibility(View.VISIBLE);
                         txt.setVisibility(View.INVISIBLE);
 
                     }
                 }.start();
 
-                Resend.setOnClickListener(new View.OnClickListener() {
+                btnResend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Resend.setVisibility(View.INVISIBLE);
+                        btnResend.setVisibility(View.INVISIBLE);
                         Resendotp(phonenumber);
 
                         new CountDownTimer(60000, 1000) {
@@ -110,7 +110,7 @@ public class CustomerPhoneSendOTP extends AppCompatActivity {
 
                             @Override
                             public void onFinish() {
-                                Resend.setVisibility(View.VISIBLE);
+                                btnResend.setVisibility(View.VISIBLE);
                                 txt.setVisibility(View.INVISIBLE);
 
                             }

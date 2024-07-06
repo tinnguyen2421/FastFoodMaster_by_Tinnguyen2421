@@ -22,6 +22,13 @@ public class DefaultAppFactory implements AppFactory  {
     }
 
     @Override
+    public Intent createIntentWithData(Context context, Class<?> cls, String key, String value) {
+        Intent intent = new Intent(context, cls);
+        intent.putExtra(key, value);
+        return intent;
+    }
+
+    @Override
     public void showToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }

@@ -108,7 +108,6 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     }
 
     private void loadDishInfoAndHandleItem() {
-        // Load user's location information
         loadUserLocationInfo();
         loadDishInfoAndHandleItem1();
     }
@@ -124,7 +123,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
                 District = cust.getDistrict();
                 City = cust.getCity();
                 Ward = cust.getWard();
-                customermenu();
+                loadDishes();
 
             }
 
@@ -173,11 +172,8 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
     private void handleDishInfo(DataSnapshot dataSnapshot) {
         UpdateDishModel updateDishModel = dataSnapshot.getValue(UpdateDishModel.class);
         if (updateDishModel != null) {
-            // load dish information
             setDishPrice(updateDishModel);
-            // Load chef information
             loadChefInfo(updateDishModel);
-            // Load cart item quantity
             loadCartItemQuantity(updateDishModel);
         }
     }
@@ -395,7 +391,7 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
         alert.show();
     }
 
-    private void customermenu() {
+    private void loadDishes() {
         swipeRefreshLayout.setRefreshing(true);
         databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(City).child(District).child(Ward);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -425,6 +421,6 @@ public class OrderDish extends AppCompatActivity implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
-        customermenu();
+        loadDishes();
     }
 }

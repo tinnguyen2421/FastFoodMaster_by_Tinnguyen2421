@@ -97,8 +97,6 @@ public class Delivery_ShippingOrder extends AppCompatActivity {
                 Chefid = deliveryShipOrders1.getChefID();
                 //get Date
                 LocalDateTime currentDateTime = LocalDateTime.now();
-
-                // Định dạng ngày giờ thành chuỗi nếu cần
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm, dd/MM/yyyy");
                 String formattedDateTime = currentDateTime.format(formatter);
                 Shipped.setOnClickListener(new View.OnClickListener() {

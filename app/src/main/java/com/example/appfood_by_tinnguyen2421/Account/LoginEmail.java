@@ -107,15 +107,18 @@ public class LoginEmail extends AppCompatActivity {
                 String role = dataSnapshot.getValue(String.class);
                 switch (role) {
                     case "Chef":
-                        startActivity(appFactory.createIntent(LoginEmail.this, ChefBottomNavigation.class));
+                        Intent chefIntent = appFactory.createIntentWithData(LoginEmail.this, ChefBottomNavigation.class, "login_success", "successed");
+                        startActivity(chefIntent);
                         finish();
                         break;
                     case "Customer":
-                        startActivity(appFactory.createIntent(LoginEmail.this, CustomerBottomNavigation.class));
+                        Intent customerIntent = appFactory.createIntentWithData(LoginEmail.this, CustomerBottomNavigation.class, "login_success", "successed");
+                        startActivity(customerIntent);
                         finish();
                         break;
                     case "DeliveryPerson":
-                        startActivity(appFactory.createIntent(LoginEmail.this, DeliveryBottomNavigation.class));
+                        Intent deliveryIntent = appFactory.createIntentWithData(LoginEmail.this, DeliveryBottomNavigation.class, "login_success", "successed");
+                        startActivity(deliveryIntent);
                         finish();
                         break;
                     default:

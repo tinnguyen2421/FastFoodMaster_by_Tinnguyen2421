@@ -4,8 +4,25 @@ package com.example.appfood_by_tinnguyen2421.Chef.ChefModel;
 //Copyright belongs to Nguyen TrongTin. contact: email:tinnguyen2421@gmail.com
 public class ChefFinalOrders1 {
 
-    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,AceptDate,SendDate,PaymentMethod,OrderStatus,DeliveryDate;
-    public ChefFinalOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String aceptDate, String sendDate, String paymentMethod, String orderStatus,String deliveryDate) {
+    private String Address,GrandTotalPrice,MobileNumber,Name,Note,RandomUID,AceptDate,SendDate,PaymentMethod,OrderStatus,DeliveryDate,DateTime,ShippingDate;
+
+    public String getDateTime() {
+        return DateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        DateTime = dateTime;
+    }
+
+    public String getShippingDate() {
+        return ShippingDate;
+    }
+
+    public void setShippingDate(String shippingDate) {
+        ShippingDate = shippingDate;
+    }
+
+    public ChefFinalOrders1(String address, String grandTotalPrice, String mobileNumber, String name, String note, String randomUID, String aceptDate, String sendDate, String paymentMethod, String orderStatus, String deliveryDate, String dateTime, String shippingDate) {
         Address = address;
         GrandTotalPrice = grandTotalPrice;
         MobileNumber = mobileNumber;
@@ -17,6 +34,8 @@ public class ChefFinalOrders1 {
         OrderStatus=orderStatus;
         PaymentMethod=paymentMethod;
         DeliveryDate=deliveryDate;
+        DateTime=dateTime;
+        ShippingDate=shippingDate;
     }
     public ChefFinalOrders1()
     {

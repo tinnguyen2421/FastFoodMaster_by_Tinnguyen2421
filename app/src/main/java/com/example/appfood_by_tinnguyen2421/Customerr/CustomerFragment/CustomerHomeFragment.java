@@ -63,6 +63,13 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         initializeViews(v);
         setupRecyclerViews();
         initializeSlider(v);
+        setUpTitle();
+        loadData();
+        setUpListeners();
+        return v;
+    }
+
+    private void setUpTitle() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY); // Lấy giờ trong 24 giờ
         if (hour < 10) {
@@ -72,9 +79,6 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         } else if (hour > 15) {
             tvSlogan.setText("Buổi chiều cùng những món ngon nè !");
         }
-        loadData();
-        setListeners();
-        return v;
     }
 
     private void initializeViews(View v) {
@@ -149,8 +153,8 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
                     ward = cust.getWard();
                     address = cust.getAddress();
                     addresss.setText(address + "," + ward + "," + district + "," + city);
-                    customerCate();
-                    customerDishes();
+                    showCategory();
+                    showDishes();
 
                 }
 
@@ -161,7 +165,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         });
     }
 
-    private void setListeners() {
+    private void setUpListeners() {
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -179,10 +183,10 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        customerDishes();
+        showDishes();
     }
 
-    private void customerCate() {
+    private void showCategory() {
         databaseReference1 = FirebaseDatabase.getInstance().getReference("Categories").child(city).child(district).child(ward);
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
@@ -205,7 +209,7 @@ public class CustomerHomeFragment extends Fragment implements SwipeRefreshLayout
         });
     }
 
-    private void customerDishes() {
+    private void showDishes() {
         swipeRefreshLayout.setRefreshing(true);
         databaseReference = FirebaseDatabase.getInstance().getReference("FoodSupplyDetails").child(city).child(district).child(ward);
         databaseReference.addValueEventListener(new ValueEventListener() {

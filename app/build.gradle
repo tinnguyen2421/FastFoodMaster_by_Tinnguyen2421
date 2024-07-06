@@ -6,7 +6,9 @@ plugins {
 android {
     namespace 'com.example.appfood_by_tinnguyen2421'
     compileSdk 33
-
+    viewBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.example.appfood_by_tinnguyen2421"
         minSdk 26

@@ -38,53 +38,44 @@ public class CustomerOrdersHistoryAdapter extends RecyclerView.Adapter<CustomerO
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CustomerOrders1 customerOrders1=customerOrders1List.get(position);
+        setUpData(holder,customerOrders1,position);
+        setUpListeners(holder,customerOrders1);
+    }
+
+    private void setUpListeners(ViewHolder holder, CustomerOrders1 customerOrders1) {
+        holder.itemView.setOnClickListener(view ->showOrdersHistoryView(customerOrders1));
+        holder.btnDelete.setOnClickListener(view -> {
+            AlertDialog.Builder builder=new AlertDialog.Builder(context);
+            builder.setMessage("Xóa đơn hàng này khỏi lịch sử ?");
+            builder.setPositiveButton("Có", (dialogInterface, i) -> deleteOrders(customerOrders1));
+            builder.setNegativeButton("Không", (dialog, which) -> dialog.cancel());
+            AlertDialog alert = builder.create();
+            alert.show();
+        });
+    }
+
+    private void deleteOrders(CustomerOrders1 customerOrders1) {
+        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders1.getRandomUID()).removeValue();
+        AlertDialog.Builder food = new AlertDialog.Builder(context);
+        food.setMessage("Đơn hàng đã được xóa");
+        food.setPositiveButton("OK", (dialog, which) -> {});
+        AlertDialog alertt = food.create();
+        alertt.show();
+    }
+
+    private void showOrdersHistoryView(CustomerOrders1 customerOrders1) {
+        Intent intent=new Intent(context, CustomerOrdersHistoryView.class);
+        intent.putExtra("RandomUIDD",customerOrders1.getRandomUID());
+        context.startActivity(intent);
+    }
+
+    private void setUpData(ViewHolder holder, CustomerOrders1 customerOrders1, int position) {
         holder.Numb.setText(String.valueOf(position+1));
         holder.NameCus.setText(customerOrders1.getName());
         holder.Address.setText(customerOrders1.getAddress());
         holder.PhoneNumb.setText(customerOrders1.getMobileNumber());
         holder.GrandTotal.setText(customerOrders1.getGrandTotalPrice());
         holder.SendDate.setText(customerOrders1.getOrderDate());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(context, CustomerOrdersHistoryView.class);
-                intent.putExtra("RandomUIDD",customerOrders1.getRandomUID());
-                context.startActivity(intent);
-            }
-        });
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(context);
-                builder.setMessage("Xóa đơn hàng này khỏi lịch sử ?");
-                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(customerOrders1.getRandomUID()).removeValue();
-                        AlertDialog.Builder food = new AlertDialog.Builder(context);
-                        food.setMessage("Đơn hàng đã được xóa");
-                        food.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                //context.startActivity(new Intent(context, ChefOrdersHistory.class));
-                            }
-                        });
-                        AlertDialog alertt = food.create();
-                        alertt.show();
-                    }
-
-                });
-                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        });
     }
 
     @Override

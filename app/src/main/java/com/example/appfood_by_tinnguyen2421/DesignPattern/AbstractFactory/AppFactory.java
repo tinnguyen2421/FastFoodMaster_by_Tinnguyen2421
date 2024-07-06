@@ -7,5 +7,6 @@ import android.content.Intent;
 public interface AppFactory  {
     ProgressDialog createProgressDialog(Context context);
     Intent createIntent(Context context, Class<?> cls);
+    Intent createIntentWithData(Context context, Class<?> cls, String key, String value);
     void showToast(Context context, String message);
 }

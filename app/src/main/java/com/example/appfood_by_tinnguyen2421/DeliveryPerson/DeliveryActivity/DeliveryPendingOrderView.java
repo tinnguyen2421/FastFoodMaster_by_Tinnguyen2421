@@ -33,27 +33,35 @@ public class DeliveryPendingOrderView extends AppCompatActivity {
     private DeliveryPendingOrderViewAdapter adapter;
     DatabaseReference reference;
     String RandomUID;
-    TextView grandtotal, address, name, number,ChefName;
+    TextView grandtotal, address, customerName, phoneNumber, chefName;
     LinearLayout l1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_pending_order_view);
-        recyclerViewdish = findViewById(R.id.delivieworder);
+        initializeViews();
+        setUpRecyclerView();
+        deliveryShipOrdersList = new ArrayList<>();
+        showPendingOrders();
+    }
+
+    private void setUpRecyclerView() {
         recyclerViewdish.setHasFixedSize(true);
         recyclerViewdish.setLayoutManager(new LinearLayoutManager(DeliveryPendingOrderView.this));
+    }
+
+    private void initializeViews() {
+        recyclerViewdish = findViewById(R.id.delivieworder);
         l1 = (LinearLayout) findViewById(R.id.linear1);
         grandtotal = (TextView) findViewById(R.id.Dtotal);
         address = (TextView) findViewById(R.id.DAddress);
-        ChefName=(TextView)findViewById(R.id.chefname);
-        name = (TextView) findViewById(R.id.DName);
-        number = (TextView) findViewById(R.id.DNumber);
-        deliveryShipOrdersList = new ArrayList<>();
-        deliveryorders();
+        chefName =(TextView)findViewById(R.id.chefname);
+        customerName = (TextView) findViewById(R.id.DName);
+        phoneNumber = (TextView) findViewById(R.id.DNumber);
     }
 
-    private void deliveryorders() {
+    private void showPendingOrders() {
         RandomUID = getIntent().getStringExtra("Random");
 
         reference = FirebaseDatabase.getInstance().getReference("DeliveryShipOrders").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes");
@@ -87,11 +95,7 @@ public class DeliveryPendingOrderView extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DeliveryShipOrders1 deliveryShipOrders1 = dataSnapshot.getValue(DeliveryShipOrders1.class);
-                grandtotal.setText( deliveryShipOrders1.getGrandTotalPrice()+"đ");
-                address.setText("Địa chỉ:"+deliveryShipOrders1.getAddress());
-                name.setText("Tên khách hàng:"+deliveryShipOrders1.getName());
-                number.setText("Số điện thoại:" + deliveryShipOrders1.getMobileNumber());
-                ChefName.setText("Tên cửa hàng"+ deliveryShipOrders1.getChefName());
+                setUpData(deliveryShipOrders1);
 
 
             }
@@ -101,5 +105,13 @@ public class DeliveryPendingOrderView extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setUpData(DeliveryShipOrders1 deliveryShipOrders1) {
+        grandtotal.setText( deliveryShipOrders1.getGrandTotalPrice()+"đ");
+        address.setText("Địa chỉ:"+deliveryShipOrders1.getAddress());
+        customerName.setText("Tên khách hàng:"+deliveryShipOrders1.getName());
+        phoneNumber.setText("Số điện thoại:" + deliveryShipOrders1.getMobileNumber());
+        chefName.setText("Tên cửa hàng"+ deliveryShipOrders1.getChefName());
     }
 }

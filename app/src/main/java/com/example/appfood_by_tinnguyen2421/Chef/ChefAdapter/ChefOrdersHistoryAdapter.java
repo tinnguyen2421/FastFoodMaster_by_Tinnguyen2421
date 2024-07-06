@@ -55,7 +55,7 @@ public class ChefOrdersHistoryAdapter extends RecyclerView.Adapter<ChefOrdersHis
         holder.PhoneNumb.setText(chefFinalOrders1.getMobileNumber());
         holder.Status.setText(chefFinalOrders1.getOrderStatus());
         holder.GrandTotal.setText(chefFinalOrders1.getGrandTotalPrice());
-        holder.SendDate.setText(chefFinalOrders1.getSendDate());
+        holder.SendDate.setText(chefFinalOrders1.getDateTime());
         holder.AceptDate.setText(chefFinalOrders1.getAceptDate());
     }
     private void setUpListeners(ViewHolder holder,ChefFinalOrders1 chefFinalOrders1)

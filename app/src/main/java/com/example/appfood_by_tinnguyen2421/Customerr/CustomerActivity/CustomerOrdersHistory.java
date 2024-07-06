@@ -31,14 +31,22 @@ public class CustomerOrdersHistory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_orders_history);
-        recyclerView = findViewById(R.id.RcvHistory);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(CustomerOrdersHistory.this));
         customerOrders1List = new ArrayList<>();
-        CustomerHistoryOrders();
+        initializeViews();
+        setUpRecyclerView();
+        showOrdersHistory();
     }
 
-    private void CustomerHistoryOrders() {
+    private void initializeViews() {
+        recyclerView = findViewById(R.id.RcvHistory);
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(CustomerOrdersHistory.this));
+    }
+
+    private void showOrdersHistory() {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {

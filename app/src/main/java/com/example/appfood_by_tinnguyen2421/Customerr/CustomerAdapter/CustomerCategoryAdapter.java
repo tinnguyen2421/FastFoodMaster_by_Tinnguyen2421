@@ -49,13 +49,13 @@ public class CustomerCategoryAdapter extends RecyclerView.Adapter<CustomerCatego
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         final Categories categories = categoryList.get(position);
-        Glide.with(mcontext).load(categories.getImage()).into(holder.imageView);
+        Glide.with(mcontext).load(categories.getImage()).into(holder.categoryImage);
         categories.getMatheloai();
-        holder.title.setText(categories.getTentheloai());
+        holder.categoryName.setText(categories.getTentheloai());
 
             Picasso.get()
                     .load(categories.getImage())
-                    .into(holder.imageView, new Callback() {
+                    .into(holder.categoryImage, new Callback() {
                         @Override
                         public void onSuccess() {
                             holder.progressBar.setVisibility(View.GONE);
@@ -86,8 +86,8 @@ public class CustomerCategoryAdapter extends RecyclerView.Adapter<CustomerCatego
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView title;
+        ImageView categoryImage;
+        TextView categoryName;
         ProgressBar progressBar;
         CardView cardView,cardView1,card_view4;
         LinearLayout line1;
@@ -96,8 +96,8 @@ public class CustomerCategoryAdapter extends RecyclerView.Adapter<CustomerCatego
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imageView = itemView.findViewById(R.id.category_image);
-            title = itemView.findViewById(R.id.category_title);
+            categoryImage = itemView.findViewById(R.id.category_image);
+            categoryName = itemView.findViewById(R.id.category_title);
             progressBar = itemView.findViewById(R.id.progressbar1);
             cardView = itemView.findViewById(R.id.card_view);
             cardView1 = itemView.findViewById(R.id.card_view1);

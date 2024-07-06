@@ -36,45 +36,34 @@ public class PendingOrdersAdapter extends RecyclerView.Adapter<PendingOrdersAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CustomerOrders customerOrders = customerOrdersList.get(position);
-        holder.Dishname.setText(position+1+"."+ customerOrders.getDishName());
-        //holder.Price.setText("Giá:  " + customerPendingOrders.getPrice()+"đ");
-        if (customerOrders != null && customerOrders.getDishPrice() != null) {
-            String priceString = customerOrders.getDishPrice();
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
-            String priceWithoutComma = priceString.replace(",", "").trim();
-            try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
-                double parsedNumber = Double.parseDouble(priceWithoutComma);
-                // Sử dụng parsedNumber trong giao diện người dùng với định dạng số
-                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-                String formattedPrice = decimalFormat.format(parsedNumber);
-                holder.Price.setText("Giá: " + formattedPrice + "đ");
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
-                e.printStackTrace();
-            }
-        }
-        holder.Quantity.setText("× " + customerOrders.getDishQuantity());
-        if (customerOrders != null && customerOrders.getDishPrice() != null) {
-            String priceString = customerOrders.getTotalPrice();
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
-            String priceWithoutComma = priceString.replace(",", "").trim();
-            try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
-                double parsedNumber = Double.parseDouble(priceWithoutComma);
-                // Sử dụng parsedNumber trong giao diện người dùng với định dạng số
-                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-                String formattedPrice = decimalFormat.format(parsedNumber);
-                holder.Totalprice.setText("Tổng tiền: " + formattedPrice + "đ");
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
-                e.printStackTrace();
-            }
-        }
-        //holder.Totalprice.setText("tổng tiền: " + customerPendingOrders.getTotalPrice()+"đ");
+        setUpData(holder,customerOrders,position);
 
     }
 
+    private void setUpData(ViewHolder holder, CustomerOrders customerOrders, int position) {
+        holder.Dishname.setText(position+1+"."+ customerOrders.getDishName());
+        if (customerOrders != null && customerOrders.getDishPrice() != null) {
+            holder.Price.setText("Giá:"+formatPrice(customerOrders.getDishPrice()));
+        }
+        holder.Quantity.setText("× " + customerOrders.getDishQuantity());
+        if (customerOrders != null && customerOrders.getDishPrice() != null) {
+            holder.Totalprice.setText("Tổng tiền:"+formatPrice(customerOrders.getTotalPrice()));
+        }
+    }
+
+    private String formatPrice(String priceString) {
+        if (priceString != null) {
+            String priceWithoutComma = priceString.replace(",", "").trim();
+            try {
+                double parsedNumber = Double.parseDouble(priceWithoutComma);
+                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
+                return  decimalFormat.format(parsedNumber) + "đ";
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
     @Override
     public int getItemCount() {
         return customerOrdersList.size();

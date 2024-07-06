@@ -38,12 +38,16 @@ public class CustomerTrackAdapter extends RecyclerView.Adapter<CustomerTrackAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final CustomerOrders customerFinalOrders = customerOrdersList.get(position);
+        setUpData(holder,customerFinalOrders,position);
+
+    }
+
+    private void setUpData(ViewHolder holder, CustomerOrders customerFinalOrders, int position) {
         Glide.with(context).load(customerFinalOrders.getImageURL()).into(holder.dishImage);
         holder.dishName.setText(customerFinalOrders.getDishName());
         holder.dishPrice.setText(customerFinalOrders.getDishPrice());
         holder.dishQuantity.setText( "× "+customerFinalOrders.getDishQuantity() );
         holder.totalPrice.setText( customerFinalOrders.getTotalPrice()+"đ");
-
     }
 
     @Override

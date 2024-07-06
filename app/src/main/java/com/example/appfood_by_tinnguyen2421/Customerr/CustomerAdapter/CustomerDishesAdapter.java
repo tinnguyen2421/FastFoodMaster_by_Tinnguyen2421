@@ -59,17 +59,92 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final UpdateDishModel updateDishModel = mUpdateDishModelList.get(position);
+        setUpData(holder,updateDishModel);
+        favouriteChecker(updateDishModel.getRandomUID(), holder);
+        setUpVisible(holder,updateDishModel);
+        setUpListeners(holder,updateDishModel);
+    }
+
+    private void setUpListeners(ViewHolder holder, UpdateDishModel updateDishModel) {
+        holder.itemView.setOnClickListener(v -> orderDish(updateDishModel));
+
+        holder.imageViewShare.setOnClickListener(view -> shareDish(updateDishModel));
+
+        holder.likeButton.setOnClickListener(v ->likeProcess(updateDishModel,v,holder));
+    }
+
+    private void likeProcess(UpdateDishModel updateDishModel, View v, ViewHolder holder) {
+        mProcessLike = true;
+        String key1 = updateDishModel.getRandomUID();
+        DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key1);
+        mFvrtRef.child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (mProcessLike) {
+                    if (snapshot.hasChild(key1)) {
+                        mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key1).removeValue();
+                        mFvrtListRef.child(key1).removeValue();
+                        Toast.makeText(v.getContext(), "Xóa khỏi yêu thích!", Toast.LENGTH_SHORT).show();
+                        mProcessLike = false;
+                        likedDishesRef.removeValue();
+                        // Đặt hình ảnh trái tim không được yêu thích
+                        holder.likeButton.setImageResource(R.drawable.baseline_favorite_border_24);
+                    } else {
+                        mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key1).setValue(true);
+                        Favorite favorite = new Favorite(mFvrtListRef.push().getKey(), FirebaseAuth.getInstance().getUid(), updateDishModel, true);
+                        mFvrtListRef.child(key1).setValue(favorite);
+                        mProcessLike = false;
+                        Toast.makeText(v.getContext(), "Thêm vào yêu thích!", Toast.LENGTH_SHORT).show();
+                        likedDishesRef.setValue(updateDishModel);
+                        // Đặt hình ảnh trái tim đã được yêu thích
+                        holder.likeButton.setImageResource(R.drawable.baseline_favorited);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu có
+            }
+        });
+    }
+
+    private void shareDish(UpdateDishModel updateDishModel) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        String shareBody = updateDishModel.getDishName();
+        String shareSub = updateDishModel.getDescription();
+        String shareSub1 = updateDishModel.getImageURL();
+        String combinedText = shareSub + "\n" + shareSub1;
+        intent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
+        intent.putExtra(Intent.EXTRA_TEXT, combinedText);
+        mContext.startActivity(intent);
+    }
+
+    private void orderDish(UpdateDishModel updateDishModel) {
+        Intent intent = new Intent(mContext, OrderDish.class);
+        intent.putExtra("FoodMenu", updateDishModel.getRandomUID());
+        intent.putExtra("ChefId", updateDishModel.getChefID());
+        intent.putExtra("CateID", updateDishModel.getCateID());
+        intent.putExtra("TenMon", updateDishModel.getDishName());
+        mContext.startActivity(intent);
+    }
+
+    private void setUpData(ViewHolder holder, UpdateDishModel updateDishModel) {
         Glide.with(mContext).load(updateDishModel.getImageURL()).into(holder.imageView);
         holder.dishName.setText(updateDishModel.getDishName());
-        double price = Double.parseDouble(updateDishModel.getDishPrice());
-        double priceReduce = Double.parseDouble(updateDishModel.getReducePrice());
-        DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-        String formatPrice = decimalFormat.format(price);
-        String formatPriceReduce = decimalFormat.format(priceReduce);
-        holder.price.setText(formatPrice + "đ");
-        holder.priceReduce.setText(formatPriceReduce + "đ");
+        holder.price.setText(formatPrice(updateDishModel.getDishPrice()) + "đ");
+        holder.priceReduce.setText(formatPrice(updateDishModel.getReducePrice()) + "đ");
         holder.priceReduce.setTextColor(Color.RED);
         holder.title.setText("Giảm " + updateDishModel.getDecreasePercent() + "%");
+    }
+
+    private String formatPrice(String priceString) {
+        double price = Double.parseDouble(priceString);
+        DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
+        return decimalFormat.format(price) ;
+    }
+    private void setUpVisible(ViewHolder holder, UpdateDishModel updateDishModel) {
         databaseReference = FirebaseDatabase.getInstance().getReference("ChefStatus").child(updateDishModel.getChefID() + "/Status");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -101,74 +176,6 @@ public class CustomerDishesAdapter extends RecyclerView.Adapter<CustomerDishesAd
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Xử lý lỗi nếu có
-            }
-        });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, OrderDish.class);
-                intent.putExtra("FoodMenu", updateDishModel.getRandomUID());
-                intent.putExtra("ChefId", updateDishModel.getChefID());
-                intent.putExtra("CateID", updateDishModel.getCateID());
-                intent.putExtra("TenMon", updateDishModel.getDishName());
-                mContext.startActivity(intent);
-            }
-        });
-
-        holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                String shareBody = updateDishModel.getDishName();
-                String shareSub = updateDishModel.getDescription();
-                String shareSub1 = updateDishModel.getImageURL();
-                String combinedText = shareSub + "\n" + shareSub1;
-                intent.putExtra(Intent.EXTRA_SUBJECT, shareBody);
-                intent.putExtra(Intent.EXTRA_TEXT, combinedText);
-                mContext.startActivity(intent);
-            }
-        });
-
-        String key = updateDishModel.getRandomUID();
-        favouriteChecker(key, holder);
-
-        holder.likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProcessLike = true;
-                String key = updateDishModel.getRandomUID();
-                DatabaseReference likedDishesRef = FirebaseDatabase.getInstance().getReference("likedDishes").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key);
-                mFvrtRef.child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (mProcessLike) {
-                            if (snapshot.hasChild(key)) {
-                                mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key).removeValue();
-                                mFvrtListRef.child(key).removeValue();
-                                Toast.makeText(v.getContext(), "Xóa khỏi yêu thích!", Toast.LENGTH_SHORT).show();
-                                mProcessLike = false;
-                                likedDishesRef.removeValue();
-                                // Đặt hình ảnh trái tim không được yêu thích
-                                holder.likeButton.setImageResource(R.drawable.baseline_favorite_border_24);
-                            } else {
-                                mFvrtRef.child(FirebaseAuth.getInstance().getUid()).child(key).setValue(true);
-                                Favorite favorite = new Favorite(mFvrtListRef.push().getKey(), FirebaseAuth.getInstance().getUid(), updateDishModel, true);
-                                mFvrtListRef.child(key).setValue(favorite);
-                                mProcessLike = false;
-                                Toast.makeText(v.getContext(), "Thêm vào yêu thích!", Toast.LENGTH_SHORT).show();
-                                likedDishesRef.setValue(updateDishModel);
-                                // Đặt hình ảnh trái tim đã được yêu thích
-                                holder.likeButton.setImageResource(R.drawable.baseline_favorited);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // Xử lý lỗi nếu có
-                    }
-                });
             }
         });
     }

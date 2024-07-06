@@ -51,47 +51,17 @@ public class CustomerCartAdapter extends RecyclerView.Adapter<CustomerCartAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Cart cart = cartModellist.get(position);
-        holder.dishname.setText(position+1+"."+cart.getDishName());
-        if (cart != null && cart.getDishPrice() != null) {
-            String priceString = cart.getDishPrice();
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
-            String priceWithoutComma = priceString.replace(",", "").trim();
-            try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
-                double parsedNumber = Double.parseDouble(priceWithoutComma);
-                // Sử dụng parsedNumber trong giao diện người dùng với định dạng số
-                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-                String formattedPrice = decimalFormat.format(parsedNumber);
-                holder.PriceRs.setText("Giá: " + formattedPrice + "đ");
+        setUpData(holder,cart,position);
+        setUpListeners(holder,cart,Integer.parseInt(cart.getDishPrice()));
+        FirebaseDatabase.getInstance().getReference("Cart")
+                .child("GrandTotal")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("GrandTotal")
+                .setValue(String.valueOf(total));
 
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
-                e.printStackTrace();
-            }
-        }
-        holder.Qty.setText("× " + cart.getDishQuantity());
-        if (cart != null && cart.getTotalPrice() != null) {
-            String totalPriceString = cart.getTotalPrice();
-            // Loại bỏ dấu phẩy và khoảng trắng từ chuỗi
-            String totalPriceWithoutComma = totalPriceString.replace(",", "").trim();
-            try {
-                // Chuyển đổi chuỗi thành số và định dạng lại
-                double parsedTotalPrice = Double.parseDouble(totalPriceWithoutComma);
-                // Sử dụng parsedTotalPrice trong giao diện người dùng với định dạng số
-                DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-                String formattedTotalPrice = decimalFormat.format(parsedTotalPrice);
-                holder.Totalrs.setText("Tổng tiền: " + formattedTotalPrice + "đ");
+    }
 
-            } catch (NumberFormatException e) {
-                // Xử lý trường hợp không thể chuyển đổi thành số
-                e.printStackTrace();
-            }
-        }
-        Picasso.get().load(cart.getImageURL()).into(holder.imageView);
-        total += Integer.parseInt(cart.getTotalPrice());
-        holder.elegantNumberButton.setNumber(cart.getDishQuantity());
-        final int dishprice = Integer.parseInt(cart.getDishPrice());
-
+    private void setUpListeners(ViewHolder holder, Cart cart, int dishprice) {
         holder.elegantNumberButton.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
@@ -113,26 +83,35 @@ public class CustomerCartAdapter extends RecyclerView.Adapter<CustomerCartAdapte
                 }
             }
         });
-        String totalString = String.valueOf(total);
-        String totalWithoutComma = totalString.replace(",", "").trim();
-        try {
-            // Chuyển đổi chuỗi thành số và định dạng lại
-            double parsedTotal = Double.parseDouble(totalWithoutComma);
-
-            // Sử dụng parsedTotal trong giao diện người dùng với định dạng số
-            DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
-            String formattedTotal = decimalFormat.format(parsedTotal);
-
-            // Hiển thị giá trị tổng cộng trong giao diện người dùng
-            CustomerCartFragment.grandt.setText("Tổng cộng: " + formattedTotal + "đ");
-        } catch (NumberFormatException e) {
-            // Xử lý trường hợp không thể chuyển đổi thành số
-            e.printStackTrace();
-        }
-        FirebaseDatabase.getInstance().getReference("Cart").child("GrandTotal").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("GrandTotal").setValue(String.valueOf(total));
-
     }
 
+
+    private void setUpData(ViewHolder holder, Cart cart, int position) {
+        holder.dishname.setText(position+1+"."+cart.getDishName());
+        if (cart != null && cart.getDishPrice() != null) {
+            holder.PriceRs.setText("Giá:"+formatPrice(cart.getDishPrice())+"đ");
+        }
+        holder.Qty.setText("× " + cart.getDishQuantity());
+        if (cart != null && cart.getTotalPrice() != null) {
+            holder.Totalrs.setText("Tổng tiền:"+formatPrice(cart.getTotalPrice())+"đ");
+        }
+        Picasso.get().load(cart.getImageURL()).into(holder.imageView);
+        total += Integer.parseInt(cart.getTotalPrice());
+        holder.elegantNumberButton.setNumber(cart.getDishQuantity());
+        CustomerCartFragment.grandt.setText("Tổng cộng: " + formatPrice(String.valueOf(total)) + "đ");
+    }
+
+    private String formatPrice(String priceString) {
+        String priceWithoutComma = priceString.replace(",", "").trim();
+        try {
+            double parsedNumber = Double.parseDouble(priceWithoutComma);
+            DecimalFormat decimalFormat = new DecimalFormat("#,###,###,###");
+            return decimalFormat.format(parsedNumber) ;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
     @Override
     public int getItemCount() {
         return cartModellist.size();

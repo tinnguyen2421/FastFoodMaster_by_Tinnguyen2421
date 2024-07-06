@@ -29,25 +29,39 @@ public class CustomerOrdersHistoryView extends AppCompatActivity {
     private List<CustomerOrders> customerOrdersList;
     private CustomerOrdersHistoryViewAdapter adapter;
     DatabaseReference reference;
-    String RandomUID;
+    String randomUID;
 
-    TextView grantotal,idOrders,cusName,ShippingTime;
+    TextView grantotal,idOrders,cusName, shippingTime;
     private APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_orders_history_view);
-        recyclerView=findViewById(R.id.rcvItem);
+        customerOrdersList = new ArrayList<>();
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        initializeViews();
+        setUpRecyclerView();
+        showOrdersHistoryView();
+
+    }
+
+    private void initializeViews() {
+        recyclerView=findViewById(R.id.rcvItem);
+        grantotal=findViewById(R.id.txtGrandTotal);
+        idOrders=findViewById(R.id.txtOrdersID);
+        cusName=findViewById(R.id.txtCusName);
+        shippingTime =findViewById(R.id.txtDatetime);
+    }
+
+    private void setUpRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(CustomerOrdersHistoryView.this));
-        customerOrdersList = new ArrayList<>();
-        CustomerordersHistoryView();
     }
-    private void CustomerordersHistoryView() {
-        RandomUID = getIntent().getStringExtra("RandomUIDD");
-        reference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("Dishes");
+
+    private void showOrdersHistoryView() {
+        randomUID = getIntent().getStringExtra("RandomUIDD");
+        reference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomUID).child("Dishes");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -64,26 +78,25 @@ public class CustomerOrdersHistoryView extends AppCompatActivity {
             }
         });
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(RandomUID).child("OtherInformation");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("CustomerOrdersHistory").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(randomUID).child("OtherInformation");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CustomerOrders1 customerOrders1 = dataSnapshot.getValue(CustomerOrders1.class);
-                grantotal=findViewById(R.id.txtGrandTotal);
-                idOrders=findViewById(R.id.txtOrdersID);
-                cusName=findViewById(R.id.txtCusName);
-                ShippingTime=findViewById(R.id.txtDatetime);
-                grantotal.setText(customerOrders1.getGrandTotalPrice());
-                int a=customerOrders1.getRandomUID().length()-10;
-                idOrders.setText(customerOrders1.getRandomUID().substring(a));
-                cusName.setText(customerOrders1.getName());
-                ShippingTime.setText(customerOrders1.getShippingDate());
-
+                setUpData(customerOrders1);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+    }
+
+    private void setUpData(CustomerOrders1 customerOrders1) {
+        grantotal.setText(customerOrders1.getGrandTotalPrice());
+        int a=customerOrders1.getRandomUID().length()-10;
+        idOrders.setText(customerOrders1.getRandomUID().substring(a));
+        cusName.setText(customerOrders1.getName());
+        shippingTime.setText(customerOrders1.getShippingDate());
     }
 }
